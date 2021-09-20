@@ -4,24 +4,18 @@
 \contentsline {section}{\numberline {2.1}Distribuovaná účtovná kniha}{3}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Vlastnosti blockchainu}{3}{subsection.2.1.1}%
 \contentsline {subsection}{\numberline {2.1.2}Aplikačné využitie}{4}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2}Moderná kryptografia}{4}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Hash}{5}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Digitálny podpis}{5}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3}Peer-to-peer sieť}{6}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Referenčný model}{6}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Využitie v blockchaine}{6}{subsection.2.3.2}%
-\contentsline {section}{\numberline {2.4}Datová štruktúra blockchain}{7}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Transakcia}{8}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Hlavička bloku}{8}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Obsah bloku}{8}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}Binárny hashovací strom}{8}{subsection.2.4.4}%
-\contentsline {chapter}{Literatúra}{10}{chapter*.2}%
+\contentsline {section}{\numberline {2.2}Kryptografia v blockchaine}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Hashovacia funkcia}{5}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Hash ukazovateľ}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Digitálny podpis}{6}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Peer-to-peer sieť}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Referenčný model}{7}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Využitie v blockchaine}{7}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Datová štruktúra blockchain}{8}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Transakcia}{9}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Hlavička bloku}{9}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Obsah bloku}{9}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Binárny hashovací strom}{9}{subsection.2.4.4}%
+\contentsline {chapter}{Literatúra}{11}{chapter*.2}%
 \ttl@starttoc {chapters@1}
-\contentsline {chapter}{\numberline {A}Jak pracovat s touto šablonou}{11}{appendix.A}%
-\contentsline {paragraph}{Pozor na číslování stránek!}{12}{section*.4}%
-\contentsline {chapter}{\numberline {B}Psaní anglického textu}{16}{appendix.B}%
-\contentsline {paragraph}{Časté chyby ve slovech}{19}{section*.15}%
-\contentsline {chapter}{\numberline {C}Checklist}{20}{appendix.C}%
-\contentsline {chapter}{\numberline {D}\LaTeX pro začátečníky}{24}{appendix.D}%
-\contentsline {chapter}{\numberline {E}Příklady bibliografických citací}{27}{appendix.E}%
 \contentsfinish 
