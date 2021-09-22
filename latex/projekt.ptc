@@ -12,10 +12,13 @@
 \contentsline {subsection}{\numberline {2.3.1}Referenčný model}{7}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Využitie v blockchaine}{7}{subsection.2.3.2}%
 \contentsline {section}{\numberline {2.4}Datová štruktúra blockchain}{8}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Transakcia}{9}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Hlavička bloku}{9}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Obsah bloku}{9}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}Binárny hashovací strom}{9}{subsection.2.4.4}%
-\contentsline {chapter}{Literatúra}{11}{chapter*.2}%
+\contentsline {subsection}{\numberline {2.4.1}Blok}{9}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Transakcia}{9}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Binárny hashovací strom}{9}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}Ťažba blokov}{10}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Konsenzus}{11}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Proof-of-Work}{11}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Proof-of-Stake}{12}{subsection.2.6.2}%
+\contentsline {chapter}{Literatúra}{13}{chapter*.2}%
 \ttl@starttoc {chapters@1}
 \contentsfinish 
