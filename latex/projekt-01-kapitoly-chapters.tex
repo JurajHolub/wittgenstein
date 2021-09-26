@@ -214,5 +214,83 @@ Proof-of-work je overený konsenzus protokol, ktorý funguje a používa sa v bl
 
 \subsection{Proof-of-Stake}\label{subsec:pos}
 
+Dôkaz podielom na vlastníctve (anglicky \textit{proof of stake}) je založený na technike lotérie, kde pravdepodobnosť výhry rastie s množstvom už vlastnených zdrojov. Základnou myšlienkou, je že vlastník veľkého množstva zdrojov v danom blockchaine je veľmi nepravdepodobným útočníkom pretože svoje zdroje nechce ohroziť. Uzly sa teda musia preukázať vlastníctvom zdrojov v danom blockchaine ak chcú publikovať nový blok. Pravdepodobnosť výberu uzlu rastie s množstvom zdrojov, ktoré v sieti vlastní.~\cite{homoliakBlockchain, nguyenPos}
+
+Veľkou výhodou proof-of-stake oproti proof-of-work je, že nevyždauje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. ~\cite{leporeConsensus}
+
+\chapter{Viacvrstvová abstrakcia}
+
+Existuje veľké množstvo blockchain protokolov, ktoré majú rôzne využitie a implementáciu. Avšak všetky tieto implementácie sú založene na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami:~\cite{homoliakBlockchain}
+
+\begin{enumerate}
+	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť blockchainu. Napríklad, verejný blockchain ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť paketov alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého blockchainu.~\cite{fanPerfEval}
+	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustavuje dohoda na stave blockchainu. Táto vrstva kľúčovo ovplyvňuje priepustnosť transakcií (\textit{TPS - transaction per second}). Táto metrika je kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne 5.
+	\item \textbf{Dátová vrstva} (alebo tiež úložisko) definuje model transakcií (binárny hashovací strom, hashovacie a kryptografické algoritmy).
+	\item \textbf{Aplikačná vrstva} definuje využitie v konkrétnej službe (napríklad kryptomena).
+\end{enumerate}
+
+\chapter{Útoky na konsenzus}
+
+\section{Ovládnutie konsenzu útočníkmi}
+Tieto útoky narušia decentralizované siete tým, že útočníci dokážu utvoriť konsenzus. V takom prípade sa stáva sieť centralizovaná, kde centrálnou autoritou sú práve útočníci. Príkladom takéhoto útoku pre proof-of-work a proof-of-stake konsenzus je ovládnutie 51\,\% siete. V prípade protokolov Byzantskej chyby dokáže $\frac{1}{3}$ uzlov spôsobiť, že bude protokol narušený alebo dokonca zastavený.~\cite{homoliakBlockchain}
+
+\section{Porušenie synchronného doručovania}
+
+Ak útočník dokáže narušiť synchrónne doručovanie správ v protokole, ktorý synchronizáciu predpokladá tak takýto protokol prestane fungovať. Tento útok už nie je možné urobiť na protokole, ktorý umožňuje asynchronnú komunikáciu. ~\cite{homoliakBlockchain}
+
+\section{title}
+
+\chapter{Porovanie simulačných nástrojov}
+
+Použiť túto prácu na porovannie~\cite{simulatorCompar}
+
+Caw, keď sa mrkneš na porovnanie simulátorov ktoré mám v práci, tak si môžeš všimnúť, že niektoré z iných simulátorov sú tvorené iba pre PoW ale taktiež u väčšiny nemáš dostupný zdroják alebo je o nich dokonca len napísaná práca a ani si ich nevieš vyskúšať. Bitcoin Simulator mal už naimplementovaný prenos správ a taktiež ukladanie blokov do ledgeru, čo mi celkom vyhovovalo a len som to rozšíril o tie protokoly, no napr. chalan predo mnou sa to snažil v NS3 urobiť komplet celé aj s výmenou transakcií, ktorá v mojom simulátore chýba a simulujem tam len časovým oneskorením pri dobe prenosu veľkosť jednotlivých blokov. Dávaj bacha ale akým spôsobom robíš niektoré operácie, lebo môj simulátor bol v konečnom dôsledku dosť pomalý a na simulácie som používal 64 CPU a 150GB RAM v metacentre, kde sa mi tesne pred odovzdaním podarilo ale vyčerpať fairshare skore, čiže na doknčenie práce som musel ešte použiť kamarátov účet  NS3 je ale podľa mňa celkom dosť vhodný spôsob nakoľko ti umožňuje simulovať rozsiahle siete a rôzne správanie v nich.. taktiež ak by sa ti podarilo spraviť dobrý simulátor, tak by bolo fajn ho hodiť ako public tool v NS3, čo určite ocení oponent ale aj komisia. Inak je to celkom jednoduchá téma a len to znie zložito, no určite na ňu nekašli lebo kódiť to len v posledných mesiacoch neni dobrý nápad  Btw, výhoda tej témy je to, že ak máš dobre vybraté protokoly, tak niektorí profáci nevedia ako majú správne fungovať a chalan predomnou dostal A za simulátor, čo nerobil ani zďaleka to čo mal.. z 3 protokolov mal naimplementované 2 a aj tie úplne mimo (pri Algorande mu chýbalo VRF a podobne), testy  bezpečnosti ani neskúsil a testy výkonu boli len také na pár riadkov, čiže reálne nesplnené zadanie ale tým, že tomu oponent nerozumel, tak si myslel, že je to spravené perfektne
+
+\section{BlockSim}
+Simulátor v pythone.
+
+\url{https://www.frontiersin.org/articles/10.3389/fbloc.2020.00028/full#note1}
+
+Aktuálna implementácia zameraná na PoW (naimplementovaný Bitcoin, Ethereum). Autor tvrdí, že implementácia umožnuje prirodzené rozšírenie aj o simuláciu PoS. PoS simulácia by však neumožnila analýzu špecifickej sekvencie správ PBFT konsenzu.
+
+\section{VIBES}
+
+Simulátor v TS a Scale.
+
+\url{https://github.com/i13-msrg/vibes/blob/master/docs/Master_Thesis_VIBES.pdf}
+
+Podľa autora je možná inplementácia PoS. Ide len o diplomovu pracu a teda nástroj nebude asi moc rozsiahly a kvalitný.
+
+\section{Shadow}
+
+Simulator siete TOR, ale niekto urobil plugin na bitcoin.
+
+\url{https://shadow.github.io/}
+
+
+\section{Bitcoin Simulator}
+
+\url{https://arthurgervais.github.io/Bitcoin-Simulator/index.html}
+
+Simulator primo určen na PoW Bitcoin, ale minuly rok prave toto použili na PoS simulator.
+
+\section{FoBSim}
+
+Simulacia blockchainu v pythone, tvrdia že sa da simulovat aj PoS. Zrejme bude problem s pravami.
+
+\url{https://github.com/sed-szeged/FobSim}
+
+\section{SimBlock}
+
+SimBlock je simulátor založený na diskrétnej simulácii. Je implementovaný v programovacom jazyku Java a jeho zdrojový kód je voľne dostupný (anglicky \textit{open source})~\footnote{Apache License, Version 2.0}. Simulátor podporuje proof-of-work protokoly Bitcoin, Leitecoin a Dogecoin.
+
+Autori tohoto projektu v rámci vyhodnocovania presnosti simulátora vykonali experiment ktorý porovnal ich prácu s podobným už existujúcim simulátorom. Obe simulácie spustili s rovnakými parametrami a to pre protokoly Bitcoin, Leitecoin a Dogecoin. Výsledky oboch simulátorov boli veľmi podobné. Na základe tohoto experimentu autori zhodnotili, že ich simulátor má dobrú presnosť.
+
+Autori ďalej navrhli úpravu algoritmu na voľbu susedných uzlov (anglicky \textit{neighbor node selection algorithm}) v protokole Bitcoin. Navrhnutú úpravu odsimulovali a vyhodnotili, že ich vylepšenie algoritmu zvyšuje priepustnosť transakcií. Touto simuláciou bol demonštrovaný význam tohoto simulačného nástroja a to je zlepšovanie blockchainových protokolov z hľadiska výkonnosti a bezpečnosti.~\cite{simblockWp}
+
+
+Open source simulator blockchainu v Jave. Klasicky zameraný na PoW (Bitcoin a Etherum je naimplementovae). Autir tvrdí, že je možná aj simulácia PoS. Dokonca by tam mala byť aj ukážka PoS implementacie~\footnote{\url{https://github.com/dsg-titech/simblock/releases}}
+
+\url{https://dsg-titech.github.io/simblock/}
 
 %===============================================================================
