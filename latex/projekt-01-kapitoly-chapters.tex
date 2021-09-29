@@ -88,6 +88,9 @@ Tieto dva kľúče tvoria dvojicu prepojenú matematickým spôsobom. Zo znalost
 
 Tento koncept je základom digitálneho podpisu. Ak chceme nepopierateľne dokázať, že nejaký dátový obsah (napríklad pdf dokument) sme vytvorili mi, tak vypočítame jeho hash (viď sekcia~\ref{subsec:hash}) a zašifrujeme ho naším privátnym kľúčom. Zašifrovaný hash priložíme k dokumentu. Príjemca dokumentu si následne pomocou verejného kľúča dešifruje hash priložený k správe a porovná si ho s tým ktorý vypočítal sám z danej správy. Ak sú hashe rovnaké tak nikto správu nezmenil a dokument je jednoznačne vytvorený vlastníkom tajného kľúča. Najznámejšie algoritmy na digitálny podpis sú RSA, DSA, ECDSA.~\cite{cryptoHandbook}
 
+\subsection{Prahový digitálny podpis}\label{subsec:threshold-sig}
+Prahový digitálny podpis (anglicky \textit{threshold signatures}) je špeciálna schéma digitálneho podpisu. V tejto schéme je $n$ účastníkov a každý vlastní časť privátneho kľúča. Každý účastník môže použiť svoju časť tajného kľúča na čiastočné podpísanie správy $M$. Kompletný podpis môže byť zostrojený ak aspoň $t$ účastníkov poskytlo svoju časť podpisu. Potom hovoríme o  $t$-z-$n$ prahovom podpise. Takýto koncept sa dá využiť pri kryptografickom hlasovaní.~\cite{blsSignature}
+
 
 \section{Peer-to-peer sieť}\label{sec:p2p}
 
@@ -231,18 +234,66 @@ Existuje veľké množstvo blockchain protokolov, ktoré majú rôzne využitie 
 
 \chapter{Útoky na konsenzus}
 
-\section{Ovládnutie konsenzu útočníkmi}
+\section{Všeobecné utoky}
+
+\subsection{Ovládnutie konsenzu útočníkmi}
 Tieto útoky narušia decentralizované siete tým, že útočníci dokážu utvoriť konsenzus. V takom prípade sa stáva sieť centralizovaná, kde centrálnou autoritou sú práve útočníci. Príkladom takéhoto útoku pre proof-of-work a proof-of-stake konsenzus je ovládnutie 51\,\% siete. V prípade protokolov Byzantskej chyby dokáže $\frac{1}{3}$ uzlov spôsobiť, že bude protokol narušený alebo dokonca zastavený.~\cite{homoliakBlockchain}
 
-\section{Porušenie synchronného doručovania}
+\subsection{Porušenie synchronného doručovania}
 
-Ak útočník dokáže narušiť synchrónne doručovanie správ v protokole, ktorý synchronizáciu predpokladá tak takýto protokol prestane fungovať. Tento útok už nie je možné urobiť na protokole, ktorý umožňuje asynchronnú komunikáciu. ~\cite{homoliakBlockchain}
+Ak útočník dokáže narušiť synchrónne doručovanie správ v protokole, ktorý synchronizáciu predpokladá tak takýto protokol prestane fungovať. Tento útok už nie je možné urobiť na protokole, ktorý umožňuje asynchronnú komunikáciu. Tento útok je možné vykonať napríklad pre protokoly Byzantskej chyby.~\cite{homoliakBlockchain}
 
-\section{title}
+\subsection{Útok na časovú synchronizáciu}
+Okrem času celého systému majú jednotlivé uzly v sieti vlastný čas. Uzly ho vypočítavajú ako medián všetkých časov získaných od ostatných. Ak je uzol miner tak typicky vloží práve tento čas do hlavičky bloku, ktorý vytvoril. Ostatné uzly v sieti budú pri distribúcii bloku overovať, že čas je dostatočne čerstvý aby bol akceptovaný. Ak útočník disponuje veľkým množstvom uzlov v sieti, tak môže narušiť synchronizáciu času, ktorý bloky získavajú mediánom. Tento útok následne spomaľuje sieť pretože bloky distribuujú bloky s časovou značkou, ktorá už nebude akceptovaná.
+
+\subsection{Zdvojnásobenie výdavkov}
+
+Zdvojnásobenie výdavkov (anglicky \textit{double spending}) je útok, ktorý vzniká vytvorením dvoch alebo viac konfliktných blokov. Tieto bloky vytvárajú tzv. vetvy (anglicky \textit{forks}). S tohoto dôvodu môžu byť niektoré krypto mince dočasne minuté v oboch konfliktných blokoch. Neskôr je síce len jeden z nich validný pretože druhá vetva bude zahodená. Avšak tento útok spomaľuje konzistentnosť blockchainu.
+
+\subsection{Útok na podskupiny uzlov}
+
+Niektoré konsenzus protokoly rozdeľujú celú sieť na podskupiny uzlov (anglicky \textit{shards}). Sharding zvyšuje škálovateľnosť a priepustnosť siete pretože uzly validujú transakcie len v rámci svojej podskupiny. Na druhej strane, tento prístup môže viesť k zníženie bezpečnosti. Množstvo spolupracujúcich uzlov v jednej takejto podskupine je oveľa menší než v celej sieti. Pre útočníka môže byť preto jednoduchšie ovládnuť takúto podskupinu ako celú sieť.
+
+\section{Útoky na proof-of-stake}
+
+\subsection{Vetvenie bez rizika straty zdrojov}
+Generovanie blokov v proof-of-stake nestojí žiadnu energiu v podobe výpočtového výkonu. Uzly preto môžu generovať viacero konfliktných uzlov súčasne a tým zvyšovať pravdepodobnosť, že bude práve ich uzol pridaný do reťazca. Takéto správanie nepredstavuje pre daný uzol žiaden risk v podobe straty zdrojov. Problémom tohoto správania je, že vzniká väčšie množstvo vetiev reťazca. Ako dôsledok sa potom zvyšuje čas do konzistentnosti blockchainu.
+
+\subsection{Ovplyvnenie volieb}
+Útočník ovplyvňuje voľby v jeho prospech. Takto zvyšuje pravdepodobnosť, že bude zvolený práve jeho blok. 
+
+\subsection{Odmietnutie služby lídrovi/výboru}
+
+Tomuto vobec nerozumiem TODO - najst vhodno literaturu kde sa to vysvetluje
+
+\subsection{Neskoršia korupcia}
+Útočník sa snaží získať privátne kľúče uzlov, ktoré mali v minulosti vplyv na reťazec. Útočník ich môže ukradnúť ale taktiež kúpiť. Tieto uzly môžu byť ochotné predať svoje privátne kľúče pretože tým nič neriskujú. Svoje krypto tokeny môžu kedykoľvek vymeniť za reálne peniaze.
+
+Ak útočník získa kľúče s dostatočným podielom zdrojov, tak môže pozmeniť históriu reťazca. 
 
 \chapter{Teoretická analýza proof-of-stake}
 
 \section{Harmony}
+
+\subsection{Konsenzus}
+
+Konsenzus v Harmony protokole je založený na algoritme PBFT (\textit{Practical Byzantine Fault Tolerance})~\cite{pbftCastro}. Pri PBFT voľbách je jeden uzol vodca a ostatné validátory. PBFT voľby prebiehajú v dvoch fázach: príprava a potvrdenie. Vo fáze prípravy rozošle návrh všetkým validátorom pomocou broadcastu. Následne každý validátor pošle broadcastom svôj hlas. Takto môže každý uzol v sieti spočítať počet hlasov. Fáza prípravy končí keď uzol videl viac ako $\frac{2}{3}$ hlasov. Následuje fáza potvrdenia, ktorá zahŕňa podobný proces hlasovania pomocou broadcastu. Celková časová zložitosť PBFT je $O(n^2)$ pre $n$ uzlov. Kvadratická škálovateľnosť tohoto algoritmu pre siete s tisíckami uzlov je neakceptovateľná.
+
+Harmony používa úpravu PBFT s lineárnou škálovateľnosťou, ktorú nazýva FBFT (\textit{Fast Byzantine Fault Tolerance}). FBFT namiesto zasielania hlasov pomocou broadcastu používa prahový digitálny podpis (pozri sekciu~\ref{subsec:threshold-sig}). FBFT konsenzus prebieha následovne:
+\begin{enumerate}
+	\item Vodca vytvorí blok a rozošle jeho hlavičku validátorom pomocou broadcastu. Súčasne rozošle aj dátový obsah bloku.
+	\item Validátorí overia hlavičku bloku, podpíšu ju svojím digitálnym podpisu a pošlú späť vodcovi. Obsah bloku je zatiaľ ignorovaný.
+	\item Keď vodca prijme aspoň $\frac{2}{3}$ podpisov tak ich agreguje do jediného prahového digitálneho podpisu. Tento podpis rozošle pomocou broadcastu spolu s bitmapou indikujúcou validátorov, ktorý podpísali.
+	\item Každý validátor overí, že prahový podpis obsahuje požadované $\frac{2}{3}$ hlasov. Až v tejto chvíli validátor overí transakcie v dátovom obsahu bloku, ktorý bol zasielaný už v kroku 1. Ak všetko súhlasí, tak podpíše správu s kroku 3 a pošle ju späť vodcovi.
+	\item Vodca čaká na $\frac{2}{3}$ podpisov validátorov s predošlého kroku (môžu sa líšiť od podpisov z kroku 3). Opäť ich agreguje do prahového podpisu a spolu s bitmapou účastníkov rozošle pomocou broadcastu nový blok na potvrdenie všetkým validátorom. 
+\end{enumerate}
+Výhodou FBFT je, že každý validátor prijíma namiesto $O(n)$ podpisov jediný prahový podpis. Táto vlastnosť redukuje časovú zložitosť z $O(n^2)$ na $O(n)$. Je dôležité podotknúť, že Harmony je proof-of-stake konsenzus. Preto v celej tejto schéme neplatí, že jeden validátor sa rovná jednému hlasu. Hlas každého účastníka má váhu priamo úmernú jeho podielu na zdrojoch reťazca. Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu hlasov.~\cite{harmonyWp}
+
+\subsection{Sharding}
+
+\subsection{Incentive Model}
+
+\subsection{Teoretická analýza hrozieb}
 
 \section{Solana}
 

@@ -8,35 +8,48 @@
 \contentsline {subsection}{\numberline {2.2.1}Hashovacia funkcia}{6}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Hash ukazovateľ}{6}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Digitálny podpis}{7}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Prahový digitálny podpis}{8}{subsection.2.2.4}%
 \contentsline {section}{\numberline {2.3}Peer-to-peer sieť}{8}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Referenčný model}{8}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Využitie v blockchaine}{8}{subsection.2.3.2}%
-\contentsline {section}{\numberline {2.4}Datová štruktúra blockchain}{9}{section.2.4}%
+\contentsline {subsection}{\numberline {2.3.2}Využitie v blockchaine}{9}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Datová štruktúra blockchain}{10}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}Blok}{10}{subsection.2.4.1}%
 \contentsline {subsection}{\numberline {2.4.2}Transakcia}{10}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Binárny hashovací strom}{10}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.3}Binárny hashovací strom}{11}{subsection.2.4.3}%
 \contentsline {section}{\numberline {2.5}Ťažba blokov}{11}{section.2.5}%
 \contentsline {section}{\numberline {2.6}Konsenzus}{12}{section.2.6}%
-\contentsline {subsection}{\numberline {2.6.1}Proof-of-Work}{12}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.1}Proof-of-Work}{13}{subsection.2.6.1}%
 \contentsline {subsection}{\numberline {2.6.2}Proof-of-Stake}{13}{subsection.2.6.2}%
 \contentsline {chapter}{\numberline {3}Viacvrstvová abstrakcia}{14}{chapter.3}%
 \contentsline {chapter}{\numberline {4}Útoky na konsenzus}{15}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Ovládnutie konsenzu útočníkmi}{15}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Porušenie synchronného doručovania}{15}{section.4.2}%
-\contentsline {section}{\numberline {4.3}title}{15}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Teoretická analýza proof-of-stake}{16}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Harmony}{16}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Solana}{16}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Prehľad existujúcich simulátorov}{17}{chapter.6}%
-\contentsline {section}{\numberline {6.1}SimBlock}{17}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Bitcoin Simulator}{18}{section.6.2}%
-\contentsline {section}{\numberline {6.3}BlockSim}{18}{section.6.3}%
-\contentsline {section}{\numberline {6.4}VIBES}{19}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Shadow}{19}{section.6.5}%
-\contentsline {section}{\numberline {6.6}FoBSim}{20}{section.6.6}%
-\contentsline {section}{\numberline {6.7}Zhodnotenie}{20}{section.6.7}%
-\contentsline {subsection}{\numberline {6.7.1}Porovnanie najvhodnejších nástrojov}{20}{subsection.6.7.1}%
-\contentsline {subsection}{\numberline {6.7.2}Výsledná voľba}{20}{subsection.6.7.2}%
-\contentsline {chapter}{Literatúra}{22}{chapter*.2}%
+\contentsline {section}{\numberline {4.1}Všeobecné utoky}{15}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Ovládnutie konsenzu útočníkmi}{15}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Porušenie synchronného doručovania}{15}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Útok na časovú synchronizáciu}{15}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Zdvojnásobenie výdavkov}{15}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Útok na podskupiny uzlov}{16}{subsection.4.1.5}%
+\contentsline {section}{\numberline {4.2}Útoky na proof-of-stake}{16}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Vetvenie bez rizika straty zdrojov}{16}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Ovplyvnenie volieb}{16}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Odmietnutie služby lídrovi/výboru}{16}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Neskoršia korupcia}{16}{subsection.4.2.4}%
+\contentsline {chapter}{\numberline {5}Teoretická analýza proof-of-stake}{17}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Harmony}{17}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Konsenzus}{17}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Sharding}{18}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Incentive Model}{18}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Teoretická analýza hrozieb}{18}{subsection.5.1.4}%
+\contentsline {section}{\numberline {5.2}Solana}{18}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Prehľad existujúcich simulátorov}{19}{chapter.6}%
+\contentsline {section}{\numberline {6.1}SimBlock}{19}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Bitcoin Simulator}{20}{section.6.2}%
+\contentsline {section}{\numberline {6.3}BlockSim}{20}{section.6.3}%
+\contentsline {section}{\numberline {6.4}VIBES}{21}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Shadow}{21}{section.6.5}%
+\contentsline {section}{\numberline {6.6}FoBSim}{22}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Zhodnotenie}{22}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}Porovnanie najvhodnejších nástrojov}{22}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Výsledná voľba}{22}{subsection.6.7.2}%
+\contentsline {chapter}{Literatúra}{24}{chapter*.2}%
 \ttl@starttoc {chapters@1}
 \contentsfinish 
