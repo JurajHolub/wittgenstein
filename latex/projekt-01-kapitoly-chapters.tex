@@ -240,7 +240,13 @@ Ak útočník dokáže narušiť synchrónne doručovanie správ v protokole, kt
 
 \section{title}
 
-\chapter{Porovanie simulačných nástrojov}
+\chapter{Teoretická analýza proof-of-stake}
+
+\section{Harmony}
+
+\section{Solana}
+
+\chapter{Prehľad existujúcich simulátorov}
 
 Pre simuláciu zvolených proof-of-stake protokolov nebude vytvorený úplne nový simulátor. Simulácia celej technológie blockchainu s dostatočne presným model je rozsiahla úloha nad rámec tejto práce. Navyše už boli vytvorené simulačné nástroje, ktoré simulujú rôzne bockchainové protokoly. K týmto simulátorom existujú práce ktoré experimentálne vyhodnotili ich presnosť (viď\cite{simulatorCompar, fanPerfEval}). Preto bude použitý jeden s týchto nástrojov. Zvolený nástroj bude následne upravený a rozšírený tak aby bolo možné simulovať zvolené proof-of-stake protokoly. 
 
@@ -291,29 +297,38 @@ Nevýhodou tohoto nástroja je, že používa konštantné oneskorenie (anglicky
 
 \section{Shadow}
 
-Simulator siete TOR, ale niekto urobil plugin na bitcoin.
+Shadow~\footnote{\url{https://shadow.github.io/}} je paralelný diskrétny simulátor, ktorý umožňuje beh reálnych aplikácií ako doplnkov. Tento nástroj teda simuluje vrstvu sieťovej komunikácie a na samotných uzloch siete spúšťa reálnu aplikáciu. Samotnú aplikáciu je pritom nutné modifikovať len minimálne. Takýmto spôsobom je pomocou tohoto nástroja simulovaná napríklad sieť Tor.~\cite{shadowTor}
 
-\url{https://shadow.github.io/}
+Nad týmto simulátorom bol vytvorený doplnok, ktorý umožňuje priamo spustiť implementáciu referenčného klienta Bitcoinu. Vďaka rôznym optimalizáciám umožňuje tento doplnok spustiť tisíce takýchto Bitcoin uzlov na jedinom stroji.
+
+Nespornou výhodou tohoto nástroja je presná simulácia, keďže implementácia nevytvára žiadnu abstrakciu Bitcoinu, ale spúšťa jeho natívnu implementáciu. Tento nástroj je vhodný na štúdium jemných rozdielov softvéru distribuovaného systému.
+
+Nevýhodou je nízka flexibilita tohoto nástroja. Spomínaný doplnok je použiteľný jedine pre simuláciu protokolu Bitcoin. Na simuláciu ľubovoľného iného protokolu by bolo potrebné vytvoriť nový doplnok.~\cite{shadowBitcoin}
 
 \section{FoBSim}
 
-Simulacia blockchainu v pythone, tvrdia že sa da simulovat aj PoS. Zrejme bude problem s pravami.
+FoBSim je open source~\footnote{GNU General Public License v3.0} simulátor, ktorého model pokrýva dve oblasti:
+\begin{itemize}
+	\item Fog Computing: Je fyzický lebo virtuálny zdroj vložený medzi koncového užívateľa a tradičné dátové centrum (anglicky \textit{cloud}). Toto rozšírenie cloudu má zvýšiť efektivitu a bezpečnosť. Táto služba využíva tradične centrálnu autoritu.
+	\item Blockchain: Technológia blockchain integrovaná s fog computing by mala viesť k decentralizácii tejto služby.
+\end{itemize}
+Rozoberať prečo je snaha integrovať tieto dve služby do jednej nie je predmetom tejto práca. Avšak tento simulačný nástroj je vyvíjaný práve za účelom experimentovania v tejto oblasti. Pre našu prácu je zaujímavá len časť, ktorá simuluje blockchain.
 
-\url{https://github.com/sed-szeged/FobSim}
+Simulátor poskytuje model blockchainu, ktorý obsahuje nasledujúcu funkcionalitu: sieťová vrstva, konsenzus algoritmy, odmeňovanie užívateľov za vytváranie nových blokov (anglicky \textit{incentive mechanism}), paralelná ťažba blokov, distribúcia správ v sieti.~\cite{fobsimWp}
+
+Autori deklarujú, že simulátor implementuje tri konsenzus protokoly: proof-of-work, proof-of-stake a proof-of-authority. Avšak nikde nedefinujú o aké konkrétne protokoly ide. Presnosť simulácie je nejasná keďže ide o nový projekt a neexistuje zatiaľ žiadna práca, ktorá by sa zaoberala jeho vyhodnocovaním. Samotná implementácia predstavuje asi 3\,000 riadkov kódu v pythone~\footnote{\url{https://github.com/sed-szeged/FobSim}} čo je dramaticky menej voči iným nástrojom. 
 
 \section{Zhodnotenie}
 
 Táto sekcia zhodnocuje simulačné nástroje popísané v rámci tejto kapitoly. Z týchto nástrojov sú porovnané vlastnosti troch najvhodnejší. Na základe týchto vlastností je na záver zvolený simulátor, ktorý bude v rámci tejto práce rozšírený o simuláciu požadovaných proof-of-stake protokolov.
 
 \subsection{Porovnanie najvhodnejších nástrojov}
-Pre potreby tejto práce definujeme niekoľko požiadaviek na simulačný nastroj ktorý použijeme. V prvom rade požadujeme dostupnosť zdrojového kódu s licenciou open source. Ďalej požadujeme aby simulátor vykazoval relatívne dostatočnú presnosť v porovnaní s reálnou blockchainovou sieťou. Dostatočnou presnosťou z hľadiska našej práce sa myslí, že simulátor vierohodne napodobuje sieťovú a konsenzuálnu vrstvu. Zaoberáme sa analýzou konsenzus protokolov a teda dátová vrstva už nie je pre simuláciu kľúčová. 
 
-Tieto požiadavky spĺňajú v najväčšej miere tri simulačné nástroje: SimBlock, Bitcoin Simulator a BlockSim. Tabuľka~\ref{tab:sim-layers} zhrňuje vlastnosti týchto troch simulátorov na sieťovej, konsenzus a dátovej vrstve. Na základe tohoto zhodnotenia môžeme povedať, že tieto tri nástroje poskytuje podobne rozsiahle modely.
-
-\begin{table}[]
+\begin{table}[tb]
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{llccc}
-			&  & \textbf{SimBlock} & \textbf{\begin{tabular}[c]{@{}c@{}}Bitcoin\\ Simulator\end{tabular}} & \textbf{BlockSim} \\ \cline{2-5} 
+			&  & \multicolumn{1}{l}{} & \textbf{Protokol} & \multicolumn{1}{l}{} \\ \cline{3-5} 
+			& \textbf{Popis vlastnosti} & \textbf{SimBlock} & \textbf{\begin{tabular}[c]{@{}c@{}}Bitcoin\\ Simulator\end{tabular}} & \textbf{BlockSim} \\ \cline{2-5} 
 			\textbf{\begin{tabular}[c]{@{}l@{}}Sieťová\\ vrstva\end{tabular}} & Velkosť bloku & 1 & 1 & 1 \\
 			\textbf{} & Veľkosť transakcie & 0 & 0 & 1 \\
 			\textbf{} & Počet uzlov & 1 & 1 & 1 \\
@@ -321,31 +336,38 @@ Tieto požiadavky spĺňajú v najväčšej miere tri simulačné nástroje: Sim
 			\textbf{} & Bandwith & 1 & 1 & 1 \\
 			\textbf{} & Latency & 1 & 1 & 1 \\ \cline{2-5} 
 			\textbf{\begin{tabular}[c]{@{}l@{}}Konsenzus\\ vrstva\end{tabular}} & Proof-of-Work & 1 & 1 & 1 \\
-			\textbf{} & Iný protokol & 1 & 0 & 0 \\
+			\textbf{} & Proof-of-Stake & 0 & 0 & 1 \\
 			\textbf{} & Množstvo vygenerovaných blokov & 1 & 1 & 1 \\ \cline{2-5} 
 			\textbf{\begin{tabular}[c]{@{}l@{}}Dátavá\\ vrstva\end{tabular}} & Generovanie transakcií & 0 & 0 & 1 \\
 			& Vzťah transakcie k uzlu & 0 & 0 & 0
 		\end{tabular}%
 	}
-	\caption{Podporované vlastnosti zvolených simulátor na sieťovej, konsenzus a dátovej vrstve.~\cite{fanPerfEval}}
+	\caption{Podporované vlastnosti zvolených simulátor na sieťovej, konsenzus a dátovej vrstve.}
 	\label{tab:sim-layers}
 \end{table}
+
+Pre potreby tejto práce definujeme niekoľko požiadaviek na simulačný nastroj ktorý použijeme. V prvom rade požadujeme dostupnosť zdrojového kódu s licenciou open source. Ďalej požadujeme aby simulátor vykazoval relatívne dostatočnú presnosť v porovnaní s reálnou blockchainovou sieťou. Dostatočnou presnosťou z hľadiska našej práce sa myslí, že simulátor vierohodne napodobuje sieťovú a konsenzuálnu vrstvu. Zaoberáme sa analýzou konsenzus protokolov a teda dátová vrstva už nie je pre simuláciu kľúčová. 
+
+Tieto požiadavky spĺňajú v najväčšej miere tri simulačné nástroje: SimBlock, Bitcoin Simulator a BlockSim. Tabuľka~\ref{tab:sim-layers} zhrňuje vlastnosti týchto troch simulátorov na sieťovej, konsenzus a dátovej vrstve. Na základe tohoto zhodnotenia môžeme povedať, že tieto tri nástroje poskytuje podobne rozsiahle modely.
 
 \subsection{Výsledná voľba}
 
 Predošlá klasifikácia určila simulátori, ktoré majú podporu požadovaných vlastností pre potrebi tejto práce. Avšak táto klasifikácia bola navysokej úrovni a zjednodušovala komplexnosť jednotlivých vrstiev. Napríklad sieťová vrstva nástroja SimBlock je značne komplexnejšia než simulácie sieťovej vrstvi nástroja BlockSim. Tabuľka~\ref{tab:cmp-sim-props} zhrnuje a porovnáva vlastnosti týchto troch simulátorov z hľadiska náročnosti rozšíriteľnosti pre potreby tejto práce. Ako môžeme vydieť, nástroj BlockSim má problém simulovať rozsiahle siete čo je veľkým nedostatkom. Bitcoin Simulator je zase projekt už 5 rokov nevyvýjaný. V tejto práci preto bude použitý nástroj SimBlock, ktorý bude rozšírený o požadovanú funkcionalitu. 
 
-\begin{table}[tb]
+\begin{table}[H]
 	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{l|c|c|c}
-			& \textbf{SimBlock} & \textbf{Bitcoin Simulator} & \textbf{BlockSim} \\ \hline
+		\begin{tabular}{lccc}
+			& \textbf{SimBlock} & \textbf{Bitcoin Simulator} & \textbf{BlockSim} \\
 			\textbf{Veľkosť simulovaných sietí} & rozsiahle& rozsiahle & malé \\
 			\textbf{Programovací jazyk} & Java & C++ & Python \\
 			\textbf{Dostupnosť} & open source & open source & open source \\
+			\textbf{Vytvorenie projektu} & Jún 2019 & Apríl  2016 & Apríl 2019 \\
 			\textbf{Posledná zmena v repozitári} & Február 2021 & Október  2016 & Máj 2021 \\
-			\textbf{Podporované protokoly} & BTC\footnote{\url{https://bitcoin.org/en/}}, LTC\footnote{\url{https://litecoin.com/en/}}, DOGE & BTC, LTC, DOGE & BTC, ETH\footnote{\url{https://ethereum.org/en/}} \\
 			\textbf{Podpora Proof-of-Stake} & áno (s ukážkou) & nie & áno (bez ukážky) \\
-			\textbf{Simulácia útočiacich uzlov} & nie & áno & nie je jasné
+			\textbf{Simulácia útočiacich uzlov} & nie & áno & nie je jasné \\
+			\textbf{Podporované protokoly} & Bitcoin & Bitcoin & Bitcoin \\
+			& Litecoin & Litecoin & Ethereum \\
+			& Dogecoin & Dogecoin & \\
 		\end{tabular}%
 	}
 	\caption{Porovnanie vlastností troch najrozsiahlejších simulátorov.}

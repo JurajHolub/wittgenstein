@@ -24,16 +24,19 @@
 \contentsline {section}{\numberline {4.1}Ovládnutie konsenzu útočníkmi}{15}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Porušenie synchronného doručovania}{15}{section.4.2}%
 \contentsline {section}{\numberline {4.3}title}{15}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Porovanie simulačných nástrojov}{16}{chapter.5}%
-\contentsline {section}{\numberline {5.1}SimBlock}{16}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Bitcoin Simulator}{17}{section.5.2}%
-\contentsline {section}{\numberline {5.3}BlockSim}{17}{section.5.3}%
-\contentsline {section}{\numberline {5.4}VIBES}{18}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Shadow}{18}{section.5.5}%
-\contentsline {section}{\numberline {5.6}FoBSim}{18}{section.5.6}%
-\contentsline {section}{\numberline {5.7}Zhodnotenie}{18}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}Porovnanie najvhodnejších nástrojov}{19}{subsection.5.7.1}%
-\contentsline {subsection}{\numberline {5.7.2}Výsledná voľba}{19}{subsection.5.7.2}%
-\contentsline {chapter}{Literatúra}{21}{chapter*.2}%
+\contentsline {chapter}{\numberline {5}Teoretická analýza proof-of-stake}{16}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Harmony}{16}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Solana}{16}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Prehľad existujúcich simulátorov}{17}{chapter.6}%
+\contentsline {section}{\numberline {6.1}SimBlock}{17}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Bitcoin Simulator}{18}{section.6.2}%
+\contentsline {section}{\numberline {6.3}BlockSim}{18}{section.6.3}%
+\contentsline {section}{\numberline {6.4}VIBES}{19}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Shadow}{19}{section.6.5}%
+\contentsline {section}{\numberline {6.6}FoBSim}{20}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Zhodnotenie}{20}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}Porovnanie najvhodnejších nástrojov}{20}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Výsledná voľba}{20}{subsection.6.7.2}%
+\contentsline {chapter}{Literatúra}{22}{chapter*.2}%
 \ttl@starttoc {chapters@1}
 \contentsfinish 
