@@ -277,65 +277,71 @@ Ak útočník získa kľúče s dostatočným podielom zdrojov, tak môže pozme
 
 \chapter{Harmony}
 
-\section{Konsenzus}
+Harmony je blockchain používajúci proof-of-stake konsenzus a sharding. Cieľom tohoto protokolu je poskytovať aplikácie, ktoré v minulosti nebolo možné uskutočňovať na technológii blockchain (decentralizované zmenárne, platobný systém rozsahovo porovnateľný s Visa).
 
-Konsenzus v Harmony protokole je založený na algoritme PBFT (\textit{Practical Byzantine Fault Tolerance})~\cite{pbftCastro}. Pri PBFT voľbách je jeden uzol vodca a ostatné validátory. PBFT voľby prebiehajú v dvoch fázach: príprava a potvrdenie. Vo fáze prípravy rozošle návrh všetkým validátorom pomocou broadcastu. Následne každý validátor pošle broadcastom svôj hlas. Takto môže každý uzol v sieti spočítať počet hlasov. Fáza prípravy končí keď uzol videl viac ako $\frac{2}{3}$ hlasov. Následuje fáza potvrdenia, ktorá zahŕňa podobný proces hlasovania pomocou broadcastu. Celková časová zložitosť PBFT je $O(n^2)$ pre $n$ uzlov.
+Všetky informácie o protokole Harmony popisované v tejto kapitole vychádzajú z oficiálnej dokumentácie publikovanej autormi tohoto protokolu~\cite{harmonyWp}. Sekcia~\ref{sec:harmony-cons} popisuje konsenzus protokol. Sekcia~\ref{sec:harmony-shards} vysvetľuje sharding používaný v tomto protokole.  Na záver je v sekcii~\ref{sec:harmony-analyze} tento protokol analyzovaný z hľadiska bezpečnosti a výkonnosti.
+
+\section{Konsenzus}\label{sec:harmony-cons}
+
+Konsenzus v Harmony protokole je založený na algoritme PBFT (\textit{Practical Byzantine Fault Tolerance})~\cite{pbftCastro}. Pri PBFT voľbách je jeden uzol vodca a ostatné validátory. PBFT voľby prebiehajú v dvoch fázach: príprava a potvrdenie. Vo fáze prípravy rozošle vodca návrh všetkým validátorom pomocou broadcastu. Následne každý validátor pošle broadcastom svôj hlas. Takto môže každý uzol v sieti spočítať počet hlasov. Fáza prípravy končí keď uzol videl viac ako $\frac{2}{3}$ hlasov. Následuje fáza potvrdenia, ktorá zahŕňa podobný proces hlasovania pomocou broadcastu. Celková časová zložitosť PBFT je $O(n^2)$ pre $n$ uzlov.
 
 \subsection{Protokol}\label{subsec:fbft}
 Harmony používa úpravu PBFT s lineárnou škálovateľnosťou, ktorú nazýva FBFT (\textit{Fast Byzantine Fault Tolerance}). FBFT namiesto zasielania hlasov pomocou broadcastu používa prahový digitálny podpis (pozri sekciu~\ref{subsec:threshold-sig}). FBFT konsenzus prebieha následovne:
 \begin{enumerate}
 	\item Vodca vytvorí blok a rozošle jeho hlavičku validátorom pomocou broadcastu. Súčasne rozošle aj dátový obsah bloku.
-	\item Validátorí overia hlavičku bloku, podpíšu ju svojím digitálnym podpisu a pošlú späť vodcovi. Obsah bloku je zatiaľ ignorovaný.
-	\item Keď vodca prijme aspoň $\frac{2}{3}$ podpisov tak ich agreguje do jediného prahového digitálneho podpisu. Tento podpis rozošle pomocou broadcastu spolu s bitmapou indikujúcou validátorov, ktorý podpísali.
+	\item Validátori overia hlavičku bloku, podpíšu ju svojím digitálnym podpisu a pošlú späť vodcovi. Obsah bloku je zatiaľ ignorovaný.
+	\item Keď vodca prijme aspoň $\frac{2}{3}$ podpisov tak ich agreguje do jediného prahového digitálneho podpisu. Tento podpis rozošle pomocou broadcastu spolu s bitmapou indikujúcou validátorov ktorý podpísali.
 	\item Každý validátor overí, že prahový podpis obsahuje požadované $\frac{2}{3}$ hlasov. Až v tejto chvíli validátor overí transakcie v dátovom obsahu bloku, ktorý bol zasielaný už v kroku 1. Ak všetko súhlasí, tak podpíše správu s kroku 3 a pošle ju späť vodcovi.
 	\item Vodca čaká na $\frac{2}{3}$ podpisov validátorov s predošlého kroku (môžu sa líšiť od podpisov z kroku 3). Opäť ich agreguje do prahového podpisu a spolu s bitmapou účastníkov rozošle pomocou broadcastu nový blok na potvrdenie všetkým validátorom. 
 \end{enumerate}
-Je dôležité podotknúť, že Harmony je proof-of-stake konsenzus. Preto v celej tejto schéme neplatí, že jeden validátor sa rovná jednému hlasu. Jeden účastník môže mať viac hlasovací lístkov (viď sekcia~\ref{subsec:rand-dist}). Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu hlasovacích lístkov.~\cite{harmonyWp}
+Je dôležité podotknúť, že Harmony je proof-of-stake konsenzus. Preto v celej tejto schéme neplatí, že jeden validátor sa rovná jednému hlasu. Jeden účastník môže mať viac hlasovacích lístkov (viď sekcia~\ref{subsec:rand-dist}). Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu hlasovacích lístkov.
 
-\section{Sharding}
+\section{Sharding}\label{sec:harmony-shards}
 
 Harmony protokol používa \textit{sharding} aby dosiahol lepšiu škálovateľnosť a priepustnosť transakcií. Niektoré zdroje~\footnote{\url{https://www.investing.com/news/cryptocurrency-news/harmony-one-slow-and-steady-wins-the-race-2609585}} deklarujú, že Harmony má priepustnosť priemerne 2\,000 TPS. Aktuálne používa 4 shardy a autori tvrdia, že pridaním každej ďalšej sa zvýši priepustnosť o 500 TPS. Táto sekcia vysvetľuje celý koncept shardingu v protokole Harmony.
 
 \subsection{Rozdelenie hlasovacím podielom}\label{subsec:rand-dist}
-Ak sa chce uzol stať účastníkom Harmony blockchainu, musí vložiť určité množstvo tokenov (koncept proof-of-stake). Tento podiel určuje koľko bude mať hlasovacích lístkov pri validovaní. Tieto hlasovacie lístky sú následne náhodne rozdelené medzi všetky shardy po dobu jednej epochy (viď sekcia ~\ref{subsec:epoch}).
+Ak sa chce uzol stať účastníkom Harmony blockchainu, musí vložiť určité množstvo tokenov (koncept proof-of-stake). Tento podiel určuje koľko bude mať hlasovacích lístkov pri validovaní. Tieto hlasovacie lístky sú následne náhodne rozdelené medzi všetky shardy (viď sekcia~\ref{subsec:rnd}) po dobu jednej epochy (viď sekcia~\ref{subsec:epoch}).
 
 \subsection{Epocha}\label{subsec:epoch}
 Epocha je časový interval počas, ktorého je štruktúra každého shardu nemenná. Epocha odpovedá času potrebnému na vygenerovanie 32\,768 blokov v beacon sharde, čo je približne 18,2 hodiny~\footnote{\url{https://docs.harmony.one/home/network/validators/definitions/epoch-transition}} (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}). Na začiatku epochy je vygenerované náhodné číslo (pozri sekciu~\ref{subsec:rnd}) na základe ktorého sa vytvorí rozdelenie do shardov. Účastníci, ktorý chcú validovať v nasledujúcej epoche musia v aktuálnej vložiť svoj podiel tokenov.
 
 \subsection{Distribuovaná generácia náhodnosti}\label{subsec:rnd}
-Harmony rozdeľuje blockchain do shard pomocou náhodnej voľby (anglicky \textit{randomness-based sharding}). Na vygenerovanie náhodného čísla sa používa algoritmus VRF (\textit{Verifiable Random Function~\cite{algorandGilad}}) a VDF (\textit{Verifiable Delay Function~\cite{vdfBoneh}}). Tento výpočet vykonáva beacon shard (viď sekcia~\ref{subsec:cross-com}):
+Harmony rozdeľuje hlasovacie lístky do shardov pomocou náhodnej voľby (anglicky \textit{randomness-based sharding}). Na vygenerovanie náhodného čísla sa používa algoritmus VRF (\textit{Verifiable Random Function~\cite{algorandGilad}}) a VDF (\textit{Verifiable Delay Function~\cite{vdfBoneh}}). Tento výpočet vykonáva beacon shard (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}):
 \begin{enumerate}
 	\item Vodca pošle hash posledného bloku všetkým validátorom.
 	\item Každý validátor vypočíta s prijatého hashu pomocou VRF náhodné číslo, ktoré pošle späť vodcovi.
 	\item Keď vodca príjme $\frac{1}{3}$ náhodných čísel, tak nad nimi urobí XOR. Výslednú hodnotu \textit{pRand} vloží do nového bloku pomocou FBFT konsenzu popísaného v sekcii~\ref{subsec:fbft}.
 	\item Keď je \textit{pRand} potvrdená v bloku, vypočíta vodca z tejto hodnoty finálne náhodne číslo \textit{rnd} pomocou VDF.
-	\item VDF garantuje, že výpočet \textit{rnd} bude trvať aspoň $k$ blokov. Keď vodca vypočíta \textit{rnd} tak ho pomocou FBFT vloží do nového bloku.
+	\item VDF garantuje, že výpočet \textit{rnd} zaberie toľko času aby sa stihlo vyprodukovať špecifické množstvo nových blokov. Keď vodca vypočíta \textit{rnd} tak ho pomocou FBFT vloží do nového bloku.
 \end{enumerate}
 
 \subsection{Komunikácie medzi shardami}\label{subsec:cross-com}
-Každý shard spravuje vlastný reťazec (anglicky \textit{shard chain}), ktorý spracováva len vlastné transakcie. Jeden shard, nazývame ho \textit{beacon shard}, má špecifickú úlohu. Jeho reťazec (\textit{beacon chain}) spravuje distribuovanú generáciu náhodnosti (viď~\ref{subsec:rnd}) a prijímanie tokenov na hlasovanie v ďalšej epoche (viď~\ref{subsec:epoch}).
+Každý shard spravuje vlastný reťazec (anglicky \textit{shard chain}), ktorý spracováva vlastné transakcie. Jeden shard má špeciálnu úlohu a nazývame ho \textit{beacon shard}. Tento shard generuje náhodné číslo a rozdeľuje na základe neho hlasovacie lístky do shardov (viď~\ref{subsec:rnd}). Beacon shard taktiež prijíma tokeny na hlasovanie v ďalšej epoche (viď~\ref{subsec:epoch}).
 
-Harmony umožňuje komunikáciu medzi shardami. Každá taká komunikácie predstavuje broadcast na úrovni celej siete. Pomocou tejto komunikácie si môžu užívatelia presúvať svoje zdroje medzi shardami. Vždy keď niektorý shard potvrdí nový blok, zašle jeho hlavičku na beacon chain. Ten ju validuje a uloží do svôjho nového bloku. Nový blok v beacon chaine je následne pomocou broadcastu zaslaný všetkým ostatným shardom, ktoré si ho uložia. Vďaka tomu vedia jednotlivé shardy validovať transakcie z iných shardov.
+Harmony umožňuje komunikáciu medzi shardami. Každá taká komunikácie predstavuje broadcast na úrovni celej siete. Pomocou tejto komunikácie si môžu užívatelia presúvať svoje zdroje medzi shardami. 
+
+Vždy keď niektorý shard potvrdí nový blok, zašle jeho hlavičku na beacon chain. Ten ju validuje a uloží do svôjho nového bloku. Nový blok v beacon chaine je následne pomocou broadcastu zaslaný všetkým ostatným shardom, ktoré si ho uložia. Vďaka tomu vedia jednotlivé shardy validovať transakcie z iných shardov.
 
 \section{Model motivácie}
 
 Za každý nový blok v reťazci sú validátori odmenený v podobe protokolom definovaného počtu tokenov. Každý validátor dostane podiel z celkovej odmeny priamo úmerný množstvu jeho hlasovacích lístkov.
 
-Na druhej strane, každé zlomyseľné chovanie je potrestané odobraním časti vlastnených tokenov. Napríklad, ak bude dokázané, že validátor podpísal neplatný blok, budú mu odobrané všetky zdroje v danej sharde.
+Na druhej strane, každé zlomyseľné chovanie je potrestané odobraním časti vlastnených tokenov. Napríklad, ak bude dokázané, že validátor podpísal neplatný blok, budú mu odobrané všetky zdroje v danom sharde.
 
-\section{Teoretická analýza}
-V tejto sekcii teoreticky zanalyzujeme protokol z Harmony z hľadiska bezpečnosti a výkonnosti.
+\section{Teoretická analýza}\label{sec:harmony-analyze}
+V tejto sekcii teoreticky zanalyzujeme protokol Harmony z hľadiska bezpečnosti a výkonnosti.
 
 \subsection{FBFT konsenzus}
-FBFT konsenzus je obdobou PBFT a teda platí, že aby sieť fungovala, musí v nej byť menej ako $\frac{1}{3}$ škodlivých uzlov. Namiesto hlasovania broadcastom sa používa prahový digitálny podpis čo je kryptograficky bezpečný spôsob hlasovania.
+FBFT konsenzus je obdobou PBFT a teda platí, že aby sieť fungovala, musí v nej byť menej ako $\frac{1}{3}$ škodlivých uzlov. Namiesto hlasovania broadcastom sa používa prahový digitálny podpis čo je kryptograficky bezpečný spôsob hlasovania. Tento konsenzus protokol teda neznižuje bezpečnosť a zároveň zvyšuje výkonnosť keďže znižuje časovú zložitosť z $O(n^2)$ na $O(n)$.
 
 \subsection{Sharding}
 Na rozdelenie do shardov sa používa lotéria, ktorá je postavená na kryptograficky bezpečnom algoritme VRF. Náhodne rozdelenie do shardov je všeobecne najbezpečnejší spôsob, ktorý efektívne bráni útoku na podskupinu uzlov (viď sekcia~\ref{subsec:shard-attack}). Navyše sa do shardov nerozdeľujú uzly ale samotné hlasovacie lístky. Vďaka zaručenej náhodnosti rozdelenia hlasovacích lístkov do shardov je možné určiť pravdepodobnosť ovládnutia shardu pomocou distribučnej funkcie kumulatívneho hypergeometrického rozdelenia $H(N,K,n,k)$~\cite{rice2006mathematical, harmonyWp}, kde:
 \begin{itemize}
 	\item $N$ je celkové množstvo hlasovacích lístkov,
-	\item $K = \frac{N}{4}$ je maximálne množstvo škodlivých hlasovacích lístkov
+	\item $K = \frac{N}{3}$ je maximálne množstvo škodlivých hlasovacích lístkov
 	\item $n = \frac{N}{n_{shard}}$ je množstvo lístkov v každom sharde, kde $n_{shard} = 4$ je počet shardov,
-	\item $k$ je množstvo škodlivých lístkov v jednom sharde.
+	\item $k = \frac{K}{n_{shard}}$ je množstvo škodlivých lístkov v jednom sharde.
 \end{itemize}
 
 \begin{figure}[bt]
@@ -345,12 +351,12 @@ Na rozdelenie do shardov sa používa lotéria, ktorá je postavená na kryptogr
 	\label{img:hypergeom-dist}
 \end{figure}
 
-Obrázok~\ref{img:hypergeom-dist} ukazuje závislosť pravdepodobnosti ovládnutia jedného shardu na celkovom podiele hlasovacích lístkov vlastnených útočníkom. Tento výpočet je založený na hypergeometrickom rozdelení a parametroch blockchainu Harmony~\cite{harmonyWp}. Môžeme vidieť, že útočník musí vlastniť približne $\frac{1}{3}$ z celkového množstva hlasovacích lístkov aby mal možnosť ovládnuť shard. S toho plynie, že rozdelenie hlasovacích lístkov do shardov si takmer zachovalo vlastnosť BFT (útočník potrebuje približne $\frac{1}{3}$ hlasov na úspešný útok).
+Obrázok~\ref{img:hypergeom-dist} ukazuje pravdepodobnosť ovládnutia jedného shardu v závislosti na celkovom podiele hlasovacích lístkov vlastnených útočníkom. Tento výpočet je založený na už spomínanom hypergeometrickom rozdelení a parametroch blockchainu Harmony~\cite{harmonyWp}. Môžeme vidieť, že útočník má zanedbateľnú pravdepodobnosť ovládnuť shard pokiaľ nevlastní približne $\frac{1}{3}$ z celkového množstva hlasovacích lístkov. S toho plynie, že shardingu v tomto protokole neumožňuje útočníkovi využiť útok na podskupinu uzlov (viď sekcia~\ref{subsec:shard-attack}).
 
 Harmony sharding používa algoritmus VDF na oneskorenie odhalenia náhodného čísla čím zabraňuje útoku na posledného objaviteľa (viď sekacia~\ref{subsec:lst-re-attack}).
 
 \subsection{Komunikácie medzi shardami}
-Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné shardy sú všetky úzko závislé na beacon sharde z dôvodu medzishardovej komunikácie. Každý nový blok v ľubovoľnom sharde musí byť zaslaný do beacon shardu. Ten musí jeho hlavičku pomocou konsenzu uložiť do svôjho nového bloku a tento blok broadcastom poskytnúť všetkým ostatným shardom. Táto závislosť na beacon sharde môže potenciálne predstavovať výkonnostné úzke hrdlo.
+Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné shardy sú všetky úzko závislé na beacon sharde z dôvodu medzishardovej komunikácie. Každý nový blok v ľubovoľnom sharde musí byť zaslaný do beacon shardu. Ten musí jeho hlavičku pomocou konsenzu uložiť do svôjho nového bloku a tento blok broadcastom poskytnúť všetkým ostatným shardom. Táto závislosť na beacon sharde môže potenciálne predstavovať výkonnostné úzke hrdlo. Aktuálne Harmony používa len 4 shardy a teda nie je overené ani jasné nakoľko bude tento protokol efektívny ak by pracoval s desiatkami až stovkami shardov.
 
 \chapter{Solana}
 
