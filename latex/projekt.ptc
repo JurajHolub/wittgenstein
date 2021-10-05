@@ -48,16 +48,20 @@
 \contentsline {subsection}{\numberline {5.4.2}Sharding}{19}{subsection.5.4.2}%
 \contentsline {subsection}{\numberline {5.4.3}Komunikácie medzi shardami}{20}{subsection.5.4.3}%
 \contentsline {chapter}{\numberline {6}Solana}{21}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Prehľad existujúcich simulátorov}{22}{chapter.7}%
-\contentsline {section}{\numberline {7.1}SimBlock}{22}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Bitcoin Simulator}{23}{section.7.2}%
-\contentsline {section}{\numberline {7.3}BlockSim}{23}{section.7.3}%
-\contentsline {section}{\numberline {7.4}VIBES}{24}{section.7.4}%
-\contentsline {section}{\numberline {7.5}Shadow}{24}{section.7.5}%
-\contentsline {section}{\numberline {7.6}FoBSim}{25}{section.7.6}%
-\contentsline {section}{\numberline {7.7}Zhodnotenie}{25}{section.7.7}%
-\contentsline {subsection}{\numberline {7.7.1}Porovnanie najvhodnejších nástrojov}{25}{subsection.7.7.1}%
-\contentsline {subsection}{\numberline {7.7.2}Výsledná voľba}{25}{subsection.7.7.2}%
-\contentsline {chapter}{Literatúra}{27}{chapter*.2}%
+\contentsline {section}{\numberline {6.1}Proof-of-history}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Konsenzus}{21}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Teoretická analýza}{22}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Proof-of-history}{22}{subsection.6.3.1}%
+\contentsline {chapter}{\numberline {7}Prehľad existujúcich simulátorov}{23}{chapter.7}%
+\contentsline {section}{\numberline {7.1}SimBlock}{23}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Bitcoin Simulator}{24}{section.7.2}%
+\contentsline {section}{\numberline {7.3}BlockSim}{24}{section.7.3}%
+\contentsline {section}{\numberline {7.4}VIBES}{25}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Shadow}{25}{section.7.5}%
+\contentsline {section}{\numberline {7.6}FoBSim}{26}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Zhodnotenie}{26}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}Porovnanie najvhodnejších nástrojov}{26}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}Výsledná voľba}{26}{subsection.7.7.2}%
+\contentsline {chapter}{Literatúra}{28}{chapter*.2}%
 \ttl@starttoc {chapters@1}
 \contentsfinish 

@@ -360,6 +360,38 @@ Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné 
 
 \chapter{Solana}
 
+\section{Proof-of-history}
+
+Proof-of-history je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie v distribuovanú sieti ako je blockchain. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}. 
+
+Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania proof-of-history. Uvažujme, že v sieti sú práve traja klienti (B, C a D), ktorý vytvorili svoje transakcie. Každý klient zoberie svoje dáta (transakciu), skonkatenuje ich s hashom poslednej jemu známej transakcie v sieti a vypočíta z nich hash. Tento hash ešte následne podpíše svojím privátnym kľúčom (pozri sekciu~\ref{subsec:sign}). Potom hashe \texttt{signHashB}, \texttt{signHashC} a \texttt{signHashD} sú usporiadané a prináležia k transakciám B, C a D. Transakcia D musela vzniknúť až po transakcii C pretože výpočet hashu \texttt{signHashD} potreboval už existujúci hash \texttt{signHashC}. Z rovnakého dôvodu musela vzniknúť transakcia C až po B. Ide o bežný kryptografický koncept dátovej štruktúry hash pointer (posri sekciu~\ref{subsec:hash-pointer}).
+
+Existuje teoretický útok pri ktorom útočník zmení poradie týchto troch transakcií. Predpokladajme, že útočník pozná všetky tri transakcie a má väčší výpočtový výkon než všetci ostatný klienti. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto útoku každý klient svoj hash podpíše svojim privátnymi kľúčom.
+
+\begin{figure}[bt]
+	\centering
+	\includegraphics[width=\textwidth]{obrazky-figures/solana-poh}
+	\caption{Nepopierateľné usporiadanie transakcií A, B a C v čase pomocou proof-of-history.}
+	\label{img:solana-poh}
+\end{figure}
+
+\section{Konsenzus}
+
+Proof-of-stake slúži na:
+\begin{itemize}
+	\item voľbu proof-of-history generátoru
+	\item hlasovanie o validnosti aktuálnej proof-of-history sekvencie
+	\item model motivácie - odemňovanie a tresty
+\end{itemize}
+
+
+
+\section{Teoretická analýza}
+
+\subsection{Proof-of-history}
+
+Why Proof-of-History is not (yet) the consensus of the future?~\footnote{\url{https://anycoindirect.eu/en/blog/what-is-proof-of-history}}
+
 \chapter{Prehľad existujúcich simulátorov}
 
 Pre simuláciu zvolených proof-of-stake protokolov nebude vytvorený úplne nový simulátor. Simulácia celej technológie blockchainu s dostatočne presným model je rozsiahla úloha nad rámec tejto práce. Navyše už boli vytvorené simulačné nástroje, ktoré simulujú rôzne bockchainové protokoly. K týmto simulátorom existujú práce ktoré experimentálne vyhodnotili ich presnosť (viď\cite{simulatorCompar, fanPerfEval}). Preto bude použitý jeden s týchto nástrojov. Zvolený nástroj bude následne upravený a rozšírený tak aby bolo možné simulovať zvolené proof-of-stake protokoly. 
