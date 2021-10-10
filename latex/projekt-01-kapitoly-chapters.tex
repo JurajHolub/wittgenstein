@@ -362,29 +362,67 @@ Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné 
 
 \section{Proof-of-history}
 
-Proof-of-history je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie v distribuovanú sieti ako je blockchain. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}. 
+Proof-of-history je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie a konsenzus hlasovania v čase pre decentralizovanú sieť ako je blockchain. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}.
 
-Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania proof-of-history. Uvažujme, že v sieti sú práve traja klienti (B, C a D), ktorý vytvorili svoje transakcie. Každý klient zoberie svoje dáta (transakciu), skonkatenuje ich s hashom poslednej jemu známej transakcie v sieti a vypočíta z nich hash. Tento hash ešte následne podpíše svojím privátnym kľúčom (pozri sekciu~\ref{subsec:sign}). Potom hashe \texttt{signHashB}, \texttt{signHashC} a \texttt{signHashD} sú usporiadané a prináležia k transakciám B, C a D. Transakcia D musela vzniknúť až po transakcii C pretože výpočet hashu \texttt{signHashD} potreboval už existujúci hash \texttt{signHashC}. Z rovnakého dôvodu musela vzniknúť transakcia C až po B. Ide o bežný kryptografický koncept dátovej štruktúry hash pointer (posri sekciu~\ref{subsec:hash-pointer}).
+Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania proof-of-history. V sieti vždy existuje jeden uzol, ktorý nazývame \textit{proof-of-history generátor}. Ten neustále (najrýchlejšie ako dokáže) pridáva nové záznamy do hash pointer zoznamu (pozri sekciu~\ref{subsec:hash-pointer}). Pridávanie nových hashov do zoznamu je sekvenčné a podmienené existenciou predchádzajúceho hashu. Tento princíp sa nazýva \textit{Verifiable Delay Function~\cite{vdfBoneh}}. Každý hash teda predstavuje časový bod a vzdialenosť dvoch hashov prestavuje časový interval.
 
-Existuje teoretický útok pri ktorom útočník zmení poradie týchto troch transakcií. Predpokladajme, že útočník pozná všetky tri transakcie a má väčší výpočtový výkon než všetci ostatný klienti. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto útoku každý klient svoj hash podpíše svojim privátnymi kľúčom.
+Generátor je aktuálny vodca v konsenzus protokole. Všetky transakcie a hlasy od rôznych klientov sú zasielané na generátor. Ten ich serializuje do proof-of-history reťazca. Vždy keď generátor prijme dáta od klienta (transakciu alebo hlas) pridá ich do zoznamu. Ak práve nemá dáta tak generuje prázdny záznam. Na obrázku môžeme vidieť v ktorých hashoch, alebo tiež časových momentoch, bola transakcia pridaná do reťazca.
+
+Generátor rozosiela proof-of-history sekvenciu do celej siete. Každý uzol potom môže jednoznačne určiť v akom čase boli vygenerované transakcie a hlasy konsenzu. Synchronizácia v blockchaine Solana je založená na tomto koncepte.
+
+Existuje teoretický útok pri ktorom útočník zmení poradie v reťazci. Predpokladajme, že útočník pozná všetky transakcie a hlasy a má väčší výpočtový výkon než aktuálny generátor. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto generátor reťazec vždy podpíše a až potom distribuuje (pozri sekciu~\ref{subsec:sign}).
+
+%Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania proof-of-history. Uvažujme, že v sieti sú práve traja klienti (B, C a D), ktorý vytvorili svoje transakcie. Každý klient zoberie svoje dáta (transakciu), skonkatenuje ich s hashom poslednej jemu známej transakcie v sieti a vypočíta z nich hash. Tento hash ešte následne podpíše svojím privátnym kľúčom (pozri sekciu~\ref{subsec:sign}). Potom hashe \texttt{signHashB}, \texttt{signHashC} a \texttt{signHashD} sú usporiadané a prináležia k transakciám B, C a D. Transakcia D musela vzniknúť až po transakcii C pretože výpočet hashu \texttt{signHashD} potreboval už existujúci hash \texttt{signHashC}. Z rovnakého dôvodu musela vzniknúť transakcia C až po B. Ide o bežný kryptografický koncept dátovej štruktúry hash pointer (posri sekciu~\ref{subsec:hash-pointer}).
+
+%Existuje teoretický útok pri ktorom útočník zmení poradie týchto troch transakcií. Predpokladajme, že útočník pozná všetky tri transakcie a má väčší výpočtový výkon než všetci ostatný klienti. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto útoku každý klient svoj hash podpíše svojim privátnymi kľúčom.
+
+\cite{solanaWp}
 
 \begin{figure}[bt]
 	\centering
-	\includegraphics[width=\textwidth]{obrazky-figures/solana-poh}
-	\caption{Nepopierateľné usporiadanie transakcií A, B a C v čase pomocou proof-of-history.}
+	\includegraphics[width=\textwidth]{obrazky-figures/solana-poh-time}
+	\caption{Reprezentácia času v decentralizovanej sieti pomocou proof-of-history.}
 	\label{img:solana-poh}
 \end{figure}
 
 \section{Konsenzus}
 
-Proof-of-stake slúži na:
-\begin{itemize}
-	\item voľbu proof-of-history generátoru
-	\item hlasovanie o validnosti aktuálnej proof-of-history sekvencie
-	\item model motivácie - odemňovanie a tresty
-\end{itemize}
+Solana používa proof-of-stake konsenzus založený na PBFT~\cite{pbftCastro}. Konsenzus sa používa na zvolenie proof-of-history generátoru (sekcia~\ref{subsec:pos-generator}), hlasovanie o validnosti proof-of-history sekvencie (sekcia~\ref{subsec:towerbft}) a je na ňom založný aj model motivácie (odmeňovanie a tresty).
 
+\subsection{Voľba proof-of-history generátoru (vodcu)}\label{subsec:pos-generator}
 
+Solana sieť sa rozdeľuje do tzv. zhlukov. Zhluk je množina validátorov, ktoré spolupracujú na konsenze. Zhluky môžu mať prieniky. Každý zhluk má vodcu, ktorý generuje záznamy v proof-of-history. Vodca sa mení po fixnom počte vygenerovaných záznamov. Tento interval voláme \textit{slot}. Nový vodca sa určí na základe už dopredu stanoveného rozvrhu. Rozvrh je stanovený na fixný počet slotov, ktorý voláme \textit{epocha}. Rozvrh na aktuálnu epochu sa vypočíta už v predchádzajúcej. Samotný výpočet rozvrhu prebieha tak, že sa zoberú všetci validátori, ktorý hlasovali v posledných $n$ záznamoch, kde $n$ je hodnota stanovená zhlukom. Títo validátori dostanú v rozvrhu pridelené vodcovské sloty na základe váhy ich podielu. Inak povedané, validátor s najväčším podielom bude v nasledujúcej epoche najčastejšie vodcom (princíp proof-of-stake).
+
+\subsection{Tower BFT}\label{subsec:towerbft}
+
+Solana používa konsenzus protokol \textit{tower BFT}, ktorý je založený na $\frac{2}{3}$ zhode hlasov validátorov (BFT):
+\begin{enumerate}
+	\item Klienti siete zasielajú transakcie na aktuálneho vodcu (proof-of-history generátor).
+	\item Vodca pridáva transakcie do proof-of-history sekvencie a túto dátovú štruktúru distribuuje validátorom.
+	\item Validátori overia transakcie v proof-of-history sekvencii a vykonajú ich v stanovenom poradí. Takto získajú nový stav.
+	\item V špecifikovanom čase, po uplynutí určitého počtu proof-of-history záznamov, pošlú validátori svoje hlasy vodcovi. Hlas je hash stavu validátora po vykonaní transakcií. Tento hash je navyše podpísaný privátnym kľúčom validátora.
+	\item Vodca pridáva prijaté hlasy do proof-of-history sekvencie.
+	\item Validátori sledujú hlasy, ktoré sa následne vyskytujú v proof-of-history sekvencii. Každý validátor počíta hlasy a ak dosahujú $\frac{2}{3}$ celkového počtu validátorov, tak bol dosiahnutý konsenzus.
+\end{enumerate}
+Solana používa proof-of-stake a teda váha hlasu validátora je priamo úmerná jeho podielu. Pre konsenzus nie je nutné dosiahnuť $\frac{2}{3}$ celkového počtu hlasov validátorov, ale len toľko hlasov aby ich vlastníci vlastnili $\frac{2}{3}$ celkového podielu.
+
+\cite{solanaDoc}
+
+\subsection{Vetvenie}
+Uzly v Solana sieti tolerujú dočasnú stratu spojenia s aktuálnym vodcom (poh generátorom). Pri strate spojenia predpokladajú len prázdne záznamy, ktoré neobsahujú žiadne dáta. Takýto poh reťazec si dokážu dopočítať aj sami bez komunikácie zo sieťou z posledného hashu minulého slotu.
+
+Vetvenie v Solana konsenze vzniká pri zmene vodcu. Nový vodca nemusel zachytiť hlasy uložené v poslednom slote. Tento slot teda nahradí prázdnymi záznamami. Vetvenie slotu je teda binárne (vetva s dátami a prázdna vetva). 
+
+Každý validátor musí sledovať celý binárny strom možných vetiev a uchovávať si ich stav. Voľbu vetvy urobí validátor tak, že vodcovi v danej vetve pošle svoj hlas čím vetvu potvrdí. Validátor potom nemôže hlasovať v žiadnej inej vetve po dobu (pevný počet slotov) ktorá sa nazýva \textit{lockout}. Lockout perióda sa navyše zdvojnásobuje každým ďalším pridaným hlasom v danej vetve až do maximálnej hodnoty (aktuálne je maximum 32 hlasov). Ak chce validátor hlasovať, za inú vetvu, musí počkať do konca periódy lockout. Následovne vykoná návrat späť (anglicky \textit{rollback}) do posledného spoločného stavu medzi starou a novou vetvou.
+
+\section{Model motivácie}
+
+\subsection{Vetvenie}
+Hlasy v jednej vetve sa ukladajú do pomyselného zásobníku s obmedzenou kapacitou na 32 položiek. Každý nový pridaný hlas do zásobníka zdvojnásobí lockout všetkých predošlých hlasov v zásobníku. Keď zásobník dosiahne maximálnu kapacitu tak je najstarší hlas odstránený (FIFO) a majiteľ hlasu je odmenený.
+
+Validátor je potrestaný za súbežné hlasovanie v rôznych vetvách. Ak hlasoval v jednej vetve, tak je zaviazaný na hlasovanie len v tejto vetve po dobu lockoutu. Ak validátor poruší lockout a bude mu to preukázané, budú mu odobrané jeho zdroje.
+
+Validátori sú odmeňovaný za výber vetvy, ktorá je najčastejšia a najpoužívanejšia. Validátor je odmenený za každý hlas, ktorý dosiahne v danej vetve maximálny lockout.
 
 \section{Teoretická analýza}
 

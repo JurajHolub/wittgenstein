@@ -1,4 +1,4 @@
-\babel@toc {slovak}{}
+\babel@toc {slovak}{}\relax 
 \contentsline {chapter}{\numberline {1}Úvod}{3}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Blockchain}{4}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Distribuovaná účtovná kniha}{4}{section.2.1}%
@@ -50,18 +50,23 @@
 \contentsline {chapter}{\numberline {6}Solana}{21}{chapter.6}%
 \contentsline {section}{\numberline {6.1}Proof-of-history}{21}{section.6.1}%
 \contentsline {section}{\numberline {6.2}Konsenzus}{21}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Teoretická analýza}{22}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Proof-of-history}{22}{subsection.6.3.1}%
-\contentsline {chapter}{\numberline {7}Prehľad existujúcich simulátorov}{23}{chapter.7}%
-\contentsline {section}{\numberline {7.1}SimBlock}{23}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Bitcoin Simulator}{24}{section.7.2}%
-\contentsline {section}{\numberline {7.3}BlockSim}{24}{section.7.3}%
-\contentsline {section}{\numberline {7.4}VIBES}{25}{section.7.4}%
-\contentsline {section}{\numberline {7.5}Shadow}{25}{section.7.5}%
-\contentsline {section}{\numberline {7.6}FoBSim}{26}{section.7.6}%
-\contentsline {section}{\numberline {7.7}Zhodnotenie}{26}{section.7.7}%
-\contentsline {subsection}{\numberline {7.7.1}Porovnanie najvhodnejších nástrojov}{26}{subsection.7.7.1}%
-\contentsline {subsection}{\numberline {7.7.2}Výsledná voľba}{26}{subsection.7.7.2}%
-\contentsline {chapter}{Literatúra}{28}{chapter*.2}%
+\contentsline {subsection}{\numberline {6.2.1}Voľba proof-of-history generátoru (vodcu)}{22}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Tower BFT}{22}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Vetvenie}{23}{subsection.6.2.3}%
+\contentsline {section}{\numberline {6.3}Model motivácie}{23}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Vetvenie}{23}{subsection.6.3.1}%
+\contentsline {section}{\numberline {6.4}Teoretická analýza}{23}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Proof-of-history}{23}{subsection.6.4.1}%
+\contentsline {chapter}{\numberline {7}Prehľad existujúcich simulátorov}{24}{chapter.7}%
+\contentsline {section}{\numberline {7.1}SimBlock}{24}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Bitcoin Simulator}{25}{section.7.2}%
+\contentsline {section}{\numberline {7.3}BlockSim}{25}{section.7.3}%
+\contentsline {section}{\numberline {7.4}VIBES}{26}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Shadow}{26}{section.7.5}%
+\contentsline {section}{\numberline {7.6}FoBSim}{27}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Zhodnotenie}{27}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}Porovnanie najvhodnejších nástrojov}{27}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}Výsledná voľba}{27}{subsection.7.7.2}%
+\contentsline {chapter}{Literatúra}{29}{chapter*.2}%
 \ttl@starttoc {chapters@1}
 \contentsfinish 
