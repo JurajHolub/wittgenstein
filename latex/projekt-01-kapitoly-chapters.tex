@@ -38,6 +38,91 @@ Blockchain bol navrhnutý a po prvýkrát implementovaný za účelom poskytnú�
 	\item \textbf{Aukcie}: Elektronická aukcia je služba veľmi podobná elektronickej peňaženke alebo zmenárni s podobnými bezpečnostnými požiadavkami. Tieto vlastnosti by opäť dokázala pokryť technológia blockchain.
 \end{itemize}
 
+\section{Viacvrstvová abstrakcia blockchainu}
+
+Existuje veľké množstvo blockchain protokolov, ktoré majú rôzne využitie a implementáciu. Avšak všetky tieto implementácie sú založené na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami:~\cite{homoliakBlockchain}
+
+\begin{enumerate}
+	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť blockchainu. Napríklad, verejný blockchain ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť paketov alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého blockchainu. Sieťová vrstva je popísaná v sekcii~\ref{sec:p2p}.~\cite{fanPerfEval}
+	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustavuje dohoda na stave blockchainu. Táto vrstva kľúčovo ovplyvňuje priepustnosť transakcií (\textit{TPS - transaction per second}). Táto metrika je kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne 5. Konsenzus v blockchaine je popísaný v sekcii~\ref{sec:consenzus}
+	\item \textbf{Dátová vrstva} (alebo tiež úložisko) definuje model transakcií (binárny hashovací strom, hashovacie a kryptografické algoritmy). Sekcia~\ref{sec:crypto} popisuje kryptografické primitíva používané v technológii blockchain a sekcia~\ref{sec:data-struct-blockchain} popisuje blockchain ako dátovú štruktúru.
+	\item \textbf{Aplikačná vrstva} definuje využitie v konkrétnej službe (napríklad kryptomena).
+\end{enumerate}
+
+\section{Peer-to-peer sieť}\label{sec:p2p}
+
+Technológia blockchain je postavená na peer-to-peer sieťach. Peer-to-peer sieť sa podieľa na decentralizovanosti, nemennosti a auditovateľnosti blockchainu. 
+
+Peer-to-peer sieť je dynamický súbor nezávislých uzlov (anglicky \textit{peers}), ktoré sú prepojené do grafu. Každý uzol obsahuje zdroje, ktoré zdieľa všetkým ostatným uzlom v sieti.~\cite{p2pBuford, p2pSchollmeier} Dôvod existencie peer-to-peer sietí je teda decentralizovaný spôsob zdieľania zdrojov ako sú súbory, fyzické zariadenia, výpočetný výkon alebo aj elektronické finančné zdroje. Dnes existuje množstvo peer-to-peer sietí. Veľmi známe sú napríklad Gnutella, Kazaa alebo BitTorrent.~\cite{p2pEssence}
+
+\subsection{Referenčný model}
+Najbežnejšie technické riešenie peer-to-peer siete je navrstvenie siete (anglicky \textit{overlay network}) na už existujúcu sieť, ktorou je typicky Internet. Takúto sieť potom môžeme definovať ako päticu $(P,R,I,F_P,F_R)$, kde:
+\begin{itemize}
+	\item $P$ je množina uzlov
+	\item $R$ je množinu zdrojov
+	\item $I$ je priestor identifikátorov
+	\item $F_P: P \rightarrow I$ je funkcia, ktorá mapuje uzoly na identifikátory
+	\item $F_R: R \rightarrow I$ je funkcia, ktorá mapuje zdroje na identifikátory
+\end{itemize}
+
+Obrázok~\ref{img:p2p-ref-model} ukazuje princíp fungovania takto definovanej siete. Tvorba siete s týmto modelom je potom závislá od šiestich návrhových aspektov:
+\begin{enumerate}
+	\item Voľba priestoru identifikátorov.
+	\item Mapovanie zdrojov a uzlov na identifikátory.
+	\item Správa priestoru identifikátorov v réžii uzlov siete.
+	\item Tvorba grafu (štruktúra siete).
+	\item Stratégia smerovania (anglicky \textit{routing}).
+	\item Stratégia údržby.
+\end{enumerate}
+Konkrétne riešenie pre popisovaných šesť aspektov je zavislé od požiadaviek na efektivitu, škálovateľnosť, samoorganizovateľnosť, odolnosť voči chybám a kooperáciu.~\cite{p2pEssence}
+
+\subsection{Využitie v blockchaine}
+
+Peer-to-peer sieť umožňuje blockchainu uchovávať jeho obsah decentralizovane a pritom bezpečne. Tento koncept si vysvetlíme na prípade blockchainu, ktorý sa využíva ako kryptomena.
+
+Elektronické financie sú typicky reprezentované pomocou elektronických mincí. Takáto minca je reprezentovaná pomocou nejakej sekvencie bitov. Avšak narozdiel od fyzických mincí, elektronické mince umožňujú jednoduchú falzifikáciu. Útočník skopíruje bitový reťazec danej mince a zaplatí ním viacnásobne rôzne produkty. Tento útok sa volá zdvojnásobenia výdavkov (anglicky \textit{double-spending attack}). Proti tomuto útoku existuje tradičné zabezpečenie pomocou centrálnej autority. Banka je centrálna autorita, ktorá schvaľuje všetky manipulácie s elektronickými mincami a teda neumožní použiť mincu takýmto podvodným spôsobom. Avšak toto riešenie nie je možné použiť v decentralizovanej sieti, kde centrálna autorita neexistuje. V prípade decentralizovanej siete je možné zabrániť tomuto útoku pomocou použitia dátovej štruktúry blockchain.~\cite{doubleSpending}
+
+Kryptomena Bitcoin ako prvá navrhla použitie peer-to-peer siete v spojení s blockchain technológiou pre zabránenie double-spending útoku. V takejto sietu je jediný zdroj na zdieľanie a to je dátová štruktúra blockchain v ktorej sú uložené všetky informácie o elektronických financiách. Zjednodušene môžeme povedať, že majorita uzlov siete zdieľa rovnaký zdroj (rovnakú kópiu blockchainu). Ak chce niektorý uzol vykonať finančnú transakciu tak zašle správu s navrhovanou zmenou blockchainu do siete. Uzly v tejto sieti nie je potrebné identifikovať pretože správy posielané v tejto sieti nie sú smerované na žiadne konkrétne miesto. Keď uzol prijme správu s nejakou modifikáciu tak si overí či ide o validnú požiadavku na finančnú transakciu. Štruktúra blockchainu používa modernú kryptografiu na overenie validnosti transakcie (pozri sekciu~\ref{sec:crypto}). Blockchain, ktorý vlastní väčšina siete je ten, ktorý sa považuje za pravdu. Útočník by musel teda vlastniť aspoň 51\,\% uzolov v sieti aby mohol vykonať double-spending útok. Ak je daná sieť dostatočne veľká tak by toho útočník nemal byť schopný dosiahnuť.~\cite{satoshiBitcoin}
+
+\begin{figure}[bt]
+	\centering
+	\includegraphics[width=\textwidth]{obrazky-figures/p2p-ref-model.pdf}
+	\caption{Referenčný model peer-to-peer siete.~\cite{p2pEssence}}
+	\label{img:p2p-ref-model}
+\end{figure}
+
+
+\section{Konsenzus}\label{sec:consenzus}
+Konsenzus v blockchaine zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave blockchainu. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak blockchain je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti blockchainu je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi vlastnosťami~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
+\begin{itemize}
+	\item Konzistentnosť: Vždy keď dôjde k potvrdeniu zmeny, celý reťazec sa aktualizuje a všetci čítajú rovnaké hodnoty.
+	\item Dostupnosť: Pre každú požiadavku na dáta musí byť poskytnutá odpoveď.
+	\item Odolnosť voči prerušeniu (anglicky \textit{partial tolerance}): Sieť funguje aj v prípade, že v nej vznikajú chyby.
+\end{itemize}
+
+Existujú tri najbežnejšie techniky, ktoré sa používajú pre ustavenie konsenzu~\cite{homoliakBlockchain}:
+\begin{itemize}
+	\item \textbf{Lotéria}: Takéto protokoly náhodne zvolia uzol, ktorý vyprodukuje nový blok. Výhodou tohoto prístupu je jeho jednoduchosť keďže takýto proces nevyžaduje žiadnu interaktivitu. Nevýhodou tohoto prístupu je, že pripúšťa možnosť voľby viacerých uzlov súčasne. V takom prípade sa reťazec rozvetví (anglicky \textit{fork}) a je potrebné určiť ktorá vetva je správna. Typicky sa za správnu vetvu volí tá najdlhšia. Avšak takéto správanie oslabuje konzistentnosť blockchainu. Transakcie v posledných blokoch môžu byť potenciálne zahodené pretože nejde o správnu vetvu. Preto sa za konzistentné transakcie považujú až tie ktoré sú prekryté väčším množstvom nových blokov.
+	\item \textbf{Hlasovanie}: Protokoly založené na hlasovaní dosahujú dohodu pomocou hlasovania všetkých zapojených uzlov. Môžeme použiť napríklad protokol Byzantskej chyby (anglicky \textit{Byzant fault tolerance}), ktorý vyžaduje majoritu hlasov k uzavretiu konsenzu (typicky $\frac{2}{3}$). Výhodou je veľmi malá pravdepodobnosť vzniku vetiev reťazca. Na druhej strane, takéto protokoly majú nižšiu priepustnosť, ktorá klesá z narastajúcim počtom uzlov.
+	\item \textbf{Kombinovaný prístup}: Tieto protokoly sa snažia kombinovať prístup lotérie a hlasovania s cieľom dosiahnuť výhody oboch prístupov. Napríklad je možné rozdeliť počet uzlov podieľajúcich sa na hlasovaní pomocou lotérie, čím sa zvýši priepustnosť.
+\end{itemize}
+~\cite{zhangConsensus, homoliakBlockchain}
+
+\subsection{Proof-of-Work}\label{subsec:pow}
+Dôkaz prácou (anglicky \textit{proof of work}) je najbežnejšia stratégia konsenzus protokolu. Ak chce uzol publikovať nový blok, musí investovať svoj výpočtový výkon do riešenia netriviálneho kryptografického problému. Uzol, ktorý ako prvý vyrieši tento problém má najväčšiu pravdepodobnosť, že bude jeho blok pridaný do reťazca. Samozrejme, je tu možnosť, že problém vyrieši súčasne viacero uzlov. Konečná voľba je teda náhodná. Proof-of-work teda umožňuje, aj keď s oveľa menšou pravdepodobnosťou, že sa reťazec rozvetví. Bezpečnosť takéhoto konsenzu spočíva v tom, že majorita výpočtového výkonu siete (51\,\%) je vlastnená poctivými uzlami.~\cite{leporeConsensus}
+
+Samotný kryptografický problém, ktorý sa rieši spočíva v počítaní hashu (viď~\ref{subsec:hash}) z hlavičky nového bloku (viď~\ref{subsec:block}). Hlavička obsahuje atribút nonce, ktorý môže miner ľubovolne nastaviť. Zmenou tohoto atribútu môže miner získať iný hash hlavičky bloku. Konsenzus vyžaduje aby výsledná hash hodnota bola menšia rovná určitej zvolenej hodnote. Miner môže túto podmienku dosiahnuť len tak, že bude inkrementovať hodnotu atribútu nonce až dokedy túto podmienku nesplní. Táto úloha sa teda dá riešiť len pomocou metódy útok hrubou silou (anglicky \textit{brute force}). Miner môže svoju šancu na úspech zvýšiť len tým, že poskytne väčší výpočtový výkon do jej riešenia. Na druhej strane, ostatné uzly môžu overiť, že jeho riešenia je správne veľmi rýchlo a efektívne.~\cite{zhengBlockchainOverview}
+
+Proof-of-work konsenzus využíva dva typy uzlov. Prvý typ uzla je miner, ktorý vytvára nové bloky tak ako je popísané v sekcii~\ref{sec:mining}. Druhý typ uzla je bežný vlastník zdrojov v danom blockchaine, ktorý môže vytvárať transakcie a distribuovať ich do siete. Druhý typ uzla teda nehrá žiadnu rolu v ustanovovaní konsenzu.~\cite{leporeConsensus}
+
+Proof-of-work je overený konsenzus protokol, ktorý funguje a používa sa v blockchainoch ako je Bitcoin~\cite{satoshiBitcoin} alebo Ethereum~\footnote{\url{https://ethereum.org/en/whitepaper/}}. Tento protokol má však jeden dlhodobý problém a to je spotreba energie. Uzly ktoré riešia kryptografický problém pre nové bloky spotrebujú veľké množstvo energie čo má nepriaznivý dopad na životné prostredie. Niektoré zdroje~\footnote{\url{https://www.businessinsider.com/bitcoin-mining-electricity-usage-more-than-google-2021-9}} napríklad hovoria, že v roku 2021 pokrýva ťažba Bitcoinu 0,5\,\% celkovej spotreby elektrickej energie na svete. Pre porovnanie, ide o sedemkrát väčšiu spotrebu energie ako má celá spoločnosť Google.~\cite{leporeConsensus}
+
+\subsection{Proof-of-Stake}\label{subsec:pos}
+
+Dôkaz podielom na vlastníctve (anglicky \textit{proof of stake}) je založený na technike lotérie, kde pravdepodobnosť výhry rastie s množstvom už vlastnených zdrojov. Základnou myšlienkou, je že vlastník veľkého množstva zdrojov v danom blockchaine je veľmi nepravdepodobným útočníkom pretože svoje zdroje nechce ohroziť. Uzly sa teda musia preukázať vlastníctvom zdrojov v danom blockchaine ak chcú publikovať nový blok. Pravdepodobnosť výberu uzlu rastie s množstvom zdrojov, ktoré v sieti vlastní.~\cite{homoliakBlockchain, nguyenPos}
+
+Veľkou výhodou proof-of-stake oproti proof-of-work je, že nevyždauje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. ~\cite{leporeConsensus}
+
 \section{Kryptografia v blockchaine}\label{sec:crypto}
 Pre pochopenie technológie blockchain je potrebná základná znalosť modernej kryptografie. V tejto sekcii je popísaný kryptografická hashovacia funkcia (pozri~\ref{subsec:hash}) a jej využitie na tvorbu dátových štruktúr zabezpečených proti modifikácii obsahu (viď sekcia~\ref{subsec:hash-pointer}). Ďalej je vysvetlený koncept asymetrickej kryptografie a digitálneho podpisu (viď sekcia~\ref{subsec:sign}). Tieto kryptografické primitíva sú základom na ktorom stojí nemennosť, auditovateľnosť a anonymita blockchainu.
 
@@ -92,49 +177,7 @@ Tento koncept je základom digitálneho podpisu. Ak chceme nepopierateľne doká
 Prahový digitálny podpis (anglicky \textit{threshold signatures}) je špeciálna schéma digitálneho podpisu. V tejto schéme je $n$ účastníkov a každý vlastní časť privátneho kľúča. Každý účastník môže použiť svoju časť tajného kľúča na čiastočné podpísanie správy $M$. Kompletný podpis môže byť zostrojený ak aspoň $t$ účastníkov poskytlo svoju časť podpisu. Potom hovoríme o  $t$-z-$n$ prahovom podpise. Takýto koncept sa dá využiť pri kryptografickom hlasovaní.~\cite{blsSignature}
 
 
-\section{Peer-to-peer sieť}\label{sec:p2p}
-
-Technológia blockchain je postavená na peer-to-peer sieťach. Peer-to-peer sieť sa podieľa na decentralizovanosti, nemennosti a auditovateľnosti blockchainu. 
-
-Peer-to-peer sieť je dynamický súbor nezávislých uzlov (anglicky \textit{peers}), ktoré sú prepojené do grafu. Každý uzol obsahuje zdroje, ktoré zdieľa všetkým ostatným uzlom v sieti.~\cite{p2pBuford, p2pSchollmeier} Dôvod existencie peer-to-peer sietí je teda decentralizovaný spôsob zdieľania zdrojov ako sú súbory, fyzické zariadenia, výpočetný výkon alebo aj elektronické finančné zdroje. Dnes existuje množstvo peer-to-peer sietí. Veľmi známe sú napríklad Gnutella, Kazaa alebo BitTorrent.~\cite{p2pEssence}
-
-\subsection{Referenčný model}
-Najbežnejšie technické riešenie peer-to-peer siete je navrstvenie siete (anglicky \textit{overlay network}) na už existujúcu sieť, ktorou je typicky Internet. Takúto sieť potom môžeme definovať ako päticu $(P,R,I,F_P,F_R)$, kde:
-\begin{itemize}
-	\item $P$ je množina uzlov
-	\item $R$ je množinu zdrojov
-	\item $I$ je priestor identifikátorov
-	\item $F_P: P \rightarrow I$ je funkcia, ktorá mapuje uzoly na identifikátory
-	\item $F_R: R \rightarrow I$ je funkcia, ktorá mapuje zdroje na identifikátory
-\end{itemize}
-
-Obrázok~\ref{img:p2p-ref-model} ukazuje princíp fungovania takto definovanej siete. Tvorba siete s týmto modelom je potom závislá od šiestich návrhových aspektov:
-\begin{enumerate}
-	\item Voľba priestoru identifikátorov.
-	\item Mapovanie zdrojov a uzlov na identifikátory.
-	\item Správa priestoru identifikátorov v réžii uzlov siete.
-	\item Tvorba grafu (štruktúra siete).
-	\item Stratégia smerovania (anglicky \textit{routing}).
-	\item Stratégia údržby.
-\end{enumerate}
-Konkrétne riešenie pre popisovaných šesť aspektov je zavislé od požiadaviek na efektivitu, škálovateľnosť, samoorganizovateľnosť, odolnosť voči chybám a kooperáciu.~\cite{p2pEssence}
-
-\subsection{Využitie v blockchaine}
-
-Peer-to-peer sieť umožňuje blockchainu uchovávať jeho obsah decentralizovane a pritom bezpečne. Tento koncept si vysvetlíme na prípade blockchainu, ktorý sa využíva ako kryptomena.
-
-Elektronické financie sú typicky reprezentované pomocou elektronických mincí. Takáto minca je reprezentovaná pomocou nejakej sekvencie bitov. Avšak narozdiel od fyzických mincí, elektronické mince umožňujú jednoduchú falzifikáciu. Útočník skopíruje bitový reťazec danej mince a zaplatí ním viacnásobne rôzne produkty. Tento útok sa volá zdvojnásobenia výdavkov (anglicky \textit{double-spending attack}). Proti tomuto útoku existuje tradičné zabezpečenie pomocou centrálnej autority. Banka je centrálna autorita, ktorá schvaľuje všetky manipulácie s elektronickými mincami a teda neumožní použiť mincu takýmto podvodným spôsobom. Avšak toto riešenie nie je možné použiť v decentralizovanej sieti, kde centrálna autorita neexistuje. V prípade decentralizovanej siete je možné zabrániť tomuto útoku pomocou použitia dátovej štruktúry blockchain.~\cite{doubleSpending}
-
-Kryptomena Bitcoin ako prvá navrhla použitie peer-to-peer siete v spojení s blockchain technológiou pre zabránenie double-spending útoku. V takejto sietu je jediný zdroj na zdieľanie a to je dátová štruktúra blockchain v ktorej sú uložené všetky informácie o elektronických financiách. Zjednodušene môžeme povedať, že majorita uzlov siete zdieľa rovnaký zdroj (rovnakú kópiu blockchainu). Ak chce niektorý uzol vykonať finančnú transakciu tak zašle správu s navrhovanou zmenou blockchainu do siete. Uzly v tejto sieti nie je potrebné identifikovať pretože správy posielané v tejto sieti nie sú smerované na žiadne konkrétne miesto. Keď uzol prijme správu s nejakou modifikáciu tak si overí či ide o validnú požiadavku na finančnú transakciu. Štruktúra blockchainu používa modernú kryptografiu na overenie validnosti transakcie (pozri sekciu~\ref{sec:crypto}). Blockchain, ktorý vlastní väčšina siete je ten, ktorý sa považuje za pravdu. Útočník by musel teda vlastniť aspoň 51\,\% uzolov v sieti aby mohol vykonať double-spending útok. Ak je daná sieť dostatočne veľká tak by toho útočník nemal byť schopný dosiahnuť.~\cite{satoshiBitcoin}
-
-\begin{figure}[bt]
-	\centering
-	\includegraphics[width=\textwidth]{obrazky-figures/p2p-ref-model.pdf}
-	\caption{Referenčný model peer-to-peer siete.~\cite{p2pEssence}}
-	\label{img:p2p-ref-model}
-\end{figure}
-
-\section{Datová štruktúra blockchain}\label{sec:data-struct-blockchain}
+\section{Dátová štruktúra blockchain}\label{sec:data-struct-blockchain}
 Blockchain je dátová štruktúra podobná zoznamu (anglicky \textit{linked list}). Blockchain organizuje dáta do podmnožín, ktoré sa volajú bloky. Blok je podobný uzlu v zozname. Každý blok obsahuje referenciu na ďalší blok. Rozdiel medzi zoznamom a blockchainom je v tom, že referencia blockchainu je zabezpečená proti manipulácia (anglicky \textit{tamper-evident}) pomocou modernej kryptografie. Bežný zoznam používa referenciu pomocou ukazovateľov (anglicky \textit{pointers}), ktoré môže ktokoľvek a kedykoľvek pozmeniť bez toho aby pozmenil dátový obsah. Naopak, blockchain vôbec neumožňuje meniť už pridané bloky. Jediná povolená operácia je pridanie ďalšieho bloku na koniec blockchainu.~\cite{horizenAcademy}
 
 Každý blok obsahuje dáta, ktoré sú typicky vo forme transakcií. Kryptograficky bezpečný blockchain by mohol fungovať aj tak, že v každom bloku bude uložená práve jedna transakcia. Z dôvodu optimalizácie je ale v jednom bloku uložené množstvo transakcií. Vďaka tejto optimalizácii nemusí celá sieť vytvárať konsenzus po každej transakcii. Samotné transakcie v rámci jedného bloku sú ukladané v ďalšej dátovej štruktúre, ktorá taktiež používa kryptografické hashovanie (viď sekcia~\ref{subsec:merkle-tree}).~\cite{narayanan2016bitcoin}
@@ -190,48 +233,6 @@ Merkle strom umožnuje efektívne šetriť pamäťové nároky blockchainu. Do b
 
 ~\cite{narayanan2016bitcoin}
 
-\section{Konsenzus}\label{sec:consenzus}
-Konsenzus v blockchaine zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave blockchainu. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak blockchain je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti blockchainu je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi vlastnosťami~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
-\begin{itemize}
-	\item Konzistentnosť: Vždy keď dôjde k potvrdeniu zmeny, celý reťazec sa aktualizuje a všetci čítajú rovnaké hodnoty.
-	\item Dostupnosť: Pre každú požiadavku na dáta musí byť poskytnutá odpoveď.
-	\item Odolnosť voči prerušeniu (anglicky \textit{partial tolerance}): Sieť funguje aj v prípade, že v nej vznikajú chyby.
-\end{itemize}
-
-Existujú tri najbežnejšie techniky, ktoré sa používajú pre ustavenie konsenzu~\cite{homoliakBlockchain}:
-\begin{itemize}
-	\item \textbf{Lotéria}: Takéto protokoly náhodne zvolia uzol, ktorý vyprodukuje nový blok. Výhodou tohoto prístupu je jeho jednoduchosť keďže takýto proces nevyžaduje žiadnu interaktivitu. Nevýhodou tohoto prístupu je, že pripúšťa možnosť voľby viacerých uzlov súčasne. V takom prípade sa reťazec rozvetví (anglicky \textit{fork}) a je potrebné určiť ktorá vetva je správna. Typicky sa za správnu vetvu volí tá najdlhšia. Avšak takéto správanie oslabuje konzistentnosť blockchainu. Transakcie v posledných blokoch môžu byť potenciálne zahodené pretože nejde o správnu vetvu. Preto sa za konzistentné transakcie považujú až tie ktoré sú prekryté väčším množstvom nových blokov.
-	\item \textbf{Hlasovanie}: Protokoly založené na hlasovaní dosahujú dohodu pomocou hlasovania všetkých zapojených uzlov. Môžeme použiť napríklad protokol Byzantskej chyby (anglicky \textit{Byzant fault tolerance}), ktorý vyžaduje majoritu hlasov k uzavretiu konsenzu (typicky $\frac{2}{3}$). Výhodou je veľmi malá pravdepodobnosť vzniku vetiev reťazca. Na druhej strane, takéto protokoly majú nižšiu priepustnosť, ktorá klesá z narastajúcim počtom uzlov.
-	\item \textbf{Kombinovaný prístup}: Tieto protokoly sa snažia kombinovať prístup lotérie a hlasovania s cieľom dosiahnuť výhody oboch prístupov. Napríklad je možné rozdeliť počet uzlov podieľajúcich sa na hlasovaní pomocou lotérie, čím sa zvýši priepustnosť.
-\end{itemize}
-~\cite{zhangConsensus, homoliakBlockchain}
-
-\subsection{Proof-of-Work}\label{subsec:pow}
-Dôkaz prácou (anglicky \textit{proof of work}) je najbežnejšia stratégia konsenzus protokolu. Ak chce uzol publikovať nový blok, musí investovať svoj výpočtový výkon do riešenia netriviálneho kryptografického problému. Uzol, ktorý ako prvý vyrieši tento problém má najväčšiu pravdepodobnosť, že bude jeho blok pridaný do reťazca. Samozrejme, je tu možnosť, že problém vyrieši súčasne viacero uzlov. Konečná voľba je teda náhodná. Proof-of-work teda umožňuje, aj keď s oveľa menšou pravdepodobnosťou, že sa reťazec rozvetví. Bezpečnosť takéhoto konsenzu spočíva v tom, že majorita výpočtového výkonu siete (51\,\%) je vlastnená poctivými uzlami.~\cite{leporeConsensus}
-
-Samotný kryptografický problém, ktorý sa rieši spočíva v počítaní hashu (viď~\ref{subsec:hash}) z hlavičky nového bloku (viď~\ref{subsec:block}). Hlavička obsahuje atribút nonce, ktorý môže miner ľubovolne nastaviť. Zmenou tohoto atribútu môže miner získať iný hash hlavičky bloku. Konsenzus vyžaduje aby výsledná hash hodnota bola menšia rovná určitej zvolenej hodnote. Miner môže túto podmienku dosiahnuť len tak, že bude inkrementovať hodnotu atribútu nonce až dokedy túto podmienku nesplní. Táto úloha sa teda dá riešiť len pomocou metódy útok hrubou silou (anglicky \textit{brute force}). Miner môže svoju šancu na úspech zvýšiť len tým, že poskytne väčší výpočtový výkon do jej riešenia. Na druhej strane, ostatné uzly môžu overiť, že jeho riešenia je správne veľmi rýchlo a efektívne.~\cite{zhengBlockchainOverview}
-
-Proof-of-work konsenzus využíva dva typy uzlov. Prvý typ uzla je miner, ktorý vytvára nové bloky tak ako je popísané v sekcii~\ref{sec:mining}. Druhý typ uzla je bežný vlastník zdrojov v danom blockchaine, ktorý môže vytvárať transakcie a distribuovať ich do siete. Druhý typ uzla teda nehrá žiadnu rolu v ustanovovaní konsenzu.~\cite{leporeConsensus}
-
-Proof-of-work je overený konsenzus protokol, ktorý funguje a používa sa v blockchainoch ako je Bitcoin~\cite{satoshiBitcoin} alebo Ethereum~\footnote{\url{https://ethereum.org/en/whitepaper/}}. Tento protokol má však jeden dlhodobý problém a to je spotreba energie. Uzly ktoré riešia kryptografický problém pre nové bloky spotrebujú veľké množstvo energie čo má nepriaznivý dopad na životné prostredie. Niektoré zdroje~\footnote{\url{https://www.businessinsider.com/bitcoin-mining-electricity-usage-more-than-google-2021-9}} napríklad hovoria, že v roku 2021 pokrýva ťažba Bitcoinu 0,5\,\% celkovej spotreby elektrickej energie na svete. Pre porovnanie, ide o sedemkrát väčšiu spotrebu energie ako má celá spoločnosť Google.~\cite{leporeConsensus}
-
-\subsection{Proof-of-Stake}\label{subsec:pos}
-
-Dôkaz podielom na vlastníctve (anglicky \textit{proof of stake}) je založený na technike lotérie, kde pravdepodobnosť výhry rastie s množstvom už vlastnených zdrojov. Základnou myšlienkou, je že vlastník veľkého množstva zdrojov v danom blockchaine je veľmi nepravdepodobným útočníkom pretože svoje zdroje nechce ohroziť. Uzly sa teda musia preukázať vlastníctvom zdrojov v danom blockchaine ak chcú publikovať nový blok. Pravdepodobnosť výberu uzlu rastie s množstvom zdrojov, ktoré v sieti vlastní.~\cite{homoliakBlockchain, nguyenPos}
-
-Veľkou výhodou proof-of-stake oproti proof-of-work je, že nevyždauje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. ~\cite{leporeConsensus}
-
-\chapter{Viacvrstvová abstrakcia}
-
-Existuje veľké množstvo blockchain protokolov, ktoré majú rôzne využitie a implementáciu. Avšak všetky tieto implementácie sú založene na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami:~\cite{homoliakBlockchain}
-
-\begin{enumerate}
-	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť blockchainu. Napríklad, verejný blockchain ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť paketov alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého blockchainu.~\cite{fanPerfEval}
-	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustavuje dohoda na stave blockchainu. Táto vrstva kľúčovo ovplyvňuje priepustnosť transakcií (\textit{TPS - transaction per second}). Táto metrika je kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne 5.
-	\item \textbf{Dátová vrstva} (alebo tiež úložisko) definuje model transakcií (binárny hashovací strom, hashovacie a kryptografické algoritmy).
-	\item \textbf{Aplikačná vrstva} definuje využitie v konkrétnej službe (napríklad kryptomena).
-\end{enumerate}
-
 \chapter{Útoky na konsenzus}
 
 \section{Všeobecné utoky}
@@ -275,7 +276,7 @@ Tomuto vobec nerozumiem TODO - najst vhodno literaturu kde sa to vysvetluje
 
 Ak útočník získa kľúče s dostatočným podielom zdrojov, tak môže pozmeniť históriu reťazca. 
 
-\chapter{Harmony}
+\chapter{Harmony}\label{chap:harmony}
 
 Harmony je blockchain používajúci proof-of-stake konsenzus a sharding. Cieľom tohoto protokolu je poskytovať aplikácie, ktoré v minulosti nebolo možné uskutočňovať na technológii blockchain (decentralizované zmenárne, platobný systém rozsahovo porovnateľný s Visa).
 
@@ -360,23 +361,25 @@ Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné 
 
 \chapter{Solana}
 
-\section{Proof-of-history}
+Solana je blockchain technológia zameraná na vysokú priepustnosť transakcií. Klasická centralizovaná databáza dokáže mať priepustnosť až 710\,000 TPS na gigabitovej sieti s priemernou veľkosťou transakcie 176\,B~\cite{solanaDoc}. Decentralizovaná databáza blockchain má dramaticky nižšiu priepustnosť. Tradičné proof-of-work protokoly ako je Bitcoin (5~TPS) alebo Ethereum (15~TPS) dosahujú veľmi nízku priepustnosť~\footnote{\url{https://academy.binance.com/en/glossary/transactions-per-second-tps}}.  V kapitole~\ref{chap:harmony} bol popísaný proof-of-stake protokol Harmony, ktorý má už značne vyššiu priepustnosť (2\,000~TPS) dosiahnutú pomocou konceptu sharding.  Autori Solana projektu deklarujú, že ich architektúra môže teoreticky dosiahnuť rovnakú priepustnosť ako centralizovaná sieť (710\,000~TPS) a to bez použitia konceptu sharding.
 
-Proof-of-history je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie a konsenzus hlasovania v čase pre decentralizovanú sieť ako je blockchain. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}.
+Solana poukazuje na to, že zníženie priepustnosti blockchainu voči centralizovanej sieti je zapríčinené tým, že uzly v sieti potrebujú synchronizovať čas a súčasne si navzájom nemôžu dôverovať. Solana projekt navrhol kryptografický algoritmus \textit{proof-of-history} (viď sekcia~\ref{sec:solana-poh}) pomocou ktorého môže rýchlo a efektívne synchronizovať čas aj decentralizovaná sieť.
 
-Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania proof-of-history. V sieti vždy existuje jeden uzol, ktorý nazývame \textit{proof-of-history generátor}. Ten neustále (najrýchlejšie ako dokáže) pridáva nové záznamy do hash pointer zoznamu (pozri sekciu~\ref{subsec:hash-pointer}). Pridávanie nových hashov do zoznamu je sekvenčné a podmienené existenciou predchádzajúceho hashu. Tento princíp sa nazýva \textit{Verifiable Delay Function~\cite{vdfBoneh}}. Každý hash teda predstavuje časový bod a vzdialenosť dvoch hashov prestavuje časový interval.
+Solana konsenzus je založený na architektúre \textit{proof-of-stake} (sekcia~\ref{sec:solana-consens}) na ktorom je založený aj model motivácie tohoto blockchainu (sekcia~\ref{sec:solana-motiv}). Sekcia~\ref{sec:solana-teor} na záver teoreticky zhodnocuje tento protokol z hľadiska bezpečnosti a výkonnosti.
 
-Generátor je aktuálny vodca v konsenzus protokole. Všetky transakcie a hlasy od rôznych klientov sú zasielané na generátor. Ten ich serializuje do proof-of-history reťazca. Vždy keď generátor prijme dáta od klienta (transakciu alebo hlas) pridá ich do zoznamu. Ak práve nemá dáta tak generuje prázdny záznam. Na obrázku môžeme vidieť v ktorých hashoch, alebo tiež časových momentoch, bola transakcia pridaná do reťazca.
+Ak nie je uvedené inak, všetky informácie v tejto kapitole vychádzajú s pôvodnej publikácie Solana~\cite{solanaWp} a oficiálnej dokumentácie tohoto projektu~\cite{solanaDoc}.
 
-Generátor rozosiela proof-of-history sekvenciu do celej siete. Každý uzol potom môže jednoznačne určiť v akom čase boli vygenerované transakcie a hlasy konsenzu. Synchronizácia v blockchaine Solana je založená na tomto koncepte.
+\section{Proof-of-history}\label{sec:solana-poh}
+
+Proof-of-history (ďalej PoH) je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie a konsenzus hlasovania v čase pre decentralizovanú sieť ako je blockchain. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}.
+
+Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania PoH. V sieti vždy existuje jeden uzol, ktorý nazývame \textit{PoH generátor}. Ten neustále (najrýchlejšie ako dokáže) pridáva nové záznamy do hash pointer zoznamu (pozri sekciu~\ref{subsec:hash-pointer}). Pridávanie nových hashov do zoznamu je sekvenčné a podmienené existenciou predchádzajúceho hashu. Tento princíp sa nazýva \textit{Verifiable Delay Function~\cite{vdfBoneh}}. Každý hash teda predstavuje časový bod a vzdialenosť dvoch hashov prestavuje časový interval.
+
+Generátor je aktuálny vodca v konsenzus protokole. Všetky transakcie a hlasy od rôznych klientov sú zasielané na generátor. Ten ich serializuje do PoH reťazca. Vždy keď generátor prijme dáta od klienta (transakciu alebo hlas) pridá ich do zoznamu. Ak práve nemá dáta tak generuje prázdny záznam. Na obrázku môžeme vidieť v ktorých hashoch, alebo tiež časových momentoch, bola transakcia pridaná do reťazca.
+
+Generátor priebežne rozosiela PoH sekvenciu do celej siete. Každý uzol potom môže jednoznačne určiť v akom čase boli vygenerované transakcie a hlasy konsenzu. Synchronizácia v blockchaine Solana je založená na tomto koncepte.
 
 Existuje teoretický útok pri ktorom útočník zmení poradie v reťazci. Predpokladajme, že útočník pozná všetky transakcie a hlasy a má väčší výpočtový výkon než aktuálny generátor. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto generátor reťazec vždy podpíše a až potom distribuuje (pozri sekciu~\ref{subsec:sign}).
-
-%Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania proof-of-history. Uvažujme, že v sieti sú práve traja klienti (B, C a D), ktorý vytvorili svoje transakcie. Každý klient zoberie svoje dáta (transakciu), skonkatenuje ich s hashom poslednej jemu známej transakcie v sieti a vypočíta z nich hash. Tento hash ešte následne podpíše svojím privátnym kľúčom (pozri sekciu~\ref{subsec:sign}). Potom hashe \texttt{signHashB}, \texttt{signHashC} a \texttt{signHashD} sú usporiadané a prináležia k transakciám B, C a D. Transakcia D musela vzniknúť až po transakcii C pretože výpočet hashu \texttt{signHashD} potreboval už existujúci hash \texttt{signHashC}. Z rovnakého dôvodu musela vzniknúť transakcia C až po B. Ide o bežný kryptografický koncept dátovej štruktúry hash pointer (posri sekciu~\ref{subsec:hash-pointer}).
-
-%Existuje teoretický útok pri ktorom útočník zmení poradie týchto troch transakcií. Predpokladajme, že útočník pozná všetky tri transakcie a má väčší výpočtový výkon než všetci ostatný klienti. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto útoku každý klient svoj hash podpíše svojim privátnymi kľúčom.
-
-\cite{solanaWp}
 
 \begin{figure}[bt]
 	\centering
@@ -385,46 +388,49 @@ Existuje teoretický útok pri ktorom útočník zmení poradie v reťazci. Pred
 	\label{img:solana-poh}
 \end{figure}
 
-\section{Konsenzus}
+\section{Konsenzus}\label{sec:solana-consens}
 
-Solana používa proof-of-stake konsenzus založený na PBFT~\cite{pbftCastro}. Konsenzus sa používa na zvolenie proof-of-history generátoru (sekcia~\ref{subsec:pos-generator}), hlasovanie o validnosti proof-of-history sekvencie (sekcia~\ref{subsec:towerbft}) a je na ňom založný aj model motivácie (odmeňovanie a tresty).
+Solana navrhla vlastný proof-of-stake konsenzus, ktorý vychádza s PBFT~\cite{pbftCastro}. Konsenzus sa používa na zvolenie PoH generátoru (sekcia~\ref{subsec:pos-generator}), hlasovanie o validnosti PoH sekvencie (sekcia~\ref{subsec:towerbft}) a je na ňom založný aj model motivácie (odmeňovanie a tresty v sekcii~\ref{sec:solana-motiv}).
 
-\subsection{Voľba proof-of-history generátoru (vodcu)}\label{subsec:pos-generator}
+\subsection{Voľba PoH generátoru (vodcu)}\label{subsec:pos-generator}
 
-Solana sieť sa rozdeľuje do tzv. zhlukov. Zhluk je množina validátorov, ktoré spolupracujú na konsenze. Zhluky môžu mať prieniky. Každý zhluk má vodcu, ktorý generuje záznamy v proof-of-history. Vodca sa mení po fixnom počte vygenerovaných záznamov. Tento interval voláme \textit{slot}. Nový vodca sa určí na základe už dopredu stanoveného rozvrhu. Rozvrh je stanovený na fixný počet slotov, ktorý voláme \textit{epocha}. Rozvrh na aktuálnu epochu sa vypočíta už v predchádzajúcej. Samotný výpočet rozvrhu prebieha tak, že sa zoberú všetci validátori, ktorý hlasovali v posledných $n$ záznamoch, kde $n$ je hodnota stanovená zhlukom. Títo validátori dostanú v rozvrhu pridelené vodcovské sloty na základe váhy ich podielu. Inak povedané, validátor s najväčším podielom bude v nasledujúcej epoche najčastejšie vodcom (princíp proof-of-stake).
+Solana sieť sa rozdeľuje do tzv. zhlukov. Zhluk je množina validátorov, ktoré spolupracujú na konsenze. Zhluky môžu mať prieniky. Každý zhluk má vodcu, ktorý generuje záznamy v PoH. Vodca sa mení po fixnom počte vygenerovaných záznamov. Tento interval voláme \textit{slot}. Autori protokolu tvrdia, že jeden slot je približne 400\,ms. 
+
+Nový vodca sa určí na základe už dopredu stanoveného rozvrhu. Rozvrh je stanovený na fixný počet slotov, ktorý voláme \textit{epocha}. Rozvrh na aktuálnu epochu sa vypočíta už v predchádzajúcej. Samotný výpočet rozvrhu prebieha tak, že sa zoberú všetci validátori, ktorý hlasovali v posledných $n$ záznamoch PoH sekvencie, kde $n$ je hodnota stanovená zhlukom. Títo validátori dostanú v rozvrhu pridelené vodcovské sloty na základe váhy ich podielu. Inak povedané, validátor s najväčším podielom bude v nasledujúcej epoche najčastejšie vodcom (princíp proof-of-stake).
 
 \subsection{Tower BFT}\label{subsec:towerbft}
 
-Solana používa konsenzus protokol \textit{tower BFT}, ktorý je založený na $\frac{2}{3}$ zhode hlasov validátorov (BFT):
+Konsenzus protokol \textit{Tower BFT}, ktorý je založený na $\frac{2}{3}$ zhode hlasov validátorov (BFT):
 \begin{enumerate}
-	\item Klienti siete zasielajú transakcie na aktuálneho vodcu (proof-of-history generátor).
-	\item Vodca pridáva transakcie do proof-of-history sekvencie a túto dátovú štruktúru distribuuje validátorom.
-	\item Validátori overia transakcie v proof-of-history sekvencii a vykonajú ich v stanovenom poradí. Takto získajú nový stav.
-	\item V špecifikovanom čase, po uplynutí určitého počtu proof-of-history záznamov, pošlú validátori svoje hlasy vodcovi. Hlas je hash stavu validátora po vykonaní transakcií. Tento hash je navyše podpísaný privátnym kľúčom validátora.
-	\item Vodca pridáva prijaté hlasy do proof-of-history sekvencie.
-	\item Validátori sledujú hlasy, ktoré sa následne vyskytujú v proof-of-history sekvencii. Každý validátor počíta hlasy a ak dosahujú $\frac{2}{3}$ celkového počtu validátorov, tak bol dosiahnutý konsenzus.
+	\item Klienti siete zasielajú transakcie na aktuálneho vodcu (PoH generátor).
+	\item Vodca pridáva transakcie do PoH sekvencie a túto dátovú štruktúru distribuuje validátorom.
+	\item Validátori overia transakcie v PoH sekvencii a vykonajú ich v stanovenom poradí. Takto získajú nový stav.
+	\item V špecifikovanom čase, po uplynutí určitého počtu PoH záznamov, pošlú validátori svoje hlasy vodcovi. Hlas je hash stavu validátora po vykonaní transakcií s danej PoH sekvencie. Tento hash je navyše podpísaný privátnym kľúčom validátora. Takto validátor potvrdzuje, že súhlasí s PoH sekvenciou ktorú podpísal. Ak zo sekveciou nesúhlasí, jednoducho svôj hlas nepošle.
+	\item Vodca pridáva prijaté hlasy do PoH sekvencie.
+	\item Validátori sledujú hlasy, ktoré sa následne vyskytujú v PoH sekvencii. Každý validátor počíta hlasy a ak dosahujú $\frac{2}{3}$ celkového počtu validátorov, tak bol dosiahnutý konsenzus.
 \end{enumerate}
 Solana používa proof-of-stake a teda váha hlasu validátora je priamo úmerná jeho podielu. Pre konsenzus nie je nutné dosiahnuť $\frac{2}{3}$ celkového počtu hlasov validátorov, ale len toľko hlasov aby ich vlastníci vlastnili $\frac{2}{3}$ celkového podielu.
 
-\cite{solanaDoc}
-
 \subsection{Vetvenie}
-Uzly v Solana sieti tolerujú dočasnú stratu spojenia s aktuálnym vodcom (poh generátorom). Pri strate spojenia predpokladajú len prázdne záznamy, ktoré neobsahujú žiadne dáta. Takýto poh reťazec si dokážu dopočítať aj sami bez komunikácie zo sieťou z posledného hashu minulého slotu.
+Uzly v Solana sieti tolerujú dočasnú stratu spojenia s aktuálnym vodcom (PoH generátorom). Pri strate spojenia predpokladajú len prázdne záznamy, ktoré neobsahujú žiadne dáta. Takýto PoH reťazec si dokážu generovať aj sami, bez komunikácie zo sieťou, na základe posledného hashu minulého slotu.
 
 Vetvenie v Solana konsenze vzniká pri zmene vodcu. Nový vodca nemusel zachytiť hlasy uložené v poslednom slote. Tento slot teda nahradí prázdnymi záznamami. Vetvenie slotu je teda binárne (vetva s dátami a prázdna vetva). 
 
-Každý validátor musí sledovať celý binárny strom možných vetiev a uchovávať si ich stav. Voľbu vetvy urobí validátor tak, že vodcovi v danej vetve pošle svoj hlas čím vetvu potvrdí. Validátor potom nemôže hlasovať v žiadnej inej vetve po dobu (pevný počet slotov) ktorá sa nazýva \textit{lockout}. Lockout perióda sa navyše zdvojnásobuje každým ďalším pridaným hlasom v danej vetve až do maximálnej hodnoty (aktuálne je maximum 32 hlasov). Ak chce validátor hlasovať, za inú vetvu, musí počkať do konca periódy lockout. Následovne vykoná návrat späť (anglicky \textit{rollback}) do posledného spoločného stavu medzi starou a novou vetvou.
+Každý validátor musí sledovať celý binárny strom možných vetiev a uchovávať si ich stav. Voľbu vetvy urobí validátor tak, že vodcovi v danej vetve pošle svoj hlas čím vetvu potvrdí. Validátor potom nemôže hlasovať v žiadnej inej vetve po dobu (pevný počet slotov) ktorá sa nazýva \textit{lockout}. Lockout perióda sa navyše zdvojnásobuje každým ďalším pridaným hlasom v danej vetve až do maximálnej hodnoty (aktuálne je maximum 32 hlasov). Ak chce validátor hlasovať, za inú vetvu, musí počkať do konca periódy lockout. Následovne vykoná návrat späť (anglicky \textit{rollback}) do posledného spoločného stavu medzi starou a novou vetvou. Fungovanie a význam lockoutu a rollbacku je podrobnejšie popísaný v sekcii~\ref{subsec:solana-branch}.
 
-\section{Model motivácie}
+\section{Model motivácie}\label{sec:solana-motiv}
+Model motivácie je založený na princípe proof-of-stake. Validátori sú odmeňovaný podielom na zdrojoch blockchainu za správanie, ktoré je pre sieť vhodné. Naopak, nevhodné správanie je penalizované odobraním zdrojov v sieti.
 
-\subsection{Vetvenie}
-Hlasy v jednej vetve sa ukladajú do pomyselného zásobníku s obmedzenou kapacitou na 32 položiek. Každý nový pridaný hlas do zásobníka zdvojnásobí lockout všetkých predošlých hlasov v zásobníku. Keď zásobník dosiahne maximálnu kapacitu tak je najstarší hlas odstránený (FIFO) a majiteľ hlasu je odmenený.
+\subsection{Vetvenie}\label{subsec:solana-branch}
+Hlasy v každej vetve sa ukladajú do pomyselného zoznamu s obmedzenou kapacitou na 32 položiek. Každý nový pridaný hlas do zoznamu zdvojnásobí lockout všetkých predošlých hlasov v zozname. Keď zoznam dosiahne maximálnu kapacitu tak je najstarší hlas odstránený (FIFO) a majiteľ hlasu je odmenený.
+
+Ešte pred tým ako je pridaný nový hlas do zoznamu tak je vykonaný \textit{rollback}. Rollback porovná časový slot pridania nového hlasu s časovými slotmi v ktorých končí lockout každého hlasu v zozname. Ak niektorému hlasu skončil lockout v slote, ktorý je skôr ako slot pridania nového hlasu tak je tento starší hlas odstránený zo zoznamu (LIFO).
+
+S toho vyplýva, že čím viac je vetva používaná, tím pravdepodobnejšie dosiahne ľubovoľný hlas koniec FIFO zoznamu a s tým spojenú odmenu. Validátor ktorý chce maximalizovať svoje zisky je takýmto odmeňovaním motivovaný vybrať vetvu, ktorá je najpoužívanejšia a najstabilnejšia.
 
 Validátor je potrestaný za súbežné hlasovanie v rôznych vetvách. Ak hlasoval v jednej vetve, tak je zaviazaný na hlasovanie len v tejto vetve po dobu lockoutu. Ak validátor poruší lockout a bude mu to preukázané, budú mu odobrané jeho zdroje.
 
-Validátori sú odmeňovaný za výber vetvy, ktorá je najčastejšia a najpoužívanejšia. Validátor je odmenený za každý hlas, ktorý dosiahne v danej vetve maximálny lockout.
-
-\section{Teoretická analýza}
+\section{Teoretická analýza}\label{sec:solana-teor}
 
 \subsection{Proof-of-history}
 
@@ -432,7 +438,7 @@ Why Proof-of-History is not (yet) the consensus of the future?~\footnote{\url{ht
 
 \chapter{Prehľad existujúcich simulátorov}
 
-Pre simuláciu zvolených proof-of-stake protokolov nebude vytvorený úplne nový simulátor. Simulácia celej technológie blockchainu s dostatočne presným model je rozsiahla úloha nad rámec tejto práce. Navyše už boli vytvorené simulačné nástroje, ktoré simulujú rôzne bockchainové protokoly. K týmto simulátorom existujú práce ktoré experimentálne vyhodnotili ich presnosť (viď\cite{simulatorCompar, fanPerfEval}). Preto bude použitý jeden s týchto nástrojov. Zvolený nástroj bude následne upravený a rozšírený tak aby bolo možné simulovať zvolené proof-of-stake protokoly. 
+Pre simuláciu zvolených proof-of-stake protokolov nebude vytvorený úplne nový simulátor. Simulácia celej technológie blockchainu s dostatočne presným model je rozsiahla úloha nad rámec tejto práce. Navyše už boli vytvorené simulačné nástroje, ktoré simulujú rôzne blockchainové protokoly. K týmto simulátorom existujú práce ktoré experimentálne vyhodnotili ich presnosť (viď\cite{simulatorCompar, fanPerfEval}). Preto bude použitý jeden s týchto nástrojov. Zvolený nástroj bude následne upravený a rozšírený tak aby bolo možné simulovať zvolené proof-of-stake protokoly. 
 
 Táto kapitola analyzuje niekoľko aktuálne dostupných simulátorov blockchainu. V závere kapitoly je vykonané porovnanie najvhodnejších nástrojov a je zvolený jeden pre ďalšiu prácu.
 
@@ -445,7 +451,7 @@ Táto kapitola analyzuje niekoľko aktuálne dostupných simulátorov blockchain
 
 SimBlock je simulátor založený na diskrétnej simulácii. Je implementovaný v programovacom jazyku Java a jeho zdrojový kód je voľne dostupný (anglicky \textit{open source})~\footnote{Apache License, Version 2.0}. Simulátor podporuje proof-of-work protokoly Bitcoin, Litecoin, a Dogecoin. Avšak umožňuje aj modulárne zmeniť konsenzus protokol. Posledná stabilná verzia pridala jednoduchú implementáciu proof-of-stake konsenzu~\footnote{\url{https://github.com/dsg-titech/simblock/releases/tag/v0.8.0}}.
 
-Autori tohoto projektu v rámci vyhodnocovania presnosti simulátora vykonali experiment ktorý porovnal ich prácu s podobným už existujúcim simulátorom. Obe simulácie spustili s rovnakými parametrami a to pre protokoly Bitcoin, Litecoin, a Dogecoin. Výsledky oboch simulátorov boli veľmi podobné. Na základe tohoto experimentu autori zhodnotili, že ich simulátor napodobuje reálne blockchainové systémy s dobrou presnosť.
+Autori tohoto projektu v rámci vyhodnocovania presnosti simulátora vykonali experiment ktorý porovnal ich prácu s podobným už existujúcim simulátorom. Obe simulácie spustili s rovnakými parametrami a to pre protokoly Bitcoin, Litecoin, a Dogecoin. Výsledky oboch simulátorov boli veľmi podobné. Na základe tohoto experimentu autori zhodnotili, že ich simulátor napodobuje reálne blockchainové systémy s porovnateľnou presnosťou ako podobné simulátory.
 
 Autori ďalej navrhli úpravu algoritmu na voľbu susedných uzlov (anglicky \textit{neighbor node selection algorithm}) v protokole Bitcoin. Navrhnutú úpravu odsimulovali a vyhodnotili, že ich vylepšenie algoritmu zvyšuje priepustnosť transakcií. Touto simuláciou bol demonštrovaný význam tohoto simulačného nástroja a to je zlepšovanie blockchainových protokolov z hľadiska výkonnosti a bezpečnosti pomocou simulácie.~\cite{simblockWp}
 
@@ -526,7 +532,7 @@ Táto sekcia zhodnocuje simulačné nástroje popísané v rámci tejto kapitoly
 			& Vzťah transakcie k uzlu & 0 & 0 & 0
 		\end{tabular}%
 	}
-	\caption{Podporované vlastnosti zvolených simulátor na sieťovej, konsenzus a dátovej vrstve.}
+	\caption{Matica podporovaných vlastností zvolených simulátorov na sieťovej, konsenzus a dátovej vrstve.}
 	\label{tab:sim-layers}
 \end{table}
 
@@ -536,7 +542,7 @@ Tieto požiadavky spĺňajú v najväčšej miere tri simulačné nástroje: Sim
 
 \subsection{Výsledná voľba}
 
-Predošlá klasifikácia určila simulátori, ktoré majú podporu požadovaných vlastností pre potrebi tejto práce. Avšak táto klasifikácia bola navysokej úrovni a zjednodušovala komplexnosť jednotlivých vrstiev. Napríklad sieťová vrstva nástroja SimBlock je značne komplexnejšia než simulácie sieťovej vrstvi nástroja BlockSim. Tabuľka~\ref{tab:cmp-sim-props} zhrnuje a porovnáva vlastnosti týchto troch simulátorov z hľadiska náročnosti rozšíriteľnosti pre potreby tejto práce. Ako môžeme vydieť, nástroj BlockSim má problém simulovať rozsiahle siete čo je veľkým nedostatkom. Bitcoin Simulator je zase projekt už 5 rokov nevyvýjaný. V tejto práci preto bude použitý nástroj SimBlock, ktorý bude rozšírený o požadovanú funkcionalitu. 
+Predošlá klasifikácia určila simulátory, ktoré majú podporu požadovaných vlastností pre potreby tejto práce. Avšak táto klasifikácia bola na vysokej úrovni a ignorovala komplexnosť jednotlivých vrstiev. Napríklad sieťová vrstva nástroja SimBlock je značne komplexnejšia než simulácie sieťovej vrstvi nástroja BlockSim. Tabuľka~\ref{tab:cmp-sim-props} zhrnuje a porovnáva vlastnosti týchto troch simulátorov z hľadiska náročnosti rozšíriteľnosti pre potreby tejto práce. Ako môžeme vydieť, nástroj BlockSim má problém simulovať rozsiahle siete čo je veľkým nedostatkom. Bitcoin Simulator je zase projekt už 5 rokov nevyvýjaný. V tejto práci preto bude použitý nástroj SimBlock, ktorý bude rozšírený o požadovanú funkcionalitu. 
 
 \begin{table}[H]
 	\resizebox{\textwidth}{!}{%
