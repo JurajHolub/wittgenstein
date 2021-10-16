@@ -12,48 +12,48 @@ Táto kapitola vysvetľuje základné koncepty a pojmy spojené z technológiou 
 \textit{Účtovná kniha} (anglicky \textit{ledger}) sa v histórii ľudstva dlhodobo používa na záznam rôznych položiek, najčastejšie peňazí a majetku. Príchod digitalizácie a globalizácie presunul tento známy koncept z papierovej podoby do elektronickej. Toto prináša nové výzvy z hľadiska bezpečnosti.
 \textit{Distribuovaná účtovná kniha} (anglicky \textit{distributed ledger}) je všeobecne technológia, ktorá poskytuje dôveryhodnú a bezpečnú databázu zdieľanú naprieč viacerými inštitúciami, krajinami a to typicky verejne. Najtypickejším odvetvím využitia distribuovanej účtovnej knihy je bankovníctvo. Banka poskytuje centralizovanú autoritu, ktorá zabezpečuje bezpečnú manipuláciu s peniazmi klientov. Tento koncept označujeme ako centralizovaná účtovná kniha.~\cite{dltUkReport}
 
-V roku 2008 bola publikovaná práca~\cite{satoshiBitcoin}, ktorá navrhla \textit{decentralizovanú} distribuovanú účtovnú knihu. Práca navrhla koncept elektronického platobného systému, ktorého bezpečnosť je založená na kryptografickom dôkaze namiesto dôvere v centralizovanú autoritu. Takáto distribuovaná účtovná kniha sa nazýva \textbf{blockchain}.
-\subsection{Vlastnosti blockchainu}
-Blockchain je dátová štruktúra, ktorá má nasledujúce vlastnosti:
+V roku 2008 bola publikovaná práca~\cite{satoshiBitcoin}, ktorá navrhla \textit{decentralizovanú} distribuovanú účtovnú knihu. Práca navrhla koncept elektronického platobného systému, ktorého bezpečnosť je založená na kryptografickom dôkaze namiesto dôvere v centralizovanú autoritu. Takáto distribuovaná účtovná kniha sa nazýva \textbf{blockchain} (ďalej \textbf{BC}).
+\subsection{Vlastnosti BC}
+BC je dátová štruktúra, ktorá má nasledujúce vlastnosti:
 \begin{itemize}
-	\item \textbf{Decentralizácia}: Blockchain funguje nad peer-to-peer sieťou, ktorá nepotrebuje centralizovanú dôveryhodnú autoritu.
-	\item \textbf{Auditovateľnosť}: Blockchain v sebe nesie celú histórie zmien jeho obsahu a teda každú zmena stavu dát uložených v blockchaine je možné sledovať.
-	\item \textbf{Nemennosť}: Pri správnom použití a dostatočne veľkej sieti nie je možné zmeniť histórie alebo dátový obsah blockchainu.
-	\item \textbf{Anonymita}: Užívatelia pracujúci s blockchainom používajú na identifikáciu asymetrickú kryptografiu s digitálnym podpisom. Takýto kryptografický identifikátor neodhaľuje skutočnú identitu užívateľa a pritom umožňuje nepopierateľne určiť vlastníka elektronického zdroja.
+	\item \textbf{Decentralizácia}: BC funguje nad peer-to-peer sieťou, ktorá nepotrebuje centralizovanú dôveryhodnú autoritu.
+	\item \textbf{Auditovateľnosť}: BC v sebe nesie celú histórie zmien jeho obsahu a teda každú zmena stavu dát uložených v BC je možné sledovať.
+	\item \textbf{Nemennosť}: Pri správnom použití a dostatočne veľkej sieti nie je možné zmeniť históriu alebo dátový obsah BC.
+	\item \textbf{Anonymita}: Užívatelia pracujúci s BC používajú na identifikáciu asymetrickú kryptografiu s digitálnym podpisom. Takýto kryptografický identifikátor neodhaľuje skutočnú identitu užívateľa a pritom umožňuje nepopierateľne určiť vlastníka elektronického zdroja.
 \end{itemize}
 
-Tieto vlastnosti blockchainu sú zabezpečené pomocou peer-to-peer siete na ktorej je blockchain postavený (viď sekcia~\ref{sec:p2p}) a taktiež pomocou samotnej dátovej štruktúry, ktorá využíva modernú kryptografiu (viď sekcia~\ref{sec:data-struct-blockchain}).~\cite{horizenAcademy}
+Tieto vlastnosti BC sú zabezpečené pomocou peer-to-peer siete na ktorej je BC postavený (viď sekcia~\ref{sec:p2p}) a taktiež pomocou samotnej dátovej štruktúry, ktorá využíva modernú kryptografiu (viď sekcia~\ref{sec:data-struct-blockchain}).~\cite{horizenAcademy}
 
 \subsection{Aplikačné využitie}
 
-Blockchain bol navrhnutý a po prvýkrát implementovaný za účelom poskytnúť elektronickú peňažnú menu nezávislú od centralizovaného bankovníctva. Tento prvý, a najznámejší, blockchain je Bitcoin~\cite{satoshiBitcoin}. Avšak vlastnosti blockchainovej technológie nachádzajú uplatnenie vo veľkom množstve odvetví. Nasledujúci zoznam vymenúva niekoľko aplikácií, ktoré blockchain môže riešiť~\cite{homoliakBlockchain}:
+BC bol navrhnutý a po prvýkrát implementovaný za účelom poskytnúť elektronickú peňažnú menu nezávislú od centralizovaného bankovníctva. Tento prvý a najznámejší BC je Bitcoin~\cite{satoshiBitcoin}. Avšak vlastnosti BC technológie nachádzajú uplatnenie vo veľkom množstve odvetví. Nasledujúci zoznam vymenúva niekoľko aplikácií, ktoré BC môže riešiť~\cite{homoliakBlockchain}:
 
 \begin{itemize}
 	\item \textbf{Elektronická peňaženka}: Elektronické peňaženky pre obchod s nejakou formou peňazí (typicky v podobe tokenov). Takéto tokeny sú typicky vlastnené pomocou privátneho kľúča, ktorý má uschovaný majiteľ. Majiteľ môže vlastníctvo tokenov presúvať na iné subjekty v danej sieti.
-	\item \textbf{Zmenárne}: V dnešnej dobe existuje veľké množstvo elektoronických peňažných mien postavených nad blockchainom. Takéto meny všeobecne označujeme ako kryptomeny. Z dôvodu veľkého množstva kryptomien sa prirodzene zvyšuje dopyt po zmenárni medzi jednotlivými kryptomenami. Klasická zmenáreň je riešená tradične centralizovanou autoritou. Avšak blockchain je vhodnou technológie aj pre decentralizovanú zmenáreň.
-	\item \textbf{Súborové systémy}: V dnešnej dobe už existujú decentralizované súborové systémy založené na peer-to-peer sieťach. Implementácia takéhoto decentralizovaného súborového systému ako blockchain by nám umožnila nepopierateľne a trasovateľne verzovať zmeny v obsahu.
-	\item \textbf{Správa identít}: Správa identít je typicky centrálna autorita, ktorá prideľuje pre konkrétne entity určité zdroje na ktoré majú právo. Ide o schému podobnú banke. Blockchain by v tomto prípade opäť umožnil náhradu tejto centralizovanej autority za decentralizovanú sieť.
-	\item \textbf{Voľby}: Elektronické voľby sú ďalším vhodným príkladom, kde sa dá efektívne využiť blockchain. Voliace entity predstavujú decentralizovanú sieť a vlastnosti blockchainu zase poskytujú transparentnosť a verejnú overiteľnosť.
-	\item \textbf{Reputačné systémy}: Reputačné systémy slúžia na meranie úrovne dôvery v určité entity. Typickým príkladom je reputácia rôznych predajcov na základe hlasovania zákazníkov. Transparentnosť a nemennosť blockchainovej histórie by znížila možnosť manipulácie s reputáciu v prospech nejakej entity.
-	\item \textbf{Aukcie}: Elektronická aukcia je služba veľmi podobná elektronickej peňaženke alebo zmenárni s podobnými bezpečnostnými požiadavkami. Tieto vlastnosti by opäť dokázala pokryť technológia blockchain.
+	\item \textbf{Zmenárne}: V dnešnej dobe existuje veľké množstvo elektronických peňažných mien postavených nad BC. Takéto meny všeobecne označujeme ako kryptomeny. Z dôvodu veľkého množstva kryptomien sa prirodzene zvyšuje dopyt po zmenárni medzi jednotlivými kryptomenami. Klasická zmenáreň je riešená tradične centralizovanou autoritou. Avšak BC je vhodnou technológie aj pre decentralizovanú zmenáreň.
+	\item \textbf{Súborové systémy}: V dnešnej dobe už existujú decentralizované súborové systémy založené na peer-to-peer sieťach. Implementácia takéhoto decentralizovaného súborového systému ako BC by nám umožnila nepopierateľne a trasovateľne verzovať zmeny v obsahu.
+	\item \textbf{Správa identít}: Táto služba je typicky zabezpečovaná centrálnou autoritou, ktorá prideľuje pre konkrétne entity určité zdroje na ktoré majú právo. Ide o schému podobnú banke. BC by v tomto prípade opäť umožnil náhradu tejto centralizovanej autority za decentralizovanú sieť.
+	\item \textbf{Voľby}: Elektronické hlasovanie je ďalším vhodným príkladom, kde sa dá efektívne využiť BC. Hlasujúce entity predstavujú decentralizovanú sieť a vlastnosti BC zase poskytujú transparentnosť a verejnú overiteľnosť.
+	\item \textbf{Reputačné systémy}: Tieto služby slúžia merajú úroveň dôvery v určité entity. Typickým príkladom je reputácia rôznych predajcov na základe hlasovania zákazníkov. Transparentnosť a nemennosť BC histórie by znížila možnosť manipulácie s reputáciu v prospech nejakej entity.
+	\item \textbf{Aukcie}: Elektronická aukcia je služba veľmi podobná elektronickej peňaženke alebo zmenárni s podobnými bezpečnostnými požiadavkami. Tieto vlastnosti by opäť dokázala pokryť technológia BC.
 \end{itemize}
 
-\section{Viacvrstvová abstrakcia blockchainu}
+\section{Viacvrstvová abstrakcia BC}
 
-Existuje veľké množstvo blockchain protokolov, ktoré majú rôzne využitie a implementáciu. Avšak všetky tieto implementácie sú založené na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami:~\cite{homoliakBlockchain}
+Existuje veľké množstvo BC protokolov, ktoré majú rôzne využitie a implementáciu. Avšak všetky tieto implementácie sú založené na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami:~\cite{homoliakBlockchain}
 
 \begin{enumerate}
-	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť blockchainu. Napríklad, verejný blockchain ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť paketov alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého blockchainu. Sieťová vrstva je popísaná v sekcii~\ref{sec:p2p}.~\cite{fanPerfEval}
-	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustavuje dohoda na stave blockchainu. Táto vrstva kľúčovo ovplyvňuje priepustnosť transakcií (\textit{TPS - transaction per second}). Táto metrika je kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne 5. Konsenzus v blockchaine je popísaný v sekcii~\ref{sec:consenzus}
-	\item \textbf{Dátová vrstva} (alebo tiež úložisko) definuje model transakcií (binárny hashovací strom, hashovacie a kryptografické algoritmy). Sekcia~\ref{sec:crypto} popisuje kryptografické primitíva používané v technológii blockchain a sekcia~\ref{sec:data-struct-blockchain} popisuje blockchain ako dátovú štruktúru.
+	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť BC. Napríklad, verejný BC ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť paketov alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého BC. Sieťová vrstva je popísaná v sekcii~\ref{sec:p2p}.~\cite{fanPerfEval}
+	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustanovuje dohoda na stave BC. Táto vrstva kľúčovo ovplyvňuje priepustnosť transakcií (\textit{TPS - transaction per second}). Táto metrika je kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne 5. Konsenzus v BC je popísaný v kapitole~\ref{chap:consenzus}
+	\item \textbf{Dátová vrstva} (alebo tiež úložisko) definuje model transakcií (binárny hashovací strom, hashovacie a kryptografické algoritmy). Sekcia~\ref{sec:crypto} popisuje kryptografické primitíva používané v technológii BC a sekcia~\ref{sec:data-struct-blockchain} popisuje BC ako dátovú štruktúru.
 	\item \textbf{Aplikačná vrstva} definuje využitie v konkrétnej službe (napríklad kryptomena).
 \end{enumerate}
 
 \section{Peer-to-peer sieť}\label{sec:p2p}
 
-Technológia blockchain je postavená na peer-to-peer sieťach. Peer-to-peer sieť sa podieľa na decentralizovanosti, nemennosti a auditovateľnosti blockchainu. 
+Technológia BC je postavená na peer-to-peer sieťach. Peer-to-peer sieť sa podieľa na decentralizovanosti, nemennosti a auditovateľnosti BC. 
 
-Peer-to-peer sieť je dynamický súbor nezávislých uzlov (anglicky \textit{peers}), ktoré sú prepojené do grafu. Každý uzol obsahuje zdroje, ktoré zdieľa všetkým ostatným uzlom v sieti.~\cite{p2pBuford, p2pSchollmeier} Dôvod existencie peer-to-peer sietí je teda decentralizovaný spôsob zdieľania zdrojov ako sú súbory, fyzické zariadenia, výpočetný výkon alebo aj elektronické finančné zdroje. Dnes existuje množstvo peer-to-peer sietí. Veľmi známe sú napríklad Gnutella, Kazaa alebo BitTorrent.~\cite{p2pEssence}
+Peer-to-peer sieť je dynamický súbor nezávislých uzlov (anglicky \textit{peers}), ktoré sú prepojené do grafu. Každý uzol obsahuje zdroje, ktoré zdieľa všetkým ostatným uzlom v sieti.~\cite{p2pBuford, p2pSchollmeier} Dôvod existencie peer-to-peer sietí je teda decentralizovaný spôsob zdieľania zdrojov ako sú súbory, fyzické zariadenia, výpočtový výkon alebo aj elektronické finančné zdroje. Dnes existuje množstvo peer-to-peer sietí. Veľmi známe sú napríklad Gnutella, Kazaa alebo BitTorrent.~\cite{p2pEssence}
 
 \subsection{Referenčný model}
 Najbežnejšie technické riešenie peer-to-peer siete je navrstvenie siete (anglicky \textit{overlay network}) na už existujúcu sieť, ktorou je typicky Internet. Takúto sieť potom môžeme definovať ako päticu $(P,R,I,F_P,F_R)$, kde:
@@ -76,13 +76,13 @@ Obrázok~\ref{img:p2p-ref-model} ukazuje princíp fungovania takto definovanej s
 \end{enumerate}
 Konkrétne riešenie pre popisovaných šesť aspektov je zavislé od požiadaviek na efektivitu, škálovateľnosť, samoorganizovateľnosť, odolnosť voči chybám a kooperáciu.~\cite{p2pEssence}
 
-\subsection{Využitie v blockchaine}
+\subsection{Využitie v BC}
 
-Peer-to-peer sieť umožňuje blockchainu uchovávať jeho obsah decentralizovane a pritom bezpečne. Tento koncept si vysvetlíme na prípade blockchainu, ktorý sa využíva ako kryptomena.
+Peer-to-peer sieť umožňuje BC uchovávať jeho obsah decentralizovane a pritom bezpečne. Tento koncept si vysvetlíme na prípade BC, ktorý sa využíva ako kryptomena.
 
-Elektronické financie sú typicky reprezentované pomocou elektronických mincí. Takáto minca je reprezentovaná pomocou nejakej sekvencie bitov. Avšak narozdiel od fyzických mincí, elektronické mince umožňujú jednoduchú falzifikáciu. Útočník skopíruje bitový reťazec danej mince a zaplatí ním viacnásobne rôzne produkty. Tento útok sa volá zdvojnásobenia výdavkov (anglicky \textit{double-spending attack}). Proti tomuto útoku existuje tradičné zabezpečenie pomocou centrálnej autority. Banka je centrálna autorita, ktorá schvaľuje všetky manipulácie s elektronickými mincami a teda neumožní použiť mincu takýmto podvodným spôsobom. Avšak toto riešenie nie je možné použiť v decentralizovanej sieti, kde centrálna autorita neexistuje. V prípade decentralizovanej siete je možné zabrániť tomuto útoku pomocou použitia dátovej štruktúry blockchain.~\cite{doubleSpending}
+Elektronické financie sú typicky reprezentované pomocou elektronických mincí. Takáto minca je reprezentovaná pomocou nejakej sekvencie bitov. Avšak narozdiel od fyzických mincí, elektronické mince umožňujú jednoduchú falzifikáciu. Útočník skopíruje bitový reťazec danej mince a zaplatí ním viacnásobne rôzne produkty. Tento útok sa volá zdvojnásobenia výdavkov (anglicky \textit{double-spending attack}). Proti tomuto útoku existuje tradičné zabezpečenie pomocou centrálnej autority. Banka je centrálna autorita, ktorá schvaľuje všetky manipulácie s elektronickými mincami a teda neumožní použiť mincu takýmto podvodným spôsobom. Avšak toto riešenie nie je možné použiť v decentralizovanej sieti, kde centrálna autorita neexistuje. V prípade decentralizovanej siete je možné zabrániť tomuto útoku pomocou použitia peer-to-peer siete v kombinácii s BC.~\cite{doubleSpending}
 
-Kryptomena Bitcoin ako prvá navrhla použitie peer-to-peer siete v spojení s blockchain technológiou pre zabránenie double-spending útoku. V takejto sietu je jediný zdroj na zdieľanie a to je dátová štruktúra blockchain v ktorej sú uložené všetky informácie o elektronických financiách. Zjednodušene môžeme povedať, že majorita uzlov siete zdieľa rovnaký zdroj (rovnakú kópiu blockchainu). Ak chce niektorý uzol vykonať finančnú transakciu tak zašle správu s navrhovanou zmenou blockchainu do siete. Uzly v tejto sieti nie je potrebné identifikovať pretože správy posielané v tejto sieti nie sú smerované na žiadne konkrétne miesto. Keď uzol prijme správu s nejakou modifikáciu tak si overí či ide o validnú požiadavku na finančnú transakciu. Štruktúra blockchainu používa modernú kryptografiu na overenie validnosti transakcie (pozri sekciu~\ref{sec:crypto}). Blockchain, ktorý vlastní väčšina siete je ten, ktorý sa považuje za pravdu. Útočník by musel teda vlastniť aspoň 51\,\% uzolov v sieti aby mohol vykonať double-spending útok. Ak je daná sieť dostatočne veľká tak by toho útočník nemal byť schopný dosiahnuť.~\cite{satoshiBitcoin}
+Kryptomena Bitcoin ako prvá navrhla použitie peer-to-peer siete v spojení s BC technológiou pre zabránenie double-spending útoku. V takejto sieti je jediný zdroj na zdieľanie a to je dátová štruktúra BC v ktorej sú uložené všetky informácie o elektronických financiách. Zjednodušene môžeme povedať, že majorita uzlov siete zdieľa rovnaký zdroj (rovnakú kópiu BC). Ak chce niektorý uzol vykonať finančnú transakciu tak zašle správu s navrhovanou zmenou BC do siete. Uzly v tejto sieti nie je potrebné identifikovať pretože správy posielané v tejto sieti nie sú smerované na žiadne konkrétne miesto. Keď uzol prijme správu s nejakou modifikáciu tak si overí či ide o validnú požiadavku na finančnú transakciu. Štruktúra BC používa modernú kryptografiu na overenie validnosti transakcie (pozri sekciu~\ref{sec:crypto}). BC vlastnený väčšinou siete je ten, ktorý sa považuje za pravdu. Útočník by musel teda vlastniť aspoň 51\,\% uzlov v sieti aby mohol vykonať double-spending útok. Ak je daná sieť dostatočne veľká tak by toho útočník nemal byť schopný dosiahnuť.~\cite{satoshiBitcoin}
 
 \begin{figure}[bt]
 	\centering
@@ -91,40 +91,8 @@ Kryptomena Bitcoin ako prvá navrhla použitie peer-to-peer siete v spojení s b
 	\label{img:p2p-ref-model}
 \end{figure}
 
-
-\section{Konsenzus}\label{sec:consenzus}
-Konsenzus v blockchaine zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave blockchainu. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak blockchain je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti blockchainu je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi vlastnosťami~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
-\begin{itemize}
-	\item Konzistentnosť: Vždy keď dôjde k potvrdeniu zmeny, celý reťazec sa aktualizuje a všetci čítajú rovnaké hodnoty.
-	\item Dostupnosť: Pre každú požiadavku na dáta musí byť poskytnutá odpoveď.
-	\item Odolnosť voči prerušeniu (anglicky \textit{partial tolerance}): Sieť funguje aj v prípade, že v nej vznikajú chyby.
-\end{itemize}
-
-Existujú tri najbežnejšie techniky, ktoré sa používajú pre ustavenie konsenzu~\cite{homoliakBlockchain}:
-\begin{itemize}
-	\item \textbf{Lotéria}: Takéto protokoly náhodne zvolia uzol, ktorý vyprodukuje nový blok. Výhodou tohoto prístupu je jeho jednoduchosť keďže takýto proces nevyžaduje žiadnu interaktivitu. Nevýhodou tohoto prístupu je, že pripúšťa možnosť voľby viacerých uzlov súčasne. V takom prípade sa reťazec rozvetví (anglicky \textit{fork}) a je potrebné určiť ktorá vetva je správna. Typicky sa za správnu vetvu volí tá najdlhšia. Avšak takéto správanie oslabuje konzistentnosť blockchainu. Transakcie v posledných blokoch môžu byť potenciálne zahodené pretože nejde o správnu vetvu. Preto sa za konzistentné transakcie považujú až tie ktoré sú prekryté väčším množstvom nových blokov.
-	\item \textbf{Hlasovanie}: Protokoly založené na hlasovaní dosahujú dohodu pomocou hlasovania všetkých zapojených uzlov. Môžeme použiť napríklad protokol Byzantskej chyby (anglicky \textit{Byzant fault tolerance}), ktorý vyžaduje majoritu hlasov k uzavretiu konsenzu (typicky $\frac{2}{3}$). Výhodou je veľmi malá pravdepodobnosť vzniku vetiev reťazca. Na druhej strane, takéto protokoly majú nižšiu priepustnosť, ktorá klesá z narastajúcim počtom uzlov.
-	\item \textbf{Kombinovaný prístup}: Tieto protokoly sa snažia kombinovať prístup lotérie a hlasovania s cieľom dosiahnuť výhody oboch prístupov. Napríklad je možné rozdeliť počet uzlov podieľajúcich sa na hlasovaní pomocou lotérie, čím sa zvýši priepustnosť.
-\end{itemize}
-~\cite{zhangConsensus, homoliakBlockchain}
-
-\subsection{Proof-of-Work}\label{subsec:pow}
-Dôkaz prácou (anglicky \textit{proof of work}) je najbežnejšia stratégia konsenzus protokolu. Ak chce uzol publikovať nový blok, musí investovať svoj výpočtový výkon do riešenia netriviálneho kryptografického problému. Uzol, ktorý ako prvý vyrieši tento problém má najväčšiu pravdepodobnosť, že bude jeho blok pridaný do reťazca. Samozrejme, je tu možnosť, že problém vyrieši súčasne viacero uzlov. Konečná voľba je teda náhodná. Proof-of-work teda umožňuje, aj keď s oveľa menšou pravdepodobnosťou, že sa reťazec rozvetví. Bezpečnosť takéhoto konsenzu spočíva v tom, že majorita výpočtového výkonu siete (51\,\%) je vlastnená poctivými uzlami.~\cite{leporeConsensus}
-
-Samotný kryptografický problém, ktorý sa rieši spočíva v počítaní hashu (viď~\ref{subsec:hash}) z hlavičky nového bloku (viď~\ref{subsec:block}). Hlavička obsahuje atribút nonce, ktorý môže miner ľubovolne nastaviť. Zmenou tohoto atribútu môže miner získať iný hash hlavičky bloku. Konsenzus vyžaduje aby výsledná hash hodnota bola menšia rovná určitej zvolenej hodnote. Miner môže túto podmienku dosiahnuť len tak, že bude inkrementovať hodnotu atribútu nonce až dokedy túto podmienku nesplní. Táto úloha sa teda dá riešiť len pomocou metódy útok hrubou silou (anglicky \textit{brute force}). Miner môže svoju šancu na úspech zvýšiť len tým, že poskytne väčší výpočtový výkon do jej riešenia. Na druhej strane, ostatné uzly môžu overiť, že jeho riešenia je správne veľmi rýchlo a efektívne.~\cite{zhengBlockchainOverview}
-
-Proof-of-work konsenzus využíva dva typy uzlov. Prvý typ uzla je miner, ktorý vytvára nové bloky tak ako je popísané v sekcii~\ref{sec:mining}. Druhý typ uzla je bežný vlastník zdrojov v danom blockchaine, ktorý môže vytvárať transakcie a distribuovať ich do siete. Druhý typ uzla teda nehrá žiadnu rolu v ustanovovaní konsenzu.~\cite{leporeConsensus}
-
-Proof-of-work je overený konsenzus protokol, ktorý funguje a používa sa v blockchainoch ako je Bitcoin~\cite{satoshiBitcoin} alebo Ethereum~\footnote{\url{https://ethereum.org/en/whitepaper/}}. Tento protokol má však jeden dlhodobý problém a to je spotreba energie. Uzly ktoré riešia kryptografický problém pre nové bloky spotrebujú veľké množstvo energie čo má nepriaznivý dopad na životné prostredie. Niektoré zdroje~\footnote{\url{https://www.businessinsider.com/bitcoin-mining-electricity-usage-more-than-google-2021-9}} napríklad hovoria, že v roku 2021 pokrýva ťažba Bitcoinu 0,5\,\% celkovej spotreby elektrickej energie na svete. Pre porovnanie, ide o sedemkrát väčšiu spotrebu energie ako má celá spoločnosť Google.~\cite{leporeConsensus}
-
-\subsection{Proof-of-Stake}\label{subsec:pos}
-
-Dôkaz podielom na vlastníctve (anglicky \textit{proof of stake}) je založený na technike lotérie, kde pravdepodobnosť výhry rastie s množstvom už vlastnených zdrojov. Základnou myšlienkou, je že vlastník veľkého množstva zdrojov v danom blockchaine je veľmi nepravdepodobným útočníkom pretože svoje zdroje nechce ohroziť. Uzly sa teda musia preukázať vlastníctvom zdrojov v danom blockchaine ak chcú publikovať nový blok. Pravdepodobnosť výberu uzlu rastie s množstvom zdrojov, ktoré v sieti vlastní.~\cite{homoliakBlockchain, nguyenPos}
-
-Veľkou výhodou proof-of-stake oproti proof-of-work je, že nevyždauje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. ~\cite{leporeConsensus}
-
-\section{Kryptografia v blockchaine}\label{sec:crypto}
-Pre pochopenie technológie blockchain je potrebná základná znalosť modernej kryptografie. V tejto sekcii je popísaný kryptografická hashovacia funkcia (pozri~\ref{subsec:hash}) a jej využitie na tvorbu dátových štruktúr zabezpečených proti modifikácii obsahu (viď sekcia~\ref{subsec:hash-pointer}). Ďalej je vysvetlený koncept asymetrickej kryptografie a digitálneho podpisu (viď sekcia~\ref{subsec:sign}). Tieto kryptografické primitíva sú základom na ktorom stojí nemennosť, auditovateľnosť a anonymita blockchainu.
+\section{Kryptografia v BC}\label{sec:crypto}
+Pre pochopenie technológie BC je potrebná základná znalosť modernej kryptografie. V tejto sekcii je popísaný kryptografická hashovacia funkcia (pozri~\ref{subsec:hash}) a jej využitie na tvorbu dátových štruktúr zabezpečených proti modifikácii obsahu (viď sekcia~\ref{subsec:hash-pointer}). Ďalej je vysvetlený koncept asymetrickej kryptografie a digitálneho podpisu (viď sekcia~\ref{subsec:sign}). Tieto kryptografické primitíva sú základom na ktorom stojí nemennosť, auditovateľnosť a anonymita BC.
 
 \subsection{Hashovacia funkcia}\label{subsec:hash}
 Hashovacia funkcia je taká funkcia $h$, ktorá má ako parameter $x$ reťazec bitov ľubovolnej dĺžky a vracia reťazec $y$ s konštantnou dĺžkou(viď rovnica~\ref{eq:hash}). Reťazec $y$ voláme hash. Hashovacia funkcia vracia pre konkrétny vstup vždy rovnaký hash.
@@ -218,20 +186,80 @@ Konštrukcia takéhoto stromu pre $n$ transakcií má časovú zložitosť $O(lo
 
 Merkle strom umožnuje efektívne šetriť pamäťové nároky blockchainu. Do blockchainu sú neustále pridávané nové bloky, ktoré obsahujú aj rovnaké staré transakcie. Ak už sú transakcie zaznamenané v dostatočne veľkom množstve blokov tak sú z hľadiska bezpečnosti nemenné. V nových blokoch ich už preto nie je potrebné ukladať. Nový blok si preto uloží len hashe starých vetiev stromu, ale ich obsah už nepotrebuje. Takto je zachovaná integrita hashu všetkých transakcií.~\cite{satoshiBitcoin}
 
-\section{Ťažba blokov}\label{sec:mining}
 
-Ťažba (anglicky \textit{mining}) bloku je proces pridania nové bloku na koniec blockchainu. Ťažba bloku zahŕňa validáciu transakcií a blokov. Preto je ťažba kritická pre správne a bezpečné fungovanie blockchainu. Každý uzol siete, ktorý ťaží nové bloky sa nazýva anglickým slovom \textit{miner}. Tieto uzly umožňujú rozširovanie blockchainu. Aby takéto uzly existovali, musia byť motivované. Miner dostane za každý vyťažený blok ako odmenu zdroje uložené v blockchaine.
+\chapter{Konsenzus}\label{chap:consenzus}
+
+Konsenzus v BC zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave BC. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak BC je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti BC je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi vlastnosťami~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
+\begin{itemize}
+	\item Konzistentnosť: Vždy keď dôjde k potvrdeniu zmeny, celý reťazec sa aktualizuje a všetci čítajú rovnaké hodnoty.
+	\item Dostupnosť: Pre každú požiadavku na dáta musí byť poskytnutá odpoveď.
+	\item Odolnosť voči prerušeniu (anglicky \textit{partial tolerance}): Sieť funguje aj v prípade, že v nej vznikajú chyby.
+\end{itemize}
+
+\section{Typy konsenzus protokolov}
+Existujú tri najbežnejšie techniky, ktoré sa používajú pre ustavenie konsenzu~\cite{zhangConsensus, homoliakBlockchain}:
+\begin{itemize}
+	\item \textbf{Lotéria}: Takéto protokoly náhodne zvolia uzol, ktorý vyprodukuje nový blok. Výhodou tohoto prístupu je jeho jednoduchosť keďže takýto proces nevyžaduje žiadnu interaktívnu komunikáciu. Nevýhodou tohoto prístupu je, že pripúšťa možnosť voľby viacerých uzlov súčasne. V takom prípade sa reťazec rozvetví (anglicky \textit{fork}) a je potrebné určiť ktorá vetva je správna. Typicky sa za správnu vetvu volí tá najdlhšia. Avšak takéto správanie oslabuje konzistentnosť BC. Transakcie v posledných blokoch môžu byť potenciálne zahodené pretože nejde o správnu vetvu. Preto sa za konzistentné transakcie považujú až tie ktoré sú prekryté väčším množstvom nových blokov.
+	\item \textbf{Hlasovanie}: Protokoly založené na hlasovaní dosahujú dohodu pomocou hlasovania všetkých zapojených uzlov. Môžeme použiť napríklad protokol Byzantskej chyby (anglicky \textit{Byzant fault tolerance}), ktorý vyžaduje majoritu hlasov k uzavretiu konsenzu (typicky $\frac{2}{3}$). Výhodou je veľmi malá pravdepodobnosť vzniku vetiev reťazca. Na druhej strane, takéto protokoly majú nižšiu priepustnosť, ktorá klesá z narastajúcim počtom uzlov.
+	\item \textbf{Kombinovaný prístup}: Tieto protokoly sa snažia kombinovať prístup lotérie a hlasovania s cieľom dosiahnuť výhody oboch prístupov. Napríklad je možné rozdeliť počet uzlov podieľajúcich sa na hlasovaní pomocou lotérie, čím sa zvýši priepustnosť.
+\end{itemize}
+
+Dnes sa hoví najmä o dvoch rodinách konsenzus protokolov. Prvou a najbežnejšou rodinou je \textit{Proof-of-Work}. Tento konsenzus mechanizmus je založený na princípe lotérie. Detailnejšie je popísaný v sekcii~\ref{sec:pow}.
+
+Táto práca sa však zaoberá predovšetkým konsenzus mechanizmos, ktorý sa všeobecne nazýva \textit{Proof-of-Stake}. Táto rodina konsenzus protokolov je založená na hlasovaní. V poslednej dobe sa ponúka ako vhodná alternatíva k Proof-of-Work. Tento mechanizmus je detailnejšie popísaný v sekcii~\ref{sec:pos}
+
+\section{Proof-of-Work}\label{sec:pow}
+Dôkaz prácou, anglicky \textit{Proof-of-Work} (ďalej PoW), je najbežnejšia stratégia konsenzus protokolu. Ak chce uzol publikovať nový blok, musí investovať svoj výpočtový výkon do riešenia netriviálneho kryptografického problému. Uzol, ktorý ako prvý vyrieši tento problém má najväčšiu pravdepodobnosť, že bude jeho blok pridaný do reťazca. Samozrejme, je tu možnosť, že problém vyrieši súčasne viacero uzlov. Konečná voľba je teda náhodná. PoW teda umožňuje, aj keď s oveľa menšou pravdepodobnosťou, že sa reťazec rozvetví. Bezpečnosť takéhoto konsenzu spočíva v tom, že majorita výpočtového výkonu siete (51\,\%) je vlastnená poctivými uzlami.
+
+PoW konsenzus využíva dva typy uzlov. Prvý typ uzla je miner, ktorý vytvára nové bloky tak ako je popísané v sekcii~\ref{sec:mining}. Druhý typ uzla je bežný vlastník zdrojov v danom BC, ktorý môže vytvárať transakcie a distribuovať ich do siete. Druhý typ uzla teda nehrá žiadnu rolu v ustanovovaní konsenzu.~\cite{leporeConsensus}
+
+\subsection{Ťažba blokov}\label{sec:mining}
+
+Ťažba (anglicky \textit{mining})~\cite{narayanan2016bitcoin} bloku je proces pridania nové bloku na koniec blockchainu. Ťažba bloku zahŕňa validáciu transakcií a blokov. Preto je ťažba kritická pre správne a bezpečné fungovanie blockchainu. Každý uzol siete, ktorý ťaží nové bloky sa nazýva anglickým slovom \textit{miner}. Tieto uzly umožňujú rozširovanie blockchainu. Aby takéto uzly existovali, musia byť motivované. Miner dostane za každý vyťažený blok ako odmenu zdroje uložené v blockchaine.
 
 Ťažba všeobecne pozostáva z nasledujúcich krokov:
 \begin{enumerate}
-	\item Miner prijíma požiadavky na transakcie z peer-to-peer siete. Každú transakciu si validuje pomocou kryptografie popísanej v sekcii~\ref{sec:crypto}.
-	\item Miner musí taktiež udržiavať aktuálny stav blockchainu. Je potrebné sledovať či nevznikli nové bloky a udržiavať si validný blockchain.
-	\item Ak miner vlastní validnú a aktuálnu kópiu blockchainu, môže začať vytvárať nový blok. Do nového bloku vloží transakcie, ktoré prijal a boli validné.
-	\item Novo vytvorený blok je potrebné distribuovať do siete. Ak väčšina siete blok získa a akceptuje, tak bol pridaný do blockchainu. Tento proces zahŕňa problém konsenzu v sieti, ktorý je podrobne vysvetlený v sekcii~\ref{sec:consenzus}.
+	\item Miner prijíma požiadavky na transakcie z peer-to-peer siete. Každú transakciu si validuje pomocou kryptografie popísanej v sekcii~\ref{sec:crypto}. Miner musí taktiež udržiavať aktuálny stav blockchainu. Je potrebné sledovať či nevznikli nové bloky a udržiavať si validný blockchain.
+	\item Ak miner vlastní validnú a aktuálnu kópiu blockchainu a má dostatok transakcií, môže začať vytvárať nový blok. Do nového bloku vloží transakcie, ktoré prijal a boli validné. Následne investuje svoj výpočtový výkon do vyriešenia kryptografického problému (podrobnejšie popísané v sekcii~\ref{subsec:bitcoin}). Ak úlohu vyrieši tak môže zostrojiť nový validný blok.
+	\item Novo vytvorený blok je potrebné distribuovať do siete. Ak väčšina siete blok získa a akceptuje, tak bol pridaný do blockchainu.
 	\item Ak sa podarilo úspešne blok pridať do blockchainu tak miner získava odmenu. Odmena za vyťažený blok je konštantná čiastka zdrojov poskytovaných daným blockchainom. Napríklad Bitcon poskytuje v roku 2021 ako odmenu 6,25 bitcoinov čo približne 300 dolárov~\footnote{\url{https://www.investopedia.com/tech/how-does-bitcoin-mining-work/}}. Avšak táto odmena môže byť navýšená o poplatky, ktoré sú v transakciách. Ak teda chcete aby sa vaša transakcia dostala do blockchainu čo najrýchlejšie, poskytnete vyššiu odmenu v podobe poplatku za transakciu. Miner bude potom viac motivovaný pridať práve túto transakciu do bloku.
 \end{enumerate}
 
-~\cite{narayanan2016bitcoin}
+\subsection{Bitcoin}\label{subsec:bitcoin}
+Bitcoin je najznámejší BC protokol, ktorý používa PoW konsenzus. Samotný kryptografický problém, ktorý užívatelia tejto siete riešia spočíva v počítaní hashu (viď~\ref{subsec:hash}) z hlavičky nového bloku (viď~\ref{subsec:block}). Hlavička obsahuje atribút nonce, ktorý môže miner ľubovolne nastaviť. Zmenou tohoto atribútu môže miner získať iný hash hlavičky bloku. Konsenzus vyžaduje aby výsledná hash hodnota bola menšia rovná určitej zvolenej hodnote. Miner môže túto podmienku dosiahnuť len tak, že bude inkrementovať hodnotu atribútu nonce až dokedy túto podmienku nesplní. Táto úloha sa teda dá riešiť len pomocou metódy útok hrubou silou (anglicky \textit{brute force}). Miner môže svoju šancu na úspech zvýšiť len tým, že poskytne väčší výpočtový výkon do jej riešenia. Na druhej strane, ostatné uzly môžu overiť, že jeho riešenie je správne veľmi rýchlo a efektívne.~\cite{zhengBlockchainOverview}
+
+\subsection{Vlastnosti}
+PoW je overený konsenzus protokol, ktorý funguje a používa sa v blockchainoch ako je Bitcoin~\cite{satoshiBitcoin} alebo Ethereum~\footnote{\url{https://ethereum.org/en/whitepaper/}}. Tento protokol má však jeden dlhodobý problém a to je spotreba energie. Uzly ktoré riešia kryptografický problém pre nové bloky spotrebujú veľké množstvo energie čo má nepriaznivý dopad na životné prostredie. Niektoré zdroje~\footnote{\url{https://www.businessinsider.com/bitcoin-mining-electricity-usage-more-than-google-2021-9}} napríklad hovoria, že v roku 2021 pokrýva ťažba Bitcoinu 0,5\,\% celkovej spotreby elektrickej energie na svete. Pre porovnanie, ide o sedemkrát väčšiu spotrebu energie ako má celá spoločnosť Google.~\cite{leporeConsensus}
+
+\section{Proof-of-Stake}\label{sec:pos}
+
+Dôkaz podielom na vlastníctve, anglicky \textit{Proof-of-Stake} (ďalej PoS), je založený na technike lotérie, kde pravdepodobnosť výhry rastie s množstvom už vlastnených zdrojov. Základnou myšlienkou, je že vlastník veľkého množstva zdrojov v danom BC je veľmi nepravdepodobným útočníkom pretože svoje zdroje nechce ohroziť. Uzly sa teda musia preukázať vlastníctvom zdrojov v danom BC ak chcú publikovať nový blok. Pravdepodobnosť výberu uzlu rastie s množstvom zdrojov, ktoré v sieti vlastní.~\cite{homoliakBlockchain, nguyenPos}
+
+\subsection{Practical Byzantine Fault Tolerance}\label{subsec:pos-pbft}
+
+\textit{Practical Byzantine Fault Tolerance}~\cite{pbftCastro} (ďalej len PBFT) je protokol na uznesenie konsenzu v distribuovanej sieti pomocou hlasovania. Tento protokol je používaný na uznesenie PoS konsenzu v BC. PBFT funguje pod podmienkou, že v sieti je maximálne $\frac{1}{3}$ nepoctivých uzlov. Na komunikáciu v sieti sa používa všesmerové vysielanie (anglicky \textit{broadcast}). Na zabezpečenie sa požíva kryptografia s digitálnym podpisom (viď sekcia~\ref{subsec:sign}). Jednotlivé uzly môžu posielať požiadavky do siete (vtedy hovoríme o tomto uzle ako o klientovi). Protokol definuje jeden uzol v sieti ako vodcu a ostatné uzly ako validátorov. Vodca hlasovania sa pravidelne mení podľa dohodnutého rozvrhu.
+Hlasovanie protokolu prebieha v štyroch fázach:
+\begin{enumerate}
+	\item \textit{Request}: Klient zašle vodcovi požiadavku na uznesenie konsenzu v sieti.
+	\item \textit{Pre-prepare}: Vodca rozošle požiadavku všetkým validátorom.
+	\item \textit{Prepare}: Validátori overia požiadavku, ak súhlasia, tak pošlú svoj hlas všetkým v sieti. Zároveň, každý uzol siete (validátori aj vodca) sledujú a overujú hlasy, ktoré prijali. Ak uzol zaznamenal viac ako $\frac{2}{3}$ hlasov tak zašle potvrdenie všetkým uzlom v sieti. 
+	\item \textit{Commit}: Každý uzol počíta potvrdenia od všetkých ostatných uzlov v sieti. Ak získa viac ako~$\frac{1}{3}$ potvrdení, tak pošle potvrdenie klientovi, ktorý pôvodne inicializoval požiadavku na konsenzus. Klient vie, že jeho požiadavka bola prijatá sieťou, ak prijme viac ako $\frac{1}{3}$ potvrdení.
+\end{enumerate}
+Obrázok~\ref{img:pbft} demonštruje tento protokol. \textbf{C} je klient, uzol 0 je vodca a uzly 1 až 3 sú validátori. Môžeme vidieť, že sieť funguje aj keď uzol 3 nereaguje na komunikáciu.
+\begin{figure}[bt]
+	\centering
+	\includegraphics[width=.7\textwidth]{obrazky-figures/pbft}
+	\caption{Priebeh hlasovania v PBFT (prevzaté z~\cite{pbftCastro}).}
+	\label{img:pbft}
+\end{figure}
+
+\subsection{Vlastnosti}
+
+Veľkou výhodou PoS oproti PoW je, že nevyžaduje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. Ďalšou veľkou výhodou je rýchlosť. PoS konsenzus umožňuje rádovo vyššie TPS, ktoré je v prípade PoW značne limitované.~\cite{leporeConsensus, nguyenPos}
+
+PoS konsenzus však prináša aj viaceré problémy. Najväčším problémom je bezpečnosť. PoS prinieslo nové typy útokov, ktoré pri PoW nevznikali. Tieto útoky sú podrobnejšie popísané v sekcii~\ref{sec:pos-attacks}. Bežným problémom väčšiny PoS protokolov je, že nedefinujú teoretický základ a formálne definovanú bezpečnosť. Existujú teda rôzne riešenia na tieto útoky avšak neexistuje formálny bezpečnostný model, ktorý by dokazoval, že tieto útoky sú zabezpečené.
+
+Ďalším problémom je model motivácie. PoS konsenzus podporuje validné správanie odmeňovaním v podobe zdrojov. Naopak, škodlivé chovanie je trestané ich odoberaním. Problémom tohoto mechanizmu je jeho nejednoznačná definícia. Väčšina protokolov neobsahuje formálnu analýzu ich modelu motivácie.~\cite{nguyenPos}
 
 \chapter{Útoky na konsenzus}
 
@@ -259,7 +287,7 @@ Niektoré konsenzus protokoly rozdeľujú celú sieť na podskupiny uzlov (angli
 
 last-revealer attack~\cite{lastRevealerAttack}
 
-\section{Útoky na proof-of-stake}
+\section{Útoky na proof-of-stake}\label{sec:pos-attacks}
 
 \subsection{Vetvenie bez rizika straty zdrojov}
 Generovanie blokov v proof-of-stake nestojí žiadnu energiu v podobe výpočtového výkonu. Uzly preto môžu generovať viacero konfliktných uzlov súčasne a tým zvyšovať pravdepodobnosť, že bude práve ich uzol pridaný do reťazca. Takéto správanie nepredstavuje pre daný uzol žiaden risk v podobe straty zdrojov. Problémom tohoto správania je, že vzniká väčšie množstvo vetiev reťazca. Ako dôsledok sa potom zvyšuje čas do konzistentnosti blockchainu.
