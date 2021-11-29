@@ -189,12 +189,15 @@ Merkle strom umožnuje efektívne šetriť pamäťové nároky blockchainu. Do b
 
 \chapter{Konsenzus}\label{chap:consenzus}
 
-Konsenzus v BC zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave BC. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak BC je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti BC je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi vlastnosťami~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
+Konsenzus v BC zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave BC. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak BC je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti BC je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi troma vlastnosťami (anglicky \textit{CAP theorem})~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
 \begin{itemize}
-	\item Konzistentnosť: Vždy keď dôjde k potvrdeniu zmeny, celý reťazec sa aktualizuje a všetci čítajú rovnaké hodnoty.
-	\item Dostupnosť: Pre každú požiadavku na dáta musí byť poskytnutá odpoveď.
-	\item Odolnosť voči prerušeniu (anglicky \textit{partial tolerance}): Sieť funguje aj v prípade, že v nej vznikajú chyby.
+	\item Konzistentnosť (\textit{Consistency}): Všetci uživatelia majú rovnaký stav BC (rovnaké dáta).
+	\item Dostupnosť (\textit{Availability}): Pre každú požiadavku na dáta musí byť poskytnutá odpoveď v konečnom čase. Odpoveďou môže byť aj neúspech.
+	\item Odolnosť voči prerušeniu (\textit{Partial tolerance}): Sieť funguje aj v prípade, že v nej vznikajú chyby (výpadky uzlov, škodlivé správanie časti uzlov).
 \end{itemize}
+CAP theorem~\cite{gilbertCAP} deklaruje, že z týchto troch vlastností je súčasne možné dosiahnuť maximálne dve.
+
+Technológia BC požaduje decentralizovanú distribuovanú sieť. Z vlastností takejto siete je zrejmé, že BC musí nevyhnutne riešiť problém odolnosť voči prerušeniu. Zo zvyšných dvoch vlastností sa môže zvoliť dostupnosť pred konzistenciou (napríklad Bitcoin). Bitcoin zaisťuje konzistenciu až dodatočne (anglicky \textit{eventual consistancy}) pomocou procesu ťažby blokov a určenia najdlhšieho reťazca. Druhou možnosťou je zvoliť konzistenciu pred dostupnosťou. Táto skupina BC protokolov je založená na hlasovaní pomocou PBFT protokolu (viď~\ref{subsec:pos-pbft}) na zaručenie silnej konzistencie.~\cite{capViswanath}
 
 \section{Typy konsenzus protokolov}
 Existujú tri najbežnejšie techniky, ktoré sa používajú pre ustavenie konsenzu~\cite{zhangConsensus, homoliakBlockchain}:
@@ -261,12 +264,10 @@ PoS konsenzus však prináša aj viaceré problémy. Najväčším problémom je
 
 Ďalším problémom je model motivácie. PoS konsenzus podporuje validné správanie odmeňovaním v podobe zdrojov. Naopak, škodlivé chovanie je trestané ich odoberaním. Problémom tohoto mechanizmu je jeho nejednoznačná definícia. Väčšina protokolov neobsahuje formálnu analýzu ich modelu motivácie.~\cite{nguyenPos}
 
-\chapter{Útoky na konsenzus}
-
-\section{Všeobecné utoky}
+\section{Všeobecné útoky na konsenzus}
 
 \subsection{Ovládnutie konsenzu útočníkmi}
-Tieto útoky narušia decentralizované siete tým, že útočníci dokážu utvoriť konsenzus. V takom prípade sa stáva sieť centralizovaná, kde centrálnou autoritou sú práve útočníci. Príkladom takéhoto útoku pre proof-of-work a proof-of-stake konsenzus je ovládnutie 51\,\% siete. V prípade protokolov Byzantskej chyby dokáže $\frac{1}{3}$ uzlov spôsobiť, že bude protokol narušený alebo dokonca zastavený.~\cite{homoliakBlockchain}
+Tieto útoky narušia decentralizované siete tým, že útočníci dokážu utvoriť konsenzus. V takom prípade sa stáva sieť centralizovaná, kde centrálnou autoritou sú práve útočníci. Príkladom takéhoto útoku pre PoW a PoS konsenzus je ovládnutie 51\,\% siete. V prípade protokolov Byzantskej chyby dokáže $\frac{1}{3}$ uzlov spôsobiť, že bude protokol narušený alebo dokonca zastavený.~\cite{homoliakBlockchain}
 
 \subsection{Porušenie synchronného doručovania}
 
@@ -287,10 +288,10 @@ Niektoré konsenzus protokoly rozdeľujú celú sieť na podskupiny uzlov (angli
 
 last-revealer attack~\cite{lastRevealerAttack}
 
-\section{Útoky na proof-of-stake}\label{sec:pos-attacks}
+\section{Útoky na PoS konsenzus}\label{sec:pos-attacks}
 
 \subsection{Vetvenie bez rizika straty zdrojov}
-Generovanie blokov v proof-of-stake nestojí žiadnu energiu v podobe výpočtového výkonu. Uzly preto môžu generovať viacero konfliktných uzlov súčasne a tým zvyšovať pravdepodobnosť, že bude práve ich uzol pridaný do reťazca. Takéto správanie nepredstavuje pre daný uzol žiaden risk v podobe straty zdrojov. Problémom tohoto správania je, že vzniká väčšie množstvo vetiev reťazca. Ako dôsledok sa potom zvyšuje čas do konzistentnosti blockchainu.
+Generovanie blokov v PoS nestojí žiadnu energiu v podobe výpočtového výkonu. Uzly preto môžu generovať viacero konfliktných uzlov súčasne a tým zvyšovať pravdepodobnosť, že bude práve ich uzol pridaný do reťazca. Takéto správanie nepredstavuje pre daný uzol žiaden risk v podobe straty zdrojov. Problémom tohoto správania je, že vzniká väčšie množstvo vetiev reťazca. Ako dôsledok sa potom zvyšuje čas do konzistentnosti BC.
 
 \subsection{Ovplyvnenie volieb}
 Útočník ovplyvňuje voľby v jeho prospech. Takto zvyšuje pravdepodobnosť, že bude zvolený práve jeho blok. 
@@ -306,13 +307,13 @@ Ak útočník získa kľúče s dostatočným podielom zdrojov, tak môže pozme
 
 \chapter{Harmony}\label{chap:harmony}
 
-Harmony je blockchain používajúci proof-of-stake konsenzus a sharding. Cieľom tohoto protokolu je poskytovať aplikácie, ktoré v minulosti nebolo možné uskutočňovať na technológii blockchain (decentralizované zmenárne, platobný systém rozsahovo porovnateľný s Visa).
+Harmony je BC používajúci PoS konsenzus a \textit{sharding}. Cieľom tohoto protokolu je poskytovať aplikácie, ktoré v minulosti nebolo možné uskutočňovať na technológii BC (decentralizované zmenárne, platobný systém rozsahovo porovnateľný s Visa).
 
 Všetky informácie o protokole Harmony popisované v tejto kapitole vychádzajú z oficiálnej dokumentácie publikovanej autormi tohoto protokolu~\cite{harmonyWp}. Sekcia~\ref{sec:harmony-cons} popisuje konsenzus protokol. Sekcia~\ref{sec:harmony-shards} vysvetľuje sharding používaný v tomto protokole.  Na záver je v sekcii~\ref{sec:harmony-analyze} tento protokol analyzovaný z hľadiska bezpečnosti a výkonnosti.
 
 \section{Konsenzus}\label{sec:harmony-cons}
 
-Konsenzus v Harmony protokole je založený na algoritme PBFT (\textit{Practical Byzantine Fault Tolerance})~\cite{pbftCastro}. Pri PBFT voľbách je jeden uzol vodca a ostatné validátory. PBFT voľby prebiehajú v dvoch fázach: príprava a potvrdenie. Vo fáze prípravy rozošle vodca návrh všetkým validátorom pomocou broadcastu. Následne každý validátor pošle broadcastom svôj hlas. Takto môže každý uzol v sieti spočítať počet hlasov. Fáza prípravy končí keď uzol videl viac ako $\frac{2}{3}$ hlasov. Následuje fáza potvrdenia, ktorá zahŕňa podobný proces hlasovania pomocou broadcastu. Celková časová zložitosť PBFT je $O(n^2)$ pre $n$ uzlov.
+Konsenzus v Harmony protokole je založený na algoritme PBFT, ktorý už bol popísaný v sekcii~\ref{subsec:pos-pbft}. Celková časová zložitosť PBFT je $O(n^2)$ pre $n$ uzlov.
 
 \subsection{Protokol}\label{subsec:fbft}
 Harmony používa úpravu PBFT s lineárnou škálovateľnosťou, ktorú nazýva FBFT (\textit{Fast Byzantine Fault Tolerance}). FBFT namiesto zasielania hlasov pomocou broadcastu používa prahový digitálny podpis (pozri sekciu~\ref{subsec:threshold-sig}). FBFT konsenzus prebieha následovne:
@@ -323,14 +324,14 @@ Harmony používa úpravu PBFT s lineárnou škálovateľnosťou, ktorú nazýva
 	\item Každý validátor overí, že prahový podpis obsahuje požadované $\frac{2}{3}$ hlasov. Až v tejto chvíli validátor overí transakcie v dátovom obsahu bloku, ktorý bol zasielaný už v kroku 1. Ak všetko súhlasí, tak podpíše správu s kroku 3 a pošle ju späť vodcovi.
 	\item Vodca čaká na $\frac{2}{3}$ podpisov validátorov s predošlého kroku (môžu sa líšiť od podpisov z kroku 3). Opäť ich agreguje do prahového podpisu a spolu s bitmapou účastníkov rozošle pomocou broadcastu nový blok na potvrdenie všetkým validátorom. 
 \end{enumerate}
-Je dôležité podotknúť, že Harmony je proof-of-stake konsenzus. Preto v celej tejto schéme neplatí, že jeden validátor sa rovná jednému hlasu. Jeden účastník môže mať viac hlasovacích lístkov (viď sekcia~\ref{subsec:rand-dist}). Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu hlasovacích lístkov.
+Je dôležité podotknúť, že Harmony je PoS konsenzus. Preto v celej tejto schéme neplatí, že jeden validátor sa rovná jednému hlasu. Jeden účastník môže mať viac hlasovacích lístkov (viď sekcia~\ref{subsec:rand-dist}). Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu hlasovacích lístkov.
 
 \section{Sharding}\label{sec:harmony-shards}
 
 Harmony protokol používa \textit{sharding} aby dosiahol lepšiu škálovateľnosť a priepustnosť transakcií. Niektoré zdroje~\footnote{\url{https://www.investing.com/news/cryptocurrency-news/harmony-one-slow-and-steady-wins-the-race-2609585}} deklarujú, že Harmony má priepustnosť priemerne 2\,000 TPS. Aktuálne používa 4 shardy a autori tvrdia, že pridaním každej ďalšej sa zvýši priepustnosť o 500 TPS. Táto sekcia vysvetľuje celý koncept shardingu v protokole Harmony.
 
 \subsection{Rozdelenie hlasovacím podielom}\label{subsec:rand-dist}
-Ak sa chce uzol stať účastníkom Harmony blockchainu, musí vložiť určité množstvo tokenov (koncept proof-of-stake). Tento podiel určuje koľko bude mať hlasovacích lístkov pri validovaní. Tieto hlasovacie lístky sú následne náhodne rozdelené medzi všetky shardy (viď sekcia~\ref{subsec:rnd}) po dobu jednej epochy (viď sekcia~\ref{subsec:epoch}).
+Ak sa chce uzol stať účastníkom Harmony blockchainu, musí vložiť určité množstvo zdrojov. Tento podiel určuje koľko bude mať hlasovacích lístkov pri validovaní. Tieto hlasovacie lístky sú následne náhodne rozdelené medzi všetky shardy (viď sekcia~\ref{subsec:rnd}) po dobu jednej epochy (viď sekcia~\ref{subsec:epoch}).
 
 \subsection{Epocha}\label{subsec:epoch}
 Epocha je časový interval počas, ktorého je štruktúra každého shardu nemenná. Epocha odpovedá času potrebnému na vygenerovanie 32\,768 blokov v beacon sharde, čo je približne 18,2 hodiny~\footnote{\url{https://docs.harmony.one/home/network/validators/definitions/epoch-transition}} (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}). Na začiatku epochy je vygenerované náhodné číslo (pozri sekciu~\ref{subsec:rnd}) na základe ktorého sa vytvorí rozdelenie do shardov. Účastníci, ktorý chcú validovať v nasledujúcej epoche musia v aktuálnej vložiť svoj podiel tokenov.
@@ -380,7 +381,7 @@ Na rozdelenie do shardov sa používa lotéria, ktorá je postavená na kryptogr
 	\label{img:hypergeom-dist}
 \end{figure}
 
-Obrázok~\ref{img:hypergeom-dist} ukazuje pravdepodobnosť ovládnutia jedného shardu v závislosti na celkovom podiele hlasovacích lístkov vlastnených útočníkom. Tento výpočet je založený na už spomínanom hypergeometrickom rozdelení a parametroch blockchainu Harmony~\cite{harmonyWp}. Môžeme vidieť, že útočník má zanedbateľnú pravdepodobnosť ovládnuť shard pokiaľ nevlastní približne $\frac{1}{3}$ z celkového množstva hlasovacích lístkov. S toho plynie, že shardingu v tomto protokole neumožňuje útočníkovi využiť útok na podskupinu uzlov (viď sekcia~\ref{subsec:shard-attack}).
+Obrázok~\ref{img:hypergeom-dist} ukazuje pravdepodobnosť ovládnutia jedného shardu v závislosti na celkovom podiele hlasovacích lístkov vlastnených útočníkom. Tento výpočet je založený na už spomínanom hypergeometrickom rozdelení a parametroch BC Harmony~\cite{harmonyWp}. Môžeme vidieť, že útočník má zanedbateľnú pravdepodobnosť ovládnuť shard pokiaľ nevlastní približne $\frac{1}{3}$ z celkového množstva hlasovacích lístkov. S toho plynie, že shardingu v tomto protokole neumožňuje útočníkovi využiť útok na podskupinu uzlov (viď sekcia~\ref{subsec:shard-attack}).
 
 Harmony sharding používa algoritmus VDF na oneskorenie odhalenia náhodného čísla čím zabraňuje útoku na posledného objaviteľa (viď sekacia~\ref{subsec:lst-re-attack}).
 
@@ -389,23 +390,23 @@ Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné 
 
 \chapter{Solana}
 
-Solana je blockchain technológia zameraná na vysokú priepustnosť transakcií. Klasická centralizovaná databáza dokáže mať priepustnosť až 710\,000 TPS na gigabitovej sieti s priemernou veľkosťou transakcie 176\,B~\cite{solanaDoc}. Decentralizovaná databáza blockchain má dramaticky nižšiu priepustnosť. Tradičné proof-of-work protokoly ako je Bitcoin (5~TPS) alebo Ethereum (15~TPS) dosahujú veľmi nízku priepustnosť~\footnote{\url{https://academy.binance.com/en/glossary/transactions-per-second-tps}}.  V kapitole~\ref{chap:harmony} bol popísaný proof-of-stake protokol Harmony, ktorý má už značne vyššiu priepustnosť (2\,000~TPS) dosiahnutú pomocou konceptu sharding.  Autori Solana projektu deklarujú, že ich architektúra môže teoreticky dosiahnuť rovnakú priepustnosť ako centralizovaná sieť (710\,000~TPS) a to bez použitia konceptu sharding.
+Solana je BC technológia zameraná na vysokú priepustnosť transakcií. Klasická centralizovaná databáza dokáže mať priepustnosť až 710\,000 TPS na gigabitovej sieti s priemernou veľkosťou transakcie 176\,B~\cite{solanaDoc}. Decentralizovaná databáza BC má dramaticky nižšiu priepustnosť. Tradičné PoW protokoly ako je Bitcoin (5~TPS) alebo Ethereum (15~TPS) dosahujú veľmi nízku priepustnosť~\footnote{\url{https://academy.binance.com/en/glossary/transactions-per-second-tps}}.  V kapitole~\ref{chap:harmony} bol popísaný PoS protokol Harmony, ktorý má už značne vyššiu priepustnosť (2\,000~TPS) dosiahnutú pomocou konceptu sharding. Autori Solana projektu deklarujú, že ich architektúra môže teoreticky dosiahnuť rovnakú priepustnosť ako centralizovaná sieť (710\,000~TPS) a to bez použitia konceptu sharding.
 
-Solana poukazuje na to, že zníženie priepustnosti blockchainu voči centralizovanej sieti je zapríčinené tým, že uzly v sieti potrebujú synchronizovať čas a súčasne si navzájom nemôžu dôverovať. Solana projekt navrhol kryptografický algoritmus \textit{proof-of-history} (viď sekcia~\ref{sec:solana-poh}) pomocou ktorého môže rýchlo a efektívne synchronizovať čas aj decentralizovaná sieť.
+Solana poukazuje na to, že zníženie priepustnosti BC voči centralizovanej sieti je zapríčinené tým, že uzly v sieti potrebujú synchronizovať čas a súčasne si navzájom nemôžu dôverovať. Solana projekt navrhol kryptografický algoritmus \textit{Proof-of-History} (viď sekcia~\ref{sec:solana-poh}) pomocou ktorého môže rýchlo a efektívne synchronizovať čas aj decentralizovaná sieť.
 
-Solana konsenzus je založený na architektúre \textit{proof-of-stake} (sekcia~\ref{sec:solana-consens}) na ktorom je založený aj model motivácie tohoto blockchainu (sekcia~\ref{sec:solana-motiv}). Sekcia~\ref{sec:solana-teor} na záver teoreticky zhodnocuje tento protokol z hľadiska bezpečnosti a výkonnosti.
+Solana konsenzus je založený na mechanizme PoS (sekcia~\ref{sec:solana-consens}) na ktorom je funguje aj model motivácie tohoto protokolu (sekcia~\ref{sec:solana-motiv}). Sekcia~\ref{sec:solana-teor} na záver teoreticky zhodnocuje tento protokol z hľadiska bezpečnosti a výkonnosti.
 
 Ak nie je uvedené inak, všetky informácie v tejto kapitole vychádzajú s pôvodnej publikácie Solana~\cite{solanaWp} a oficiálnej dokumentácie tohoto projektu~\cite{solanaDoc}.
 
-\section{Proof-of-history}\label{sec:solana-poh}
+\section{Proof-of-History}\label{sec:solana-poh}
 
-Proof-of-history (ďalej PoH) je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie a konsenzus hlasovania v čase pre decentralizovanú sieť ako je blockchain. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}.
+\textit{Proof-of-History} (ďalej len PoH) je kryptografický algoritmus, ktorý usporiada dátové záznamy v čase tak ako vznikajú. Takýto algoritmus pomáha jednoznačne a nepopierateľne usporiadať transakcie a konsenzus hlasovania v čase pre decentralizovanú sieť ako je BC. Dôkaz o usporiadaní je založený na kryptografickej hash funkcii (pozri sekciu~\ref{subsec:hash}), ktorá spĺňa kritérium \textit{collision resistant}.
 
-Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania PoH. V sieti vždy existuje jeden uzol, ktorý nazývame \textit{PoH generátor}. Ten neustále (najrýchlejšie ako dokáže) pridáva nové záznamy do hash pointer zoznamu (pozri sekciu~\ref{subsec:hash-pointer}). Pridávanie nových hashov do zoznamu je sekvenčné a podmienené existenciou predchádzajúceho hashu. Tento princíp sa nazýva \textit{Verifiable Delay Function~\cite{vdfBoneh}}. Každý hash teda predstavuje časový bod a vzdialenosť dvoch hashov prestavuje časový interval.
+Obrázok~\ref{img:solana-poh} demonštruje princíp fungovania PoH. V sieti vždy existuje jeden uzol, ktorý nazývame \textit{PoH generátor}. Ten neustále (najrýchlejšie ako dokáže) pridáva nové záznamy do hash pointer zoznamu (pozri sekciu~\ref{subsec:hash-pointer}). Pridávanie nových hashov do zoznamu je sekvenčné a podmienené existenciou predchádzajúceho hashu. Tento princíp sa nazýva \textit{Verifiable Delay Function~\cite{vdfBoneh}}. Každý hash teda predstavuje časový bod a vzdialenosť dvoch hashov udáva časový interval.
 
 Generátor je aktuálny vodca v konsenzus protokole. Všetky transakcie a hlasy od rôznych klientov sú zasielané na generátor. Ten ich serializuje do PoH reťazca. Vždy keď generátor prijme dáta od klienta (transakciu alebo hlas) pridá ich do zoznamu. Ak práve nemá dáta tak generuje prázdny záznam. Na obrázku môžeme vidieť v ktorých hashoch, alebo tiež časových momentoch, bola transakcia pridaná do reťazca.
 
-Generátor priebežne rozosiela PoH sekvenciu do celej siete. Každý uzol potom môže jednoznačne určiť v akom čase boli vygenerované transakcie a hlasy konsenzu. Synchronizácia v blockchaine Solana je založená na tomto koncepte.
+Generátor priebežne rozosiela PoH sekvenciu do celej siete. Každý uzol potom môže jednoznačne určiť v akom čase boli vygenerované transakcie a hlasy konsenzu. Synchronizácia v BC Solana je založená na tomto koncepte.
 
 Existuje teoretický útok pri ktorom útočník zmení poradie v reťazci. Predpokladajme, že útočník pozná všetky transakcie a hlasy a má väčší výpočtový výkon než aktuálny generátor. Potom by dokázal vypočítať reťazec s alternatívnym usporiadaním a publikovať ho skôr. Práve kvôli tomuto generátor reťazec vždy podpíše a až potom distribuuje (pozri sekciu~\ref{subsec:sign}).
 
@@ -418,17 +419,17 @@ Existuje teoretický útok pri ktorom útočník zmení poradie v reťazci. Pred
 
 \section{Konsenzus}\label{sec:solana-consens}
 
-Solana navrhla vlastný proof-of-stake konsenzus, ktorý vychádza s PBFT~\cite{pbftCastro}. Konsenzus sa používa na zvolenie PoH generátoru (sekcia~\ref{subsec:pos-generator}), hlasovanie o validnosti PoH sekvencie (sekcia~\ref{subsec:towerbft}) a je na ňom založný aj model motivácie (odmeňovanie a tresty v sekcii~\ref{sec:solana-motiv}).
+Solana navrhla PoS mechanizmus, ktorý vychádza s protokolu PBFT (pozri sekcii~\ref{subsec:pos-pbft}). Konsenzus sa používa na zvolenie PoH generátoru (sekcia~\ref{subsec:pos-generator}), hlasovanie o validnosti PoH sekvencie (sekcia~\ref{subsec:towerbft}) a je na ňom založný aj model motivácie (odmeňovanie a tresty v sekcii~\ref{sec:solana-motiv}).
 
 \subsection{Voľba PoH generátoru (vodcu)}\label{subsec:pos-generator}
 
 Solana sieť sa rozdeľuje do tzv. zhlukov. Zhluk je množina validátorov, ktoré spolupracujú na konsenze. Zhluky môžu mať prieniky. Každý zhluk má vodcu, ktorý generuje záznamy v PoH. Vodca sa mení po fixnom počte vygenerovaných záznamov. Tento interval voláme \textit{slot}. Autori protokolu tvrdia, že jeden slot je približne 400\,ms. 
 
-Nový vodca sa určí na základe už dopredu stanoveného rozvrhu. Rozvrh je stanovený na fixný počet slotov, ktorý voláme \textit{epocha}. Rozvrh na aktuálnu epochu sa vypočíta už v predchádzajúcej. Samotný výpočet rozvrhu prebieha tak, že sa zoberú všetci validátori, ktorý hlasovali v posledných $n$ záznamoch PoH sekvencie, kde $n$ je hodnota stanovená zhlukom. Títo validátori dostanú v rozvrhu pridelené vodcovské sloty na základe váhy ich podielu. Inak povedané, validátor s najväčším podielom bude v nasledujúcej epoche najčastejšie vodcom (princíp proof-of-stake).
+Nový vodca sa určí na základe už dopredu stanoveného rozvrhu. Rozvrh je stanovený na fixný počet slotov, ktorý voláme \textit{epocha}. Rozvrh na aktuálnu epochu sa vypočíta už v predchádzajúcej. Samotný výpočet rozvrhu prebieha tak, že sa zoberú všetci validátori, ktorý hlasovali v posledných $n$ záznamoch PoH sekvencie, kde $n$ je hodnota stanovená zhlukom. Títo validátori dostanú v rozvrhu pridelené vodcovské sloty na základe váhy ich podielu. Inak povedané, validátor s najväčším podielom bude v nasledujúcej epoche najčastejšie vodcom (princíp PoS).
 
 \subsection{Tower BFT}\label{subsec:towerbft}
 
-Konsenzus protokol \textit{Tower BFT}, ktorý je založený na $\frac{2}{3}$ zhode hlasov validátorov (BFT):
+Solana navrhla konsenzus protokol \textit{Tower BFT}, ktorý je založený na PBFT protokole:
 \begin{enumerate}
 	\item Klienti siete zasielajú transakcie na aktuálneho vodcu (PoH generátor).
 	\item Vodca pridáva transakcie do PoH sekvencie a túto dátovú štruktúru distribuuje validátorom.
@@ -437,7 +438,7 @@ Konsenzus protokol \textit{Tower BFT}, ktorý je založený na $\frac{2}{3}$ zho
 	\item Vodca pridáva prijaté hlasy do PoH sekvencie.
 	\item Validátori sledujú hlasy, ktoré sa následne vyskytujú v PoH sekvencii. Každý validátor počíta hlasy a ak dosahujú $\frac{2}{3}$ celkového počtu validátorov, tak bol dosiahnutý konsenzus.
 \end{enumerate}
-Solana používa proof-of-stake a teda váha hlasu validátora je priamo úmerná jeho podielu. Pre konsenzus nie je nutné dosiahnuť $\frac{2}{3}$ celkového počtu hlasov validátorov, ale len toľko hlasov aby ich vlastníci vlastnili $\frac{2}{3}$ celkového podielu.
+Solana používa PoS a teda váha hlasu validátora je priamo úmerná jeho podielu. Pre konsenzus nie je nutné dosiahnuť $\frac{2}{3}$ celkového počtu hlasov validátorov, ale len toľko hlasov aby ich vlastníci vlastnili $\frac{2}{3}$ celkového podielu.
 
 \subsection{Vetvenie}
 Uzly v Solana sieti tolerujú dočasnú stratu spojenia s aktuálnym vodcom (PoH generátorom). Pri strate spojenia predpokladajú len prázdne záznamy, ktoré neobsahujú žiadne dáta. Takýto PoH reťazec si dokážu generovať aj sami, bez komunikácie zo sieťou, na základe posledného hashu minulého slotu.
@@ -447,7 +448,7 @@ Vetvenie v Solana konsenze vzniká pri zmene vodcu. Nový vodca nemusel zachyti�
 Každý validátor musí sledovať celý binárny strom možných vetiev a uchovávať si ich stav. Voľbu vetvy urobí validátor tak, že vodcovi v danej vetve pošle svoj hlas čím vetvu potvrdí. Validátor potom nemôže hlasovať v žiadnej inej vetve po dobu (pevný počet slotov) ktorá sa nazýva \textit{lockout}. Lockout perióda sa navyše zdvojnásobuje každým ďalším pridaným hlasom v danej vetve až do maximálnej hodnoty (aktuálne je maximum 32 hlasov). Ak chce validátor hlasovať, za inú vetvu, musí počkať do konca periódy lockout. Následovne vykoná návrat späť (anglicky \textit{rollback}) do posledného spoločného stavu medzi starou a novou vetvou. Fungovanie a význam lockoutu a rollbacku je podrobnejšie popísaný v sekcii~\ref{subsec:solana-branch}.
 
 \section{Model motivácie}\label{sec:solana-motiv}
-Model motivácie je založený na princípe proof-of-stake. Validátori sú odmeňovaný podielom na zdrojoch blockchainu za správanie, ktoré je pre sieť vhodné. Naopak, nevhodné správanie je penalizované odobraním zdrojov v sieti.
+Model motivácie je založený na mechanizme PoS. Validátori sú odmeňovaný podielom na zdrojoch BC za správanie, ktoré je pre sieť vhodné. Naopak, nevhodné správanie je penalizované odobraním zdrojov v sieti.
 
 \subsection{Vetvenie}\label{subsec:solana-branch}
 Hlasy v každej vetve sa ukladajú do pomyselného zoznamu s obmedzenou kapacitou na 32 položiek. Každý nový pridaný hlas do zoznamu zdvojnásobí lockout všetkých predošlých hlasov v zozname. Keď zoznam dosiahne maximálnu kapacitu tak je najstarší hlas odstránený (FIFO) a majiteľ hlasu je odmenený.
@@ -464,11 +465,94 @@ Validátor je potrestaný za súbežné hlasovanie v rôznych vetvách. Ak hlaso
 
 Why Proof-of-History is not (yet) the consensus of the future?~\footnote{\url{https://anycoindirect.eu/en/blog/what-is-proof-of-history}}
 
+\subsection{Konsenzus}
+Autori tvrdia, že sa nepoužíva sharding. Avšak v dokumentácii je veľmi vágne povedané, že uzly nepracujú globálne ale v nejakých zhlukoch. Ako takéto zhluky fungujú nie je jasné. Očividne však ide o sharding.
+
+\chapter{Ouroboros}
+
+Ouroboros je PoS protokol, ktorý je používaný v kryptomene Cardano. Autori Cardano deklarujú~\footnote{\url{https://www.youtube.com/watch?v=Ja9D0kpksxw}}, že všetky technológie, protokoly a algoritmy použité v ich BC sú vyberané koncepciou recenzného hodnotenia. Inak povedané, Cardano používa technológie, ktoré boli vedecky prezentované a kladne prijaté komunitou okolo technológie BC. V zmysle tohoto konceptu bol ako PoS protokol zvolený práve Ouroboros. V tejto kapitole je vysvetlený princíp fungovania protokolu Ouroboros na základe oficiálnej publikácie tohoto projektu~\cite{ouroborosWp}.
+
+\section{Konsenzus}
+Ouroboros konsenzus je založený na PoS princípe (upresnené v sekcii~\ref{sec:ouroboros-slot-leader}). Obecne môžeme povedať, že konsenzus je uznesení ak sa viac ako 50\,\% (majorita vlastníkov podielu) zhodne na stave BC.
+
+\subsection{Synchronizácia v čase}
+Protokol Ouroboros pracuje s časom v dvoch jednotkách. Najmenšia časová jednotka je \textit{slot}. Za jeden slot je vytvorený maximálne jeden blok (čas potrebný na komunikáciu v decentralizovanej peer-to-peer sieti). Slot je najmenšia časová jednotka na synchronizáciu uzlov v sieti. 
+
+Druhou (väčšou) časovou jednotkou je \textit{epocha}, ktorú tvorí pevný počet slotov $R$. Pre Cardano~\footnote{\url{https://developers.cardano.org/docs/stake-pool-course/introduction-to-cardano/}} je $R$ rovné 432\,000 slotom (približne päť dní).
+
+\subsection{Protokol}\label{subsec:ouroboros-protocol}
+Pre každý slot je určený vodca podľa dopredu známeho rozvrhu. Proces určenia rozvrhu vodcov je popísaný v sekcii~\ref{sec:ouroboros-slot-leader}. Vodca môže ako jediný vytvoriť blok v danom slote. 
+Blok obsahuje sekvenčné číslo slotu a je podpísaný privátnym kľúčom jeho tvorcu. Overenie validnosti bloku prebieha na základe čísla slotu zapísaného v hlavičke tohoto bloku. Každý validátor sa pozrie do rozvrhu a určí kto má byť vodca pre daný slot. Následne overí, že blok je podpísaný práve týmto vodcom.
+
+Každý uživateľ vykonáva nasledujúce činnosti:
+\begin{itemize}
+	\item Zber validných transakcií zo siete.
+	\item Zber všetkých BC, ktoré sú distribuované sieťou a kontrola ich validity (sekvencia blokov má len rastúce sekvenčné čísla slotov, transakcie sú validné, blok je vytvorený správnym vodcom). Každý udržiava najdlhší validný BC (rovnaký princíp ako Bitcoin).
+	\item Ak je uživateľ aktuálny vodca, tak vytvorí nový blok z transakcií ktoré získal. Blok pridá na koniec BC a distribuuje ho. Je dôležité podotknúť, že vodca nemusí vždy publikovať nový blok a teda slot môže byť "prázdny". Avšak jeden slot môže publikovať maximálne jeden blok.
+\end{itemize}
+
+\subsection{Schéma delegovania}\label{subsec:ourobors-delegation}
+Ouroboros protokol vyžaduje aby bol vlastník podielu neustále online, ak sa chce podieľať na tvorbe nových blokov. Táto požiadavka je príliš nepraktická a nerealistická. Preto Ouroboros poskytuje schému delegovania práva na generovanie blokov. Ak je vlastník zvolený za vodcu slotu, môže tento post delegovať inému užívateľovi (delegátovi). Tento užívateľ teda vytvorí nový blok namiesto skutočného vodcu slotu. Avšak, vlastník podielu deleguje len svoje právo na tvorbu bloku. Delegát nemá možnosť manipulovať zo zdrojmi, ktoré nie sú jeho. Koncept delegovania umožňuje zoskupovať podielnikov do väčších celkov (anglicky \textit{stake pools}). 
+
+Delegovanie je zabezpečené pomocou kryptografického konceptu \textit{Proxy Signatures}~\cite{proxySig}. Skutočný vodca slotu si vytvorí kľúč na delegovanie digitálneho podpisu \textit{anglicky proxy signing key}, ktorým delegát podpíše vytvorený blok. Proxy kľúč kryptograficky zabezpečuje, že ktokoľvek môže overiť nasledujúce jeho vlastnosti:
+\begin{itemize}
+	\item Verifikácia: Identita tvorcu proxy kľúča a identita delegáta, ktorému bol vystavený.
+	\item Prevencia pred zneužitím: Tento kľúč je časovo limitovaný pretože jeho tvorca definuje presný slot v ktorom platnosť kľúča expiruje. 
+\end{itemize}
+
+\section{Vodca slotu}\label{sec:ouroboros-slot-leader}
+
+Rozvrh vodcov pre jednotlivé sloty sa vytvára na obdobie jednej epochy a je známy už na jej začiatku. Každý užívateľ si môže vypočítať vodcov ($U_1, U_2,  ..., U_R$) pre jednotlivé sloty ($1, 2, ..., R$) v aktuálnej epoche pomocou funkcie $L(stake, rnd)$, kde:
+\begin{itemize}
+	\item $stake$: Rozdelenie podielu (anglicky \textit{stake distribution}) v predchádzajúcej epoche. Rozdelenie podielu sa vezme z $k$-tého slotu v predchádzajúcej epoche, kde $k$ je parametricky nastaviteľná konštanta.
+	\item $rnd$: Dostatočne dlhý a skutočne náhodný reťazec $rnd \in \{0,1\}^*$ vytvorený pomocou distribuovanej generácie náhodnosti v minulej epoche. Aby bol reťazec považovaný za skutočne náhodný, musí byť produktom kryptograficky bezpečného výpočtu všetkých zainteresovaných strán. Ouroboros používa pre tento účel kombináciu algoritmov \textit{Coin Tossing} (viď~\ref{subsec:ouroboros-coin-tossing}) a PVSS (viď~\ref{subsec:ouroboros-pvss}).
+\end{itemize}
+Funkcia $L$ z náhodného reťazca $rnd$ pomocou deterministického algoritmu určí rozvrh pričom pravdepodobnosť zvolenia za vodcu je priamo úmerná podielu daného užívateľa. Pri voľbe vodcu sa teda uplatní PoS princíp (napríklad, ak v predchádzajúcej epoche vlastní užívateľ 2\,\% podielu tak má v aktuálnej epoche práve 2\,\% šancu stať sa vodcom slotu).
+
+\subsection{Coin Tossing protokol}\label{subsec:ouroboros-coin-tossing}
+
+\textit{Coin Tossing}~\cite{coinFlipBlum} protokol umožňuje dvom stranám (uvažujme Alicu a Boba) vytvoriť rovnomerne náhodný reťazec. Protokol funguje nasledovne:
+\begin{enumerate}
+	\item Alica vygeneruje náhodný reťazec $u_1 \in \{0,1\}^*$ a navzorkuje z neho náhodnosť $r$. Následne pošle Bobovi dôkaz $Commit(r,u_1)$ tejto hodnoty, ktorý ju však neodhaľuje.
+	\item Bob vygeneruje svoj náhodný reťazec $u_2 \in \{0,1\}^*$ a pošle ho Alici. 
+	\item Alica odhalí $u_1$ zaslaním $Open(r,u_1)$.
+	\item Obe strany vypočítajú výstupnú náhodnosť $u = u_1 \oplus u_2$.
+\end{enumerate}
+
+Ouroboros používa pre vytvorenie náhodného reťazca \textit{Coin Tossing} protokol rozšírený na viac ako dve strany a to pomocou algoritmu PVSS (viď sekcia~\ref{subsec:ouroboros-pvss}).
+
+\subsection{PVSS}\label{subsec:ouroboros-pvss}
+
+PVSS (\textit{Publicly Verifiable Secret Sharing})~\cite{pvssFeldman} je kryptografická schéma, ktorá umožňuje rozdeliť tajomstvo $\sigma$ na $n$ dielov. Pôvodné $\sigma$ je možné zrekonštruovať pokiaľ je poškodených maximálne $t$ dielov (nedostupných alebo úmyselne pozmenených útočníkom), kde $t$ je nastaviteľný parameter. Schéma definuje nasledujúce dve funkcie:
+\begin{itemize}
+	\item $Deal(n, t, \sigma) = (\sigma_1, \sigma_2, ..., \sigma_n)$, kde vstupy $n$, $t$ a $\sigma$ sú počet dielov na vygenerovanie, maximálny počet poškodených dielov a vstupné tajomstvo. Výstupom funkcie sú diely tajomstva.
+	\item $Rec(\sigma_1, \sigma_2, ..., \sigma_n) = \sigma$, kde vstupom sú diely vytvorené funkciou \textit{Deal} a výstupom je rekonštrukcia pôvodného tajomstva $\sigma$ ak platí, že maximálne $t$ vstupných dielov je poškodených.
+\end{itemize}
+
+\subsection{Protokol pre generovanie distribuovanej náhodnosti}
+ 
+Nech dĺžka epochy $e_j$ je $R=10k$ slotov a vodcovia slotov $1,2,...,R$ sú $U_1, U_2, ..., U_R$ (vodcovia nemusia byť nutne rôzny). Potom protokol pre distribuované generovanie náhodnosti pre epochu $e_{j+1}$ je definovaný následovne:
+\begin{enumerate}
+	\item Fáza záväzku: Ide o prvých $4k$ slotov. Každý vlastník podielu $U_i$, pre $1 \leq i \leq R$, vygeneruje náhodný reťazec $u_i$ a navzorkuje z neho náhodnosť~$r_i$. Následne rozdelí tajomstvo $u_i$ na diely $\sigma_1, \sigma_2, ..., \sigma_R$ pomocou $Deal(R,R/2,u_i)$. Každé $\sigma_j$, pre $1 \leq j \leq R$, zašifruje verejným kľúčom užívateľa $U_j$. Vlastník podielu $U_i$ uloží do BC zašifrované diely tajomstva a zároveň kryptografický dôkaz $Commit(r_i, u_i)$. Všimnime si, že $t$ vo funkcii $Deal$ je nastavené na $R/2$. To znamená, že na rekonštrukciu tajomstva je potrebná majorita vlastníkov podielu.
+	\item Fáza odhalenia: Po uplynutí $4k$ slotov, každý účastník odstráni posledných $k$ slotov a vo zvyšku identifikuje držiteľov podielu. Ak majorita držiteľov podielu publikovala $Commit$, tak začína fáza odhalenia. V opačnom prípade protokol zastaví. Následne každý vlastník podielu $U_i$, pre $1 < i \leq R$, odhalí tajomstvo $u_i$ tým, že vloží do BC $Open(r_i, u_i)$.
+	\item Fáza obnovy: Po uplynutí $8k$ slotov, každý účastník odstráni posledných $k$ slotov a vo zvyšku identifikuje všetkých držiteľov podielu, ktorý odhalili ich tajomstvo $u_i$ (overenie $Commit(r_i, u_i)$ voči $Open(r_i, u_i)$). Ak nejaký nepoctivý účastník $U_x$ nezverejnil $Open$ k svojmu $Commit$, tak všetci poctivý účastníci zverejnia  $\sigma_1, \sigma_2, ..., \sigma_n$, ktoré patria k tajomstvu $u_x$. Ak bude poctivých účastníkov viac ako $t$ (majorita), tak bude možné použiť $Rec(\sigma_1, \sigma_2, ..., \sigma_n)$ na rekonštrukciu tajomstva $u_x$.
+	\item Nová epocha: Každé tajomstvo $u_i$, pre $1 \leq i \leq R$, je teraz už verejne známe. Výsledná náhodnosť pre epochu $e_{j+1}$ vypočíta každý účastník ako $u_1 \oplus u_2 \oplus ... \oplus u_R$.
+\end{enumerate}
+
+
+\section{Model motivácie}
+
+Vodca slotu je motivovaný vytvoriť nový blok pomocou odmeny v podobe poplatku na transakciách (anglicky \textit{transaction fee}), ktoré do bloku zahrnul. Ak bol blok vygenerovaný delegovane, tak majú na odmenu nárok všetci účastníci daného \textit{stake pool} zoskupenia. Odmena je potom rozdelená úmerne podielu jednotlivých podielnikov. Samotné odmeny sa počítajú a vyplácajú za obdobie jednej epochy.
+
+\section{Teoretická analýza}
+
+\subsection{Vetvenie}
+
 \chapter{Prehľad existujúcich simulátorov}
 
-Pre simuláciu zvolených proof-of-stake protokolov nebude vytvorený úplne nový simulátor. Simulácia celej technológie blockchainu s dostatočne presným model je rozsiahla úloha nad rámec tejto práce. Navyše už boli vytvorené simulačné nástroje, ktoré simulujú rôzne blockchainové protokoly. K týmto simulátorom existujú práce ktoré experimentálne vyhodnotili ich presnosť (viď\cite{simulatorCompar, fanPerfEval}). Preto bude použitý jeden s týchto nástrojov. Zvolený nástroj bude následne upravený a rozšírený tak aby bolo možné simulovať zvolené proof-of-stake protokoly. 
+Pre simuláciu zvolených PoS protokolov nebude vytvorený úplne nový simulátor. Simulácia celej technológie BC s dostatočne presným model je rozsiahla úloha nad rámec tejto práce. Navyše už boli vytvorené simulačné nástroje, ktoré simulujú rôzne BC protokoly. K týmto simulátorom existujú práce ktoré experimentálne vyhodnotili ich presnosť (viď\cite{simulatorCompar, fanPerfEval}). Preto bude použitý jeden s týchto nástrojov. Zvolený nástroj bude následne upravený a rozšírený tak aby bolo možné simulovať zvolené PoS protokoly. 
 
-Táto kapitola analyzuje niekoľko aktuálne dostupných simulátorov blockchainu. V závere kapitoly je vykonané porovnanie najvhodnejších nástrojov a je zvolený jeden pre ďalšiu prácu.
+Táto kapitola analyzuje niekoľko aktuálne dostupných simulátorov BC. V závere kapitoly je vykonané porovnanie najvhodnejších nástrojov a je zvolený jeden pre ďalšiu prácu.
 
 %Použiť túto prácu na porovannie~\cite{simulatorCompar}
 
@@ -477,11 +561,11 @@ Táto kapitola analyzuje niekoľko aktuálne dostupných simulátorov blockchain
 
 \section{SimBlock}
 
-SimBlock je simulátor založený na diskrétnej simulácii. Je implementovaný v programovacom jazyku Java a jeho zdrojový kód je voľne dostupný (anglicky \textit{open source})~\footnote{Apache License, Version 2.0}. Simulátor podporuje proof-of-work protokoly Bitcoin, Litecoin, a Dogecoin. Avšak umožňuje aj modulárne zmeniť konsenzus protokol. Posledná stabilná verzia pridala jednoduchú implementáciu proof-of-stake konsenzu~\footnote{\url{https://github.com/dsg-titech/simblock/releases/tag/v0.8.0}}.
+SimBlock je simulátor založený na diskrétnej simulácii. Je implementovaný v programovacom jazyku Java a jeho zdrojový kód je voľne dostupný (anglicky \textit{open source})~\footnote{Apache License, Version 2.0}. Simulátor podporuje PoW protokoly Bitcoin, Litecoin, a Dogecoin. Avšak umožňuje aj modulárne zmeniť konsenzus protokol. Posledná stabilná verzia pridala jednoduchú implementáciu PoS konsenzu~\footnote{\url{https://github.com/dsg-titech/simblock/releases/tag/v0.8.0}}.
 
-Autori tohoto projektu v rámci vyhodnocovania presnosti simulátora vykonali experiment ktorý porovnal ich prácu s podobným už existujúcim simulátorom. Obe simulácie spustili s rovnakými parametrami a to pre protokoly Bitcoin, Litecoin, a Dogecoin. Výsledky oboch simulátorov boli veľmi podobné. Na základe tohoto experimentu autori zhodnotili, že ich simulátor napodobuje reálne blockchainové systémy s porovnateľnou presnosťou ako podobné simulátory.
+Autori tohoto projektu v rámci vyhodnocovania presnosti simulátora vykonali experiment ktorý porovnal ich prácu s podobným už existujúcim simulátorom. Obe simulácie spustili s rovnakými parametrami a to pre protokoly Bitcoin, Litecoin, a Dogecoin. Výsledky oboch simulátorov boli veľmi podobné. Na základe tohoto experimentu autori zhodnotili, že ich simulátor napodobuje reálne BC systémy s porovnateľnou presnosťou ako podobné simulátory.
 
-Autori ďalej navrhli úpravu algoritmu na voľbu susedných uzlov (anglicky \textit{neighbor node selection algorithm}) v protokole Bitcoin. Navrhnutú úpravu odsimulovali a vyhodnotili, že ich vylepšenie algoritmu zvyšuje priepustnosť transakcií. Touto simuláciou bol demonštrovaný význam tohoto simulačného nástroja a to je zlepšovanie blockchainových protokolov z hľadiska výkonnosti a bezpečnosti pomocou simulácie.~\cite{simblockWp}
+Autori ďalej navrhli úpravu algoritmu na voľbu susedných uzlov (anglicky \textit{neighbor node selection algorithm}) v protokole Bitcoin. Navrhnutú úpravu odsimulovali a vyhodnotili, že ich vylepšenie algoritmu zvyšuje priepustnosť transakcií. Touto simuláciou bol demonštrovaný význam tohoto simulačného nástroja a to je zlepšovanie BC protokolov z hľadiska výkonnosti a bezpečnosti pomocou simulácie.~\cite{simblockWp}
 
 Výhodou tohoto simulačného nástroj je schopnosť simulovať aj rozsiahle siete s viac ako 10\,000 uzlami. Ďalšou výhodou je, že simulácia ustanovuje medzi uzlami priame spojenie (anglicky \textit{point-to-point}) uvažujúce geografickú lokalitu jednotlivých uzlov. Simulácia teda umožnuje zohľadňovať sieťové oneskorenie (anglicky \textit{latency}) a šírku pásma (anglicky \textit{bandwidth}). 
 
@@ -489,29 +573,29 @@ Na druhú stranu, simulátor predpokladá, že všetky uzly sú poctivé. V aktu
 
 \section{Bitcoin Simulator}
 
-Bitcoin Simulator je open source~\footnote{\url{https://arthurgervais.github.io/Bitcoin-Simulator/index.html}} simulačný nástroj implementovaný v programovacom jazyku C++. Simulátor je postavený nad platformou NS-3~\footnote{\url{https://www.nsnam.org/}}, ktorá slúži na diskrétnu simuláciu Internetových systémov. Na tejto platforme je teda postavená simulácia peer-to-peer siete blockchainu. Tento simulátor je určený a bol vyvinutý na experimentovanie s proof-of-work protokolmi. Aktuálne podporuje protokoly Bitcoin, Litecoin, a Dogecoin. Simulátor teda nepodporuje proof-of-stake konsenzus. Avšak v minulosti už bol tento nástroj použitý treťou stranou, ktorá rozšírila implementáciu o proof-of-stake protokoly Algorand, Casper FFG a Gasper (viď~\cite{borcikDp}). 
+Bitcoin Simulator je open source~\footnote{\url{https://arthurgervais.github.io/Bitcoin-Simulator/index.html}} simulačný nástroj implementovaný v programovacom jazyku C++. Simulátor je postavený nad platformou NS-3~\footnote{\url{https://www.nsnam.org/}}, ktorá slúži na diskrétnu simuláciu Internetových systémov. Na tejto platforme je teda postavená simulácia peer-to-peer siete BC. Tento simulátor je určený a bol vyvinutý na experimentovanie s PoW protokolmi. Aktuálne podporuje protokoly Bitcoin, Litecoin, a Dogecoin. Simulátor teda nepodporuje PoS konsenzus. Avšak v minulosti už bol tento nástroj použitý treťou stranou, ktorá rozšírila implementáciu o PoS protokoly Algorand, Casper FFG a Gasper (viď~\cite{borcikDp}). 
 
 Autori simulátoru vykonali experiment na vyhodnotenie presnosti ich nástroja. Tri vyššie spomenuté protokoly boli simulované na rozsiahlej sieti a boli namerané mediány propagačného času bloku. Mediány získané zo simulácie boli relatívne podobné mediánom skutočných sietí postavených na týchto troch protokoloch. S tohoto hľadiska bol simulátor vyhodnotený ako pomerne presný.~\cite{btcSimulatorWp}
 
-Medzi výhody tohoto simulačného nástroja patrí jeho rozsiahlosť, ktorá poskytuje veľkú škálu vstupných parametrov a taktiež veľké množstvo nameraných výstupných metrík. Z hľadiska simulácie proof-of-work protokolov umožňuje simulátor rozlišovať rôzne typy uzlov (bežný uzol a miner uzol). Rozlišovanie rôznych uzlov umožňuje tomuto nástroju simulovať aj zlomyseľné chovanie niektorých uzlov. Tento simulátor teda umožňuje analyzovať aj bezpečnosť proof-of-work konsenzu z hľadiska ťažby blokov (útoky selfish-mining a double-spending).~\cite{fanPerfEval}
+Medzi výhody tohoto simulačného nástroja patrí jeho rozsiahlosť, ktorá poskytuje veľkú škálu vstupných parametrov a taktiež veľké množstvo nameraných výstupných metrík. Z hľadiska simulácie PoW protokolov umožňuje simulátor rozlišovať rôzne typy uzlov (bežný uzol a miner uzol). Rozlišovanie rôznych uzlov umožňuje tomuto nástroju simulovať aj zlomyseľné chovanie niektorých uzlov. Tento simulátor teda umožňuje analyzovať aj bezpečnosť PoW konsenzu z hľadiska ťažby blokov (útoky selfish-mining a double-spending).~\cite{fanPerfEval}
 
 \section{BlockSim}\label{sec:blocksim}
 
-BlockSim je open source~\footnote{\url{https://github.com/maher243/BlockSim}} simulátor vytvorený v programovacom jazyku Python3 určený na diskrétnu simuláciu blockchainu. Autori definujú tri základné ciele tohoto simulátora: všeobecnosť, rozširovateľnosť a jednoduchosť. Všeobecnosť architektúry simulátora umožňuje simuláciu veľkého množstva blockchain systémov. Simulátor by malo byť možné jednoducho rozšíriť o ďalšie protokoly. Oba predošlé ciele majú viesť k tomu aby bol tento nástroj jednoduchý na použitie. 
+BlockSim je open source~\footnote{\url{https://github.com/maher243/BlockSim}} simulátor vytvorený v programovacom jazyku Python3 určený na diskrétnu simuláciu BC. Autori definujú tri základné ciele tohoto simulátora: všeobecnosť, rozširovateľnosť a jednoduchosť. Všeobecnosť architektúry simulátora umožňuje simuláciu veľkého množstva BC systémov. Simulátor by malo byť možné jednoducho rozšíriť o ďalšie protokoly. Oba predošlé ciele majú viesť k tomu aby bol tento nástroj jednoduchý na použitie. 
 
-Simulátor poskytuje všeobecnú abstrakciu blockchainu, ktorú autori nazvali \textit{base model}. Base model je zdieľaná vrstva pre všetky konkrétne protokoly pretože pokrýva všetky základné prvky blockchainu (uzly, transakcie, bloky, reťatec blokov, fork reťazca). Nad touto vrstvou je potom možné vytvoriť implementáciu konkrétnych protokolov. Autori demonštrovali túto flexibilnú architektúru tak, že vytvorili nad base modelom simuláciu dvoch proof-of-work protokolov (Bitcoin a Ethereum). Simulátor by teda mal byť priamočiaro rozšíriteľný aj o simuláciu proof-of-stake protokolov. Avšak takáto simulácia by neumožnila analýzu špecifickej sekvencie správ proof-of-stake konsenzu.~\cite{blocksimWp}	
+Simulátor poskytuje všeobecnú abstrakciu BC, ktorú autori nazvali \textit{base model}. Base model je zdieľaná vrstva pre všetky konkrétne protokoly pretože pokrýva všetky základné prvky BC (uzly, transakcie, bloky, reťazec blokov, fork reťazca). Nad touto vrstvou je potom možné vytvoriť implementáciu konkrétnych protokolov. Autori demonštrovali túto flexibilnú architektúru tak, že vytvorili nad base modelom simuláciu dvoch PoW protokolov (Bitcoin a Ethereum). Simulátor by teda mal byť priamočiaro rozšíriteľný aj o simuláciu PoS protokolov. Avšak takáto simulácia by neumožnila analýzu špecifickej sekvencie správ PoS konsenzu.~\cite{blocksimWp}	
 
-Najväčšou výhodou tohoto simulátoru je jeho jednoduchá architektúra, ktorá umožňuje rozšíriteľnosť o ďalšie blockchainové protokoly. Simulátor pokrýva sieťovú, dátovú a konsenzus vrstvu. Z hľadiska sieťovej vrstvy je možné simulovať oneskorenie a šírku pásma pomocou geografickej distribúcie uzlov siete. Ďalšou výhodou je pomerne veľké množstvo konfigurovateľných vstupných parametrov simulácie. 
+Najväčšou výhodou tohoto simulátoru je jeho jednoduchá architektúra, ktorá umožňuje rozšíriteľnosť o ďalšie BC protokoly. Simulátor pokrýva sieťovú, dátovú a konsenzus vrstvu. Z hľadiska sieťovej vrstvy je možné simulovať oneskorenie a šírku pásma pomocou geografickej distribúcie uzlov siete. Ďalšou výhodou je pomerne veľké množstvo konfigurovateľných vstupných parametrov simulácie. 
 
 Naopak nevýhodu simulátoru je, že nedokáže efektívne simulovať rozsiahle siete. Tento simulátor sice podporuje simulácie transakcií avšak tento proces je limitovaný, keďže implementácia neobsahuje žiaden model účtov (napríklad UTXO~\footnote{\url{https://river.com/learn/terms/u/unspent-transaction-output-utxo/}} pre Bitcoin).~\cite{fanPerfEval}
 
 \section{VIBES}
 
-VIBES je open source~\footnote{\url{https://github.com/i13-msrg/vibes}} nástroj pre simuláciu blockchain technológie. Simulátor implementuje výhradne proof-of-work konsenzus. Podľa autora je možná implementáciu rozšíriť o proof-of-stake konsenzus. Tento simulátor je zameraný na všeobecnejšiu simuláciu blockchainu v peer-to-peer sieti a neobsahuje implementáciu žiadneho konkrétneho protokolu.~\cite{vibesWp}
+VIBES je open source~\footnote{\url{https://github.com/i13-msrg/vibes}} nástroj pre simuláciu BC technológie. Simulátor implementuje výhradne PoW konsenzus. Podľa autora je možná implementáciu rozšíriť o PS konsenzus. Tento simulátor je zameraný na všeobecnejšiu simuláciu BC v peer-to-peer sieti a neobsahuje implementáciu žiadneho konkrétneho protokolu.~\cite{vibesWp}
 
 Výhodu tohoto nástroja je možnosť simulácie škodlivých uzlov. Simulátor je teda možné použiť na bezpečnostnú analýzu konsenzus protokolov. Ďalej, je podporovaná simulácia na úrovni dát (transakcie). Avšak rovnako ako pri nástroji BlockSim (viď sekcia~\ref{sec:blocksim}), transakcie neobsahujú žiaden model účtov.
 
-Nevýhodou tohoto nástroja je, že používa konštantné oneskorenie (anglicky \textit{delay}) propagácie blokov a transakcií v sieti. Dôsledkom je nepresnosť simulácie z hľadiska výkonnostnej analýzy blockchainu. Autor tvrdí, že simulátor umožňuje simuláciu rozsiahlych sietí s viac ako 10\,000 uzlami. Avšak v skutočnosti je takáto simulácia pomerne náročná pretože tento nástroj používa centrálny koordinátor, ktorý tvorí úzke hrdlo (anglicky \textit{botleneck}) simulácie.\cite{fanPerfEval}
+Nevýhodou tohoto nástroja je, že používa konštantné oneskorenie (anglicky \textit{delay}) propagácie blokov a transakcií v sieti. Dôsledkom je nepresnosť simulácie z hľadiska výkonnostnej analýzy BC. Autor tvrdí, že simulátor umožňuje simuláciu rozsiahlych sietí s viac ako 10\,000 uzlami. Avšak v skutočnosti je takáto simulácia pomerne náročná pretože tento nástroj používa centrálny koordinátor, ktorý tvorí úzke hrdlo (anglicky \textit{botleneck}) simulácie.\cite{fanPerfEval}
 
 \section{Shadow}
 
@@ -528,17 +612,17 @@ Nevýhodou je nízka flexibilita tohoto nástroja. Spomínaný doplnok je použi
 FoBSim je open source~\footnote{GNU General Public License v3.0} simulátor, ktorého model pokrýva dve oblasti:
 \begin{itemize}
 	\item Fog Computing: Je fyzický lebo virtuálny zdroj vložený medzi koncového užívateľa a tradičné dátové centrum (anglicky \textit{cloud}). Toto rozšírenie cloudu má zvýšiť efektivitu a bezpečnosť. Táto služba využíva tradične centrálnu autoritu.
-	\item Blockchain: Technológia blockchain integrovaná s fog computing by mala viesť k decentralizácii tejto služby.
+	\item Blockchain: Technológia BC integrovaná s fog computing by mala viesť k decentralizácii tejto služby.
 \end{itemize}
-Rozoberať prečo je snaha integrovať tieto dve služby do jednej nie je predmetom tejto práca. Avšak tento simulačný nástroj je vyvíjaný práve za účelom experimentovania v tejto oblasti. Pre našu prácu je zaujímavá len časť, ktorá simuluje blockchain.
+Rozoberať prečo je snaha integrovať tieto dve služby do jednej nie je predmetom tejto práca. Avšak tento simulačný nástroj je vyvíjaný práve za účelom experimentovania v tejto oblasti. Pre našu prácu je zaujímavá len časť, ktorá simuluje BC.
 
-Simulátor poskytuje model blockchainu, ktorý obsahuje nasledujúcu funkcionalitu: sieťová vrstva, konsenzus algoritmy, odmeňovanie užívateľov za vytváranie nových blokov (anglicky \textit{incentive mechanism}), paralelná ťažba blokov, distribúcia správ v sieti.~\cite{fobsimWp}
+Simulátor poskytuje model BC, ktorý obsahuje nasledujúcu funkcionalitu: sieťová vrstva, konsenzus algoritmy, odmeňovanie užívateľov za vytváranie nových blokov (anglicky \textit{incentive mechanism}), paralelná ťažba blokov, distribúcia správ v sieti.~\cite{fobsimWp}
 
-Autori deklarujú, že simulátor implementuje tri konsenzus protokoly: proof-of-work, proof-of-stake a proof-of-authority. Avšak nikde nedefinujú o aké konkrétne protokoly ide. Presnosť simulácie je nejasná keďže ide o nový projekt a neexistuje zatiaľ žiadna práca, ktorá by sa zaoberala jeho vyhodnocovaním. Samotná implementácia predstavuje asi 3\,000 riadkov kódu v pythone~\footnote{\url{https://github.com/sed-szeged/FobSim}} čo je dramaticky menej voči iným nástrojom. 
+Autori deklarujú, že simulátor implementuje tri konsenzus protokoly: PoW, PoS a Proof-of-Authority. Avšak nikde nedefinujú o aké konkrétne protokoly ide. Presnosť simulácie je nejasná keďže ide o nový projekt a neexistuje zatiaľ žiadna práca, ktorá by sa zaoberala jeho vyhodnocovaním. Samotná implementácia predstavuje asi 3\,000 riadkov kódu v pythone~\footnote{\url{https://github.com/sed-szeged/FobSim}} čo je dramaticky menej voči iným nástrojom. 
 
 \section{Zhodnotenie}
 
-Táto sekcia zhodnocuje simulačné nástroje popísané v rámci tejto kapitoly. Z týchto nástrojov sú porovnané vlastnosti troch najvhodnejší. Na základe týchto vlastností je na záver zvolený simulátor, ktorý bude v rámci tejto práce rozšírený o simuláciu požadovaných proof-of-stake protokolov.
+Táto sekcia zhodnocuje simulačné nástroje popísané v rámci tejto kapitoly. Z týchto nástrojov sú porovnané vlastnosti troch najvhodnejší. Na základe týchto vlastností je na záver zvolený simulátor, ktorý bude v rámci tejto práce rozšírený o simuláciu požadovaných PoS protokolov.
 
 \subsection{Porovnanie najvhodnejších nástrojov}
 
@@ -553,8 +637,8 @@ Táto sekcia zhodnocuje simulačné nástroje popísané v rámci tejto kapitoly
 			\textbf{} & Geografická distribúcia uzlov & 1 & 1 & 1 \\
 			\textbf{} & Bandwith & 1 & 1 & 1 \\
 			\textbf{} & Latency & 1 & 1 & 1 \\ \cline{2-5} 
-			\textbf{\begin{tabular}[c]{@{}l@{}}Konsenzus\\ vrstva\end{tabular}} & Proof-of-Work & 1 & 1 & 1 \\
-			\textbf{} & Proof-of-Stake & 0 & 0 & 1 \\
+			\textbf{\begin{tabular}[c]{@{}l@{}}Konsenzus\\ vrstva\end{tabular}} & PoW & 1 & 1 & 1 \\
+			\textbf{} & PoS & 0 & 0 & 1 \\
 			\textbf{} & Množstvo vygenerovaných blokov & 1 & 1 & 1 \\ \cline{2-5} 
 			\textbf{\begin{tabular}[c]{@{}l@{}}Dátavá\\ vrstva\end{tabular}} & Generovanie transakcií & 0 & 0 & 1 \\
 			& Vzťah transakcie k uzlu & 0 & 0 & 0
@@ -564,7 +648,7 @@ Táto sekcia zhodnocuje simulačné nástroje popísané v rámci tejto kapitoly
 	\label{tab:sim-layers}
 \end{table}
 
-Pre potreby tejto práce definujeme niekoľko požiadaviek na simulačný nastroj ktorý použijeme. V prvom rade požadujeme dostupnosť zdrojového kódu s licenciou open source. Ďalej požadujeme aby simulátor vykazoval relatívne dostatočnú presnosť v porovnaní s reálnou blockchainovou sieťou. Dostatočnou presnosťou z hľadiska našej práce sa myslí, že simulátor vierohodne napodobuje sieťovú a konsenzuálnu vrstvu. Zaoberáme sa analýzou konsenzus protokolov a teda dátová vrstva už nie je pre simuláciu kľúčová. 
+Pre potreby tejto práce definujeme niekoľko požiadaviek na simulačný nastroj ktorý použijeme. V prvom rade požadujeme dostupnosť zdrojového kódu s licenciou open source. Ďalej požadujeme aby simulátor vykazoval relatívne dostatočnú presnosť v porovnaní s reálnou BC sieťou. Dostatočnou presnosťou z hľadiska našej práce sa myslí, že simulátor vierohodne napodobuje sieťovú a konsenzuálnu vrstvu. Zaoberáme sa analýzou konsenzus protokolov a teda dátová vrstva už nie je pre simuláciu kľúčová. 
 
 Tieto požiadavky spĺňajú v najväčšej miere tri simulačné nástroje: SimBlock, Bitcoin Simulator a BlockSim. Tabuľka~\ref{tab:sim-layers} zhrňuje vlastnosti týchto troch simulátorov na sieťovej, konsenzus a dátovej vrstve. Na základe tohoto zhodnotenia môžeme povedať, že tieto tri nástroje poskytuje podobne rozsiahle modely.
 
@@ -581,7 +665,7 @@ Predošlá klasifikácia určila simulátory, ktoré majú podporu požadovanýc
 			\textbf{Dostupnosť} & open source & open source & open source \\
 			\textbf{Vytvorenie projektu} & Jún 2019 & Apríl  2016 & Apríl 2019 \\
 			\textbf{Posledná zmena v repozitári} & Február 2021 & Október  2016 & Máj 2021 \\
-			\textbf{Podpora Proof-of-Stake} & áno (s ukážkou) & nie & áno (bez ukážky) \\
+			\textbf{Podpora PoS} & áno (s ukážkou) & nie & áno (bez ukážky) \\
 			\textbf{Simulácia útočiacich uzlov} & nie & áno & nie je jasné \\
 			\textbf{Podporované protokoly} & Bitcoin & Bitcoin & Bitcoin \\
 			& Litecoin & Litecoin & Ethereum \\
