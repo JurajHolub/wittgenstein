@@ -473,7 +473,7 @@ Autori tvrdia, že sa nepoužíva sharding. Avšak v dokumentácii je veľmi vá
 Ouroboros je PoS protokol, ktorý je používaný v kryptomene Cardano. Autori Cardano deklarujú~\footnote{\url{https://www.youtube.com/watch?v=Ja9D0kpksxw}}, že všetky technológie, protokoly a algoritmy použité v ich BC sú vyberané koncepciou recenzného hodnotenia. Inak povedané, Cardano používa technológie, ktoré boli vedecky prezentované a kladne prijaté komunitou okolo technológie BC. V zmysle tohoto konceptu bol ako PoS protokol zvolený práve Ouroboros. V tejto kapitole je vysvetlený princíp fungovania protokolu Ouroboros na základe oficiálnej publikácie tohoto projektu~\cite{ouroborosWp}.
 
 \section{Konsenzus}
-Ouroboros konsenzus je založený na PoS princípe (upresnené v sekcii~\ref{sec:ouroboros-slot-leader}). Obecne môžeme povedať, že konsenzus je uznesení ak sa viac ako 50\,\% (majorita vlastníkov podielu) zhodne na stave BC.
+Ouroboros konsenzus je uznesený ak sa viac ako 50\,\% (majorita vlastníkov podielu) zhodne na stave BC.
 
 \subsection{Synchronizácia v čase}
 Protokol Ouroboros pracuje s časom v dvoch jednotkách. Najmenšia časová jednotka je \textit{slot}. Za jeden slot je vytvorený maximálne jeden blok (čas potrebný na komunikáciu v decentralizovanej peer-to-peer sieti). Slot je najmenšia časová jednotka na synchronizáciu uzlov v sieti. 
@@ -494,7 +494,7 @@ Každý uživateľ vykonáva nasledujúce činnosti:
 \subsection{Schéma delegovania}\label{subsec:ourobors-delegation}
 Ouroboros protokol vyžaduje aby bol vlastník podielu neustále online, ak sa chce podieľať na tvorbe nových blokov. Táto požiadavka je príliš nepraktická a nerealistická. Preto Ouroboros poskytuje schému delegovania práva na generovanie blokov. Ak je vlastník zvolený za vodcu slotu, môže tento post delegovať inému užívateľovi (delegátovi). Tento užívateľ teda vytvorí nový blok namiesto skutočného vodcu slotu. Avšak, vlastník podielu deleguje len svoje právo na tvorbu bloku. Delegát nemá možnosť manipulovať zo zdrojmi, ktoré nie sú jeho. Koncept delegovania umožňuje zoskupovať podielnikov do väčších celkov (anglicky \textit{stake pools}). 
 
-Delegovanie je zabezpečené pomocou kryptografického konceptu \textit{Proxy Signatures}~\cite{proxySig}. Skutočný vodca slotu si vytvorí kľúč na delegovanie digitálneho podpisu \textit{anglicky proxy signing key}, ktorým delegát podpíše vytvorený blok. Proxy kľúč kryptograficky zabezpečuje, že ktokoľvek môže overiť nasledujúce jeho vlastnosti:
+Delegovanie je zabezpečené pomocou kryptografického konceptu \textit{Proxy Signatures}~\cite{proxySig}. Skutočný vodca slotu si vytvorí kľúč na delegovanie digitálneho podpisu (anglicky \textit{proxy signing key}), ktorým delegát podpíše vytvorený blok. Proxy kľúč kryptograficky zabezpečuje, že ktokoľvek môže overiť nasledujúce jeho vlastnosti:
 \begin{itemize}
 	\item Verifikácia: Identita tvorcu proxy kľúča a identita delegáta, ktorému bol vystavený.
 	\item Prevencia pred zneužitím: Tento kľúč je časovo limitovaný pretože jeho tvorca definuje presný slot v ktorom platnosť kľúča expiruje. 
@@ -515,11 +515,11 @@ Funkcia $L$ z náhodného reťazca $rnd$ pomocou deterministického algoritmu ur
 \begin{enumerate}
 	\item Alica vygeneruje náhodný reťazec $u_1 \in \{0,1\}^*$ a navzorkuje z neho náhodnosť $r$. Následne pošle Bobovi dôkaz $Commit(r,u_1)$ tejto hodnoty, ktorý ju však neodhaľuje.
 	\item Bob vygeneruje svoj náhodný reťazec $u_2 \in \{0,1\}^*$ a pošle ho Alici. 
-	\item Alica odhalí $u_1$ zaslaním $Open(r,u_1)$.
+	\item Alica odhalí $u_1$ zaslaním kryptografického dôkazu $Open(r,u_1)$. Bob si môže overiť, že $Open(r,u_1)$ odpovedá $Commit(r,u_1)$ a teda Alica určite nepozmenila pôvodné $u_1$.
 	\item Obe strany vypočítajú výstupnú náhodnosť $u = u_1 \oplus u_2$.
 \end{enumerate}
 
-Ouroboros používa pre vytvorenie náhodného reťazca \textit{Coin Tossing} protokol rozšírený na viac ako dve strany a to pomocou algoritmu PVSS (viď sekcia~\ref{subsec:ouroboros-pvss}).
+Ouroboros používa pre vytvorenie náhodného reťazca rozšírenie protokolu \textit{Coin Tossing}, ktoré uvažuje viac ako dve strany a to pomocou algoritmu PVSS (viď sekcia~\ref{subsec:ouroboros-pvss}).
 
 \subsection{PVSS}\label{subsec:ouroboros-pvss}
 
@@ -542,7 +542,19 @@ Nech dĺžka epochy $e_j$ je $R=10k$ slotov a vodcovia slotov $1,2,...,R$ sú $U
 
 \section{Model motivácie}
 
-Vodca slotu je motivovaný vytvoriť nový blok pomocou odmeny v podobe poplatku na transakciách (anglicky \textit{transaction fee}), ktoré do bloku zahrnul. Ak bol blok vygenerovaný delegovane, tak majú na odmenu nárok všetci účastníci daného \textit{stake pool} zoskupenia. Odmena je potom rozdelená úmerne podielu jednotlivých podielnikov. Samotné odmeny sa počítajú a vyplácajú za obdobie jednej epochy.
+Ouroboros motivuje účastníkov protokolu chovať sa poctivo pomocou modelu odmeňovania. Transakcie zahrnuté do blokov obsahujú poplatky (anglicky \textit{transaction fee}), ktoré tvorcovia transakcií musia zaplatiť podielnikom. Samotné odmeny sa počítajú a vyplácajú za obdobie jednej epochy.
+
+Celkový fond odmien $T_{all}$ pre epochu $e_j$ je daný rovnicou~\ref{eq:ouroboros-reward-pool}, kde R je počet slotov v epoche a $T_i$ sú všetky poplatky za transakcie v slote $i$. Ak sa ľubovoľná transakcia vyskytne vo viacerých blokoch, tak je poplatok uvažovaný len pri jej prvom výskyte.
+\begin{equation}\label{eq:ouroboros-reward-pool}
+	T_{all} = \sum_{i=1}^{R}\sum_{k \in T_i}t_k
+\end{equation}
+
+V epoche $e_j$ uvažujme vodcov $U_1, U_2, ..., U_R$ pre sloty $1, 2, ..., R$ a všetkých podielnikov označme ako množinu $\mathbf{P}$. Potom $i$-tý podielnik $p_i \in \mathbf{P}$ dostane za epochu $e_j$ odmenu $\alpha_i$ určenú rovnicou~\ref{eq_ouroboros-reward}.
+\begin{equation}\label{eq_ouroboros-reward}
+	\alpha_i = \frac{|\{ k\,|\,p_i = U_k \}|}{R}T_{all}
+\end{equation}
+
+Odmena podielnika teda nevychádza z transakcií, ktoré sú pridané do BC v jeho vodcovských slotoch, ale je vždy priamo úmerná jeho podielu. Tento model motivácie teda odmeňuje podielnikov nie za vytváranie blokov, ale za samotné vlastníctvo podielu.
 
 \section{Teoretická analýza}
 
