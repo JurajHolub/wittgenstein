@@ -6,20 +6,20 @@ TODO
 
 \chapter{Blockchain}\label{chap:blockchain}
 
-Táto kapitola vysvetľuje základné koncepty a pojmy spojené z technológiou blockchain, ako aj samotnú dátovú štruktúru blockchain. Sekcia~\ref{sec:ladger} vysvetľuje pojmi distribuovaná účtovná kniha a blockchain. Ďalej rozoberá vlastnosti a využitie blockchainu. Sekcia~\ref{sec:crypto} vysvetľuje kryptografiu používanú v blockchaine (hashovanie, a asymetrická kryptografia).  Sekcia~\ref{sec:p2p} popisuje peer-to-peer siete a ich využitie v blockchaine. Nazáver sú v sekcii~\ref{sec:data-struct-blockchain} spojené všetky vysvetlené koncepty dokopy a je popísaná samotná dátová štruktúra blockchain.
+Táto kapitola vysvetľuje základné koncepty a pojmy spojené z technológiou blockchain, ako aj samotnú dátovú štruktúru blockchain. Sekcia~\ref{sec:ladger} vysvetľuje pojmi distribuovaná účtovná kniha a blockchain. Ďalej rozoberá vlastnosti a využitie blockchainu. Sekcia~\ref{sec:crypto} vysvetľuje kryptografiu používanú v blockchaine (hashovanie, a asymetrická kryptografia). Sekcia~\ref{sec:p2p} popisuje peer-to-peer siete a ich využitie v blockchaine. Na záver sú v sekcii~\ref{sec:data-struct-blockchain} spojené všetky vysvetlené koncepty dokopy a je popísaná samotná dátová štruktúra blockchain.
 
 \section{Distribuovaná účtovná kniha}\label{sec:ladger}
 \textit{Účtovná kniha} (anglicky \textit{ledger}) sa v histórii ľudstva dlhodobo používa na záznam rôznych položiek, najčastejšie peňazí a majetku. Príchod digitalizácie a globalizácie presunul tento známy koncept z papierovej podoby do elektronickej. Toto prináša nové výzvy z hľadiska bezpečnosti.
-\textit{Distribuovaná účtovná kniha} (anglicky \textit{distributed ledger}) je všeobecne technológia, ktorá poskytuje dôveryhodnú a bezpečnú databázu zdieľanú naprieč viacerými inštitúciami, krajinami a to typicky verejne. Najtypickejším odvetvím využitia distribuovanej účtovnej knihy je bankovníctvo. Banka poskytuje centralizovanú autoritu, ktorá zabezpečuje bezpečnú manipuláciu s peniazmi klientov. Tento koncept označujeme ako centralizovaná účtovná kniha.~\cite{dltUkReport}
+\textit{Distribuovaná účtovná kniha} (anglicky \textit{distributed ledger}) je všeobecne technológia, ktorá poskytuje dôveryhodnú a bezpečnú databázu zdieľanú naprieč viacerými inštitúciami, krajinami a to typicky verejne. Veľmi bežným odvetvím využitia distribuovanej účtovnej knihy je bankovníctvo. Banka poskytuje centralizovanú autoritu, ktorá zabezpečuje bezpečnú manipuláciu s peniazmi klientov. Tento koncept označujeme ako centralizovaná účtovná kniha.~\cite{dltUkReport}
 
 V roku 2008 bola publikovaná práca~\cite{satoshiBitcoin}, ktorá navrhla \textit{decentralizovanú} distribuovanú účtovnú knihu. Práca navrhla koncept elektronického platobného systému, ktorého bezpečnosť je založená na kryptografickom dôkaze namiesto dôvere v centralizovanú autoritu. Takáto distribuovaná účtovná kniha sa nazýva \textbf{blockchain} (ďalej \textbf{BC}).
 \subsection{Vlastnosti BC}
-BC je dátová štruktúra, ktorá má nasledujúce vlastnosti:
+BC je dátová štruktúra, ktorá má nasledujúce vlastnosti~\cite{zhengBlockchainOverview}:
 \begin{itemize}
-	\item \textbf{Decentralizácia}: BC funguje nad peer-to-peer sieťou, ktorá nepotrebuje centralizovanú dôveryhodnú autoritu.
-	\item \textbf{Auditovateľnosť}: BC v sebe nesie celú histórie zmien jeho obsahu a teda každú zmena stavu dát uložených v BC je možné sledovať.
-	\item \textbf{Nemennosť}: Pri správnom použití a dostatočne veľkej sieti nie je možné zmeniť históriu alebo dátový obsah BC.
-	\item \textbf{Anonymita}: Užívatelia pracujúci s BC používajú na identifikáciu asymetrickú kryptografiu s digitálnym podpisom. Takýto kryptografický identifikátor neodhaľuje skutočnú identitu užívateľa a pritom umožňuje nepopierateľne určiť vlastníka elektronického zdroja.
+	\item \textbf{Decentralizácia} (anglicky \textit{decentralization}): BC funguje nad peer-to-peer sieťou, ktorá nepotrebuje centralizovanú dôveryhodnú autoritu, ale na zabezpečenie konzistencie používa konsenzus protokol.
+	\item \textbf{Auditovateľnosť} (anglicky \textit{auditability}): BC v sebe nesie celú histórie zmien dátového obsahu a teda každú zmena stavu dát uložených v BC je možné sledovať.
+	\item \textbf{Nemennosť} (anglicky \textit{persistency}): Modifikácia alebo zmazanie časti dátového obsahu BC nie je možná.
+	\item \textbf{Anonymita} (anglicky \textit{anonymity}): Užívatelia pracujúci s BC používajú na identifikáciu asymetrickú kryptografiu s digitálnym podpisom. Takýto kryptografický identifikátor neodhaľuje skutočnú identitu užívateľa a pritom umožňuje nepopierateľne určiť vlastníka elektronického zdroja.
 \end{itemize}
 
 Tieto vlastnosti BC sú zabezpečené pomocou peer-to-peer siete na ktorej je BC postavený (viď sekcia~\ref{sec:p2p}) a taktiež pomocou samotnej dátovej štruktúry, ktorá využíva modernú kryptografiu (viď sekcia~\ref{sec:data-struct-blockchain}).~\cite{horizenAcademy}
@@ -29,22 +29,22 @@ Tieto vlastnosti BC sú zabezpečené pomocou peer-to-peer siete na ktorej je BC
 BC bol navrhnutý a po prvýkrát implementovaný za účelom poskytnúť elektronickú peňažnú menu nezávislú od centralizovaného bankovníctva. Tento prvý a najznámejší BC je Bitcoin~\cite{satoshiBitcoin}. Avšak vlastnosti BC technológie nachádzajú uplatnenie vo veľkom množstve odvetví. Nasledujúci zoznam vymenúva niekoľko aplikácií, ktoré BC môže riešiť~\cite{homoliakBlockchain}:
 
 \begin{itemize}
-	\item \textbf{Elektronická peňaženka}: Elektronické peňaženky pre obchod s nejakou formou peňazí (typicky v podobe tokenov). Takéto tokeny sú typicky vlastnené pomocou privátneho kľúča, ktorý má uschovaný majiteľ. Majiteľ môže vlastníctvo tokenov presúvať na iné subjekty v danej sieti.
+	\item \textbf{Elektronická peňaženka}: Elektronické peňaženky pre obchod s nejakou formou digitálnych peňazí (typicky v podobe tokenov). Takéto tokeny sú vlastnené pomocou privátneho kľúča, ktorý má uschovaný majiteľ. Ten môže vlastníctvo tokenov presúvať na iné subjekty v danej sieti.
 	\item \textbf{Zmenárne}: V dnešnej dobe existuje veľké množstvo elektronických peňažných mien postavených nad BC. Takéto meny všeobecne označujeme ako kryptomeny. Z dôvodu veľkého množstva kryptomien sa prirodzene zvyšuje dopyt po zmenárni medzi jednotlivými kryptomenami. Klasická zmenáreň je riešená tradične centralizovanou autoritou. Avšak BC je vhodnou technológie aj pre decentralizovanú zmenáreň.
 	\item \textbf{Súborové systémy}: V dnešnej dobe už existujú decentralizované súborové systémy založené na peer-to-peer sieťach. Implementácia takéhoto decentralizovaného súborového systému ako BC by nám umožnila nepopierateľne a trasovateľne verzovať zmeny v obsahu.
 	\item \textbf{Správa identít}: Táto služba je typicky zabezpečovaná centrálnou autoritou, ktorá prideľuje pre konkrétne entity určité zdroje na ktoré majú právo. Ide o schému podobnú banke. BC by v tomto prípade opäť umožnil náhradu tejto centralizovanej autority za decentralizovanú sieť.
 	\item \textbf{Voľby}: Elektronické hlasovanie je ďalším vhodným príkladom, kde sa dá efektívne využiť BC. Hlasujúce entity predstavujú decentralizovanú sieť a vlastnosti BC zase poskytujú transparentnosť a verejnú overiteľnosť.
-	\item \textbf{Reputačné systémy}: Tieto služby slúžia merajú úroveň dôvery v určité entity. Typickým príkladom je reputácia rôznych predajcov na základe hlasovania zákazníkov. Transparentnosť a nemennosť BC histórie by znížila možnosť manipulácie s reputáciu v prospech nejakej entity.
+	\item \textbf{Reputačné systémy}: Tieto služby merajú úroveň dôvery v určité entity. Typickým príkladom je reputácia rôznych predajcov na základe hlasovania zákazníkov. Transparentnosť a nemennosť BC histórie by znížila možnosť manipulácie s reputáciu v prospech nejakej entity.
 	\item \textbf{Aukcie}: Elektronická aukcia je služba veľmi podobná elektronickej peňaženke alebo zmenárni s podobnými bezpečnostnými požiadavkami. Tieto vlastnosti by opäť dokázala pokryť technológia BC.
 \end{itemize}
 
 \section{Viacvrstvová abstrakcia BC}
 
-Existuje veľké množstvo BC protokolov, ktoré majú rôzne využitie a implementáciu. Avšak všetky tieto implementácie sú založené na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami:~\cite{homoliakBlockchain}
+Existuje veľké množstvo BC protokolov, ktoré majú rôzne využitie a technologické riešenie. Avšak všetky tieto implementácie sú založené na spoločnom koncepte distribuovanej účtovnej knihy. Pre ich jednotnú klasifikáciu použijeme nasledujúci model abstrakcie so štyrmi vrstvami~\cite{homoliakBlockchain}:
 
 \begin{enumerate}
-	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť BC. Napríklad, verejný BC ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť paketov alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého BC. Sieťová vrstva je popísaná v sekcii~\ref{sec:p2p}.~\cite{fanPerfEval}
-	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustanovuje dohoda na stave BC. Táto vrstva kľúčovo ovplyvňuje priepustnosť transakcií (\textit{TPS - transaction per second}). Táto metrika je kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne 5. Konsenzus v BC je popísaný v kapitole~\ref{chap:consenzus}
+	\item \textbf{Sieťová vrstva} predstavuje najnižšiu vrstvu abstrakcie a zaoberá sa peer-to-peer sieťou. Sieť rieši pripájanie nových peerov a komunikácia medzi uzlami v sieti (šírenie transakcií a blokov). Táto vrstva má kritický dosah na výkonnosť BC. Napríklad, verejný BC ako je Bitcoin tvorí veľmi rozsiahlu sieť s tisíckami aktívnych uzlov. V takejto sieti sa už vlastnosti ako stratovosť dát alebo priepustnosť nezanedbateľne prejaví na rýchlosti a stabilite celého BC. Sieťová vrstva je popísaná v sekcii~\ref{sec:p2p}.~\cite{fanPerfEval}
+	\item \textbf{Konsenzus vrstva} definuje protokol pomocou, ktorého sa ustanovuje dohoda na stave BC. Konsenzus v BC je popísaný v kapitole~\ref{chap:consenzus}.
 	\item \textbf{Dátová vrstva} (alebo tiež úložisko) definuje model transakcií (binárny hashovací strom, hashovacie a kryptografické algoritmy). Sekcia~\ref{sec:crypto} popisuje kryptografické primitíva používané v technológii BC a sekcia~\ref{sec:data-struct-blockchain} popisuje BC ako dátovú štruktúru.
 	\item \textbf{Aplikačná vrstva} definuje využitie v konkrétnej službe (napríklad kryptomena).
 \end{enumerate}
@@ -76,11 +76,11 @@ Obrázok~\ref{img:p2p-ref-model} ukazuje princíp fungovania takto definovanej s
 \end{enumerate}
 Konkrétne riešenie pre popisovaných šesť aspektov je zavislé od požiadaviek na efektivitu, škálovateľnosť, samoorganizovateľnosť, odolnosť voči chybám a kooperáciu.~\cite{p2pEssence}
 
-\subsection{Využitie v BC}
+\subsection{Využitie v BC}\label{subsec:bc-usage}
 
 Peer-to-peer sieť umožňuje BC uchovávať jeho obsah decentralizovane a pritom bezpečne. Tento koncept si vysvetlíme na prípade BC, ktorý sa využíva ako kryptomena.
 
-Elektronické financie sú typicky reprezentované pomocou elektronických mincí. Takáto minca je reprezentovaná pomocou nejakej sekvencie bitov. Avšak narozdiel od fyzických mincí, elektronické mince umožňujú jednoduchú falzifikáciu. Útočník skopíruje bitový reťazec danej mince a zaplatí ním viacnásobne rôzne produkty. Tento útok sa volá zdvojnásobenia výdavkov (anglicky \textit{double-spending attack}). Proti tomuto útoku existuje tradičné zabezpečenie pomocou centrálnej autority. Banka je centrálna autorita, ktorá schvaľuje všetky manipulácie s elektronickými mincami a teda neumožní použiť mincu takýmto podvodným spôsobom. Avšak toto riešenie nie je možné použiť v decentralizovanej sieti, kde centrálna autorita neexistuje. V prípade decentralizovanej siete je možné zabrániť tomuto útoku pomocou použitia peer-to-peer siete v kombinácii s BC.~\cite{doubleSpending}
+Elektronické financie sú typicky reprezentované pomocou elektronických mincí. Takáto minca je definovaná nejakou unikátnou sekvencie bitov. Avšak narozdiel od fyzických mincí, elektronické mince umožňujú jednoduchú falzifikáciu. Útočník skopíruje bitový reťazec danej mince a zaplatí ním viacnásobne rôzne produkty. Tento útok sa volá zdvojnásobenia výdavkov (anglicky \textit{double-spending attack}). Proti tomuto útoku existuje tradičné zabezpečenie pomocou centrálnej autority. Banka je centrálna autorita, ktorá schvaľuje všetky manipulácie s elektronickými mincami a teda neumožní použiť mincu takýmto podvodným spôsobom. Avšak toto riešenie nie je možné použiť v decentralizovanej sieti, kde centrálna autorita neexistuje. V prípade decentralizovanej siete je možné zabrániť tomuto útoku pomocou použitia peer-to-peer siete v kombinácii s BC.~\cite{doubleSpending}
 
 Kryptomena Bitcoin ako prvá navrhla použitie peer-to-peer siete v spojení s BC technológiou pre zabránenie double-spending útoku. V takejto sieti je jediný zdroj na zdieľanie a to je dátová štruktúra BC v ktorej sú uložené všetky informácie o elektronických financiách. Zjednodušene môžeme povedať, že majorita uzlov siete zdieľa rovnaký zdroj (rovnakú kópiu BC). Ak chce niektorý uzol vykonať finančnú transakciu tak zašle správu s navrhovanou zmenou BC do siete. Uzly v tejto sieti nie je potrebné identifikovať pretože správy posielané v tejto sieti nie sú smerované na žiadne konkrétne miesto. Keď uzol prijme správu s nejakou modifikáciu tak si overí či ide o validnú požiadavku na finančnú transakciu. Štruktúra BC používa modernú kryptografiu na overenie validnosti transakcie (pozri sekciu~\ref{sec:crypto}). BC vlastnený väčšinou siete je ten, ktorý sa považuje za pravdu. Útočník by musel teda vlastniť aspoň 51\,\% uzlov v sieti aby mohol vykonať double-spending útok. Ak je daná sieť dostatočne veľká tak by toho útočník nemal byť schopný dosiahnuť.~\cite{satoshiBitcoin}
 
@@ -153,19 +153,15 @@ Každý blok obsahuje dáta, ktoré sú typicky vo forme transakcií. Kryptograf
 \subsection{Blok}\label{subsec:block}
 
 Blok sa skladá z hlavičky a tela. Telo bloku obsahuje dáta a hlavička obsahuje metadáta. Dáta v tele bloku sú uložené vo forme transakcií. Transakcie sú popísané v sekcii~\ref{subsec:transaction}. Počet transakcií v bloku je typicky obmedzený maximálnou veľkosťou bloku.
-Hlavička bloku obsahuje metadáta o bloku, kde najdôležitejšie a najbežnejšie sú nasledujúce:
+Hlavička bloku obsahuje metadáta o bloku, kde najdôležitejšie a najbežnejšie sú nasledujúce~\cite{zhengBlockchainOverview}:
 \begin{itemize}
 	\item Hash všetkých transakcií.
 	\item Časové razítko vytvorenia bloku.
 	\item Hash ukazovateľ na predošlý blok v blockchaine.
-	\item Náhodná výzva (anglicky \textit{nonce}), ktorej využitie vysvetľuje sekcia~\ref{subsec:pow}
 \end{itemize} 
 
-~\cite{zhengBlockchainOverview}
-
-
 \subsection{Transakcia}\label{subsec:transaction}
-Transakcia je elementárna dátová jednotka na ukladanie dáta v blockchaine. Bitcoin, prvý blockchain, použil transakciu na manipuláciu s elektronickými financiami. Takáto transakcia sa skladá z troch častí:
+Transakcia je elementárna dátová jednotka na ukladanie digitálnych informácií v blockchaine. Bitcoin, prvý blockchain, použil transakciu na manipuláciu s elektronickými financiami. Takáto transakcia sa skladá z troch častí~\cite{narayanan2016bitcoin}:
 \begin{itemize}
 	\item \textbf{Množina vstupov}: Každý vstup má uložený hash predošlej transakcie s ktorej vychádza. Ďalej definuje, ktoré výstupy s predošlej transakcie si nárokuje. Nakoniec obsahuje digitálny podpis, ktorý autorizuje tvorcu transakcie.
 	\item \textbf{Množina výstupov}: Každý výstup má hodnotu, ktorá je uchovávaná v blockchaine (typicky minca nejakej kryptomeny). Suma hodnôt všetkých výstup transakcie musí byť menšia alebo rovná sume všetkých vstupov transakcie. Ak je menšia, tak tento rozdiel je použitý ako odmena pre toho, kto publikoval tento blok blockchainu.
@@ -173,23 +169,23 @@ Transakcia je elementárna dátová jednotka na ukladanie dáta v blockchaine. B
 \end{itemize}
 
 
-\subsection{Binárny hashovací strom}~\label{subsec:merkle-tree}
-Binárny hashovací strom alebo tiež Merkle strom (anglicky \textit{Merkle tree}) je datová štruktúra podobná binárnemu stromu, ktorá slúži na efektívne a rýchle vypočítanie hashu veľkého množstva dát. Blockchain používa tento strom na časovo efektívny výpočet hashu všetkých transakcií. Takto vypočítaný hash je uložený v hlavičke bloku.
+\subsection{Markle tree}~\label{subsec:merkle-tree}
+Binárny hashovací strom alebo tiež Merkle strom (anglicky \textit{Merkle tree})~\cite{merkleTreeBosamia} je dátová štruktúra podobná binárnemu stromu, ktorá slúži na efektívne a rýchle vypočítanie hashu veľkého množstva dát. Blockchain používa tento strom na časovo efektívny výpočet hashu všetkých transakcií. Takto vypočítaný hash je uložený v hlavičke bloku.
 
-Merkle strom je vyvážený binarny strom, kde listové uzly obsahujú jednotlivé transakcie uložené v danom bloku blockchainu. Každý nelistový uzol stromu obsahuje hash vypočítaný z jeho potomkov. Koreňový uzol teda obsahuje hash celého stromu a teda aj všetkých transakcií. Pridanie, odobranie, zmena obsahu, alebo zmena poradia transakcií bude teda viesť k zmene koreňového hashu. Konštrukcia stromu, inak povedané výpočet hashu všetkých transakcií, prebieha následovne:
+Merkle strom je vyvážený binárny strom, kde listové uzly obsahujú jednotlivé transakcie uložené v danom bloku blockchainu. Každý nelistový uzol stromu obsahuje hash vypočítaný z jeho potomkov. Koreňový uzol teda obsahuje hash celého stromu a teda aj všetkých transakcií. Pridanie, odobranie, zmena obsahu, alebo zmena poradia transakcií bude teda viesť k zmene koreňového hashu. Konštrukcia stromu, inak povedané výpočet hashu všetkých transakcií, prebieha následovne:
 \begin{enumerate}
 	\item Všetky transakcie sú uložené do listovej úrovne stromu. Ak je počet transakcií nepárny tak, je posledná vložená dvakrát.
 	\item Nad každým listovým uzlom je vypočítaný hash.
 	\item Každý nelistový uzol skonkatenuje hash ľavého a pravého syna, vypočíta nad nimi hash a uloží si ho. 
 \end{enumerate}
-Konštrukcia takéhoto stromu pre $n$ transakcií má časovú zložitosť $O(log(n))$. Takýto spôsob výpočtu hashu je teda veľmi efektívny pre veľké množstvo transakcií (blok v blockchaine bežne obsahuje stovky transakcií).~\cite{merkleTreeBosamia}
+Konštrukcia takéhoto stromu pre $n$ transakcií má časovú zložitosť $O(log(n))$. Takýto spôsob výpočtu hashu je teda veľmi efektívny pre veľké množstvo transakcií (blok v blockchaine bežne obsahuje stovky transakcií).
 
-Merkle strom umožnuje efektívne šetriť pamäťové nároky blockchainu. Do blockchainu sú neustále pridávané nové bloky, ktoré obsahujú aj rovnaké staré transakcie. Ak už sú transakcie zaznamenané v dostatočne veľkom množstve blokov tak sú z hľadiska bezpečnosti nemenné. V nových blokoch ich už preto nie je potrebné ukladať. Nový blok si preto uloží len hashe starých vetiev stromu, ale ich obsah už nepotrebuje. Takto je zachovaná integrita hashu všetkých transakcií.~\cite{satoshiBitcoin}
+Merkle strom umožňuje efektívne šetriť pamäťové nároky blockchainu. Do blockchainu sú neustále pridávané nové bloky, ktoré obsahujú aj rovnaké staré transakcie. Ak už sú transakcie zaznamenané v dostatočne veľkom množstve blokov tak sú z hľadiska bezpečnosti nemenné. V nových blokoch ich už preto nie je potrebné ukladať. Nový blok si preto uloží len hashe starých vetiev stromu, ale ich obsah už nepotrebuje. Takto je zachovaná integrita hashu všetkých transakcií.~\cite{satoshiBitcoin}
 
 
 \chapter{Konsenzus}\label{chap:consenzus}
 
-Konsenzus v BC zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave BC. Tradične je konsenzus zabezpečený centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak BC je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti BC je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi troma vlastnosťami (anglicky \textit{CAP theorem})~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
+Konsenzus v BC zabezpečuje, že skupina uzlov (peerov) sa  zhodne na rovnakom stave BC. Tradične je táto vlastnosť zabezpečená centrálnou autoritou s ktorou musia byť všetky uzly spojené. Avšak BC je decentralizovaný a teda toto riešenie nie je možné. Konsenzus v decentralizovanej sieti BC je zabezpečený pomocou protokolu, ktorý sa snaží nájsť kompromis medzi nasledujúcimi troma vlastnosťami (anglicky \textit{CAP theorem})~\cite{gilbertCAP, zhangConsensus, leporeConsensus}:
 \begin{itemize}
 	\item Konzistentnosť (\textit{Consistency}): Všetci uživatelia majú rovnaký stav BC (rovnaké dáta).
 	\item Dostupnosť (\textit{Availability}): Pre každú požiadavku na dáta musí byť poskytnutá odpoveď v konečnom čase. Odpoveďou môže byť aj neúspech.
@@ -207,9 +203,9 @@ Existujú tri najbežnejšie techniky, ktoré sa používajú pre ustavenie kons
 	\item \textbf{Kombinovaný prístup}: Tieto protokoly sa snažia kombinovať prístup lotérie a hlasovania s cieľom dosiahnuť výhody oboch prístupov. Napríklad je možné rozdeliť počet uzlov podieľajúcich sa na hlasovaní pomocou lotérie, čím sa zvýši priepustnosť.
 \end{itemize}
 
-Dnes sa hoví najmä o dvoch rodinách konsenzus protokolov. Prvou a najbežnejšou rodinou je \textit{Proof-of-Work}. Tento konsenzus mechanizmus je založený na princípe lotérie. Detailnejšie je popísaný v sekcii~\ref{sec:pow}.
+Dnes sa hovorí najmä o dvoch rodinách konsenzus protokolov. Prvou a najbežnejšou rodinou je \textit{Proof-of-Work}. Tento konsenzus mechanizmus je založený na princípe lotérie. Detailnejšie je popísaný v sekcii~\ref{sec:pow}.
 
-Táto práca sa však zaoberá predovšetkým konsenzus mechanizmos, ktorý sa všeobecne nazýva \textit{Proof-of-Stake}. Táto rodina konsenzus protokolov je založená na hlasovaní. V poslednej dobe sa ponúka ako vhodná alternatíva k Proof-of-Work. Tento mechanizmus je detailnejšie popísaný v sekcii~\ref{sec:pos}
+Táto práca sa však zaoberá predovšetkým konsenzus mechanizmom, ktorý sa všeobecne nazýva \textit{Proof-of-Stake}. Táto rodina konsenzus protokolov je založená na hlasovaní. V poslednej dobe sa ponúka ako vhodná alternatíva k Proof-of-Work. Tento mechanizmus je detailnejšie popísaný v sekcii~\ref{sec:pos}
 
 \section{Proof-of-Work}\label{sec:pow}
 Dôkaz prácou, anglicky \textit{Proof-of-Work} (ďalej PoW), je najbežnejšia stratégia konsenzus protokolu. Ak chce uzol publikovať nový blok, musí investovať svoj výpočtový výkon do riešenia netriviálneho kryptografického problému. Uzol, ktorý ako prvý vyrieši tento problém má najväčšiu pravdepodobnosť, že bude jeho blok pridaný do reťazca. Samozrejme, je tu možnosť, že problém vyrieši súčasne viacero uzlov. Konečná voľba je teda náhodná. PoW teda umožňuje, aj keď s oveľa menšou pravdepodobnosťou, že sa reťazec rozvetví. Bezpečnosť takéhoto konsenzu spočíva v tom, že majorita výpočtového výkonu siete (51\,\%) je vlastnená poctivými uzlami.
@@ -225,7 +221,7 @@ PoW konsenzus využíva dva typy uzlov. Prvý typ uzla je miner, ktorý vytvára
 	\item Miner prijíma požiadavky na transakcie z peer-to-peer siete. Každú transakciu si validuje pomocou kryptografie popísanej v sekcii~\ref{sec:crypto}. Miner musí taktiež udržiavať aktuálny stav blockchainu. Je potrebné sledovať či nevznikli nové bloky a udržiavať si validný blockchain.
 	\item Ak miner vlastní validnú a aktuálnu kópiu blockchainu a má dostatok transakcií, môže začať vytvárať nový blok. Do nového bloku vloží transakcie, ktoré prijal a boli validné. Následne investuje svoj výpočtový výkon do vyriešenia kryptografického problému (podrobnejšie popísané v sekcii~\ref{subsec:bitcoin}). Ak úlohu vyrieši tak môže zostrojiť nový validný blok.
 	\item Novo vytvorený blok je potrebné distribuovať do siete. Ak väčšina siete blok získa a akceptuje, tak bol pridaný do blockchainu.
-	\item Ak sa podarilo úspešne blok pridať do blockchainu tak miner získava odmenu. Odmena za vyťažený blok je konštantná čiastka zdrojov poskytovaných daným blockchainom. Napríklad Bitcon poskytuje v roku 2021 ako odmenu 6,25 bitcoinov čo približne 300 dolárov~\footnote{\url{https://www.investopedia.com/tech/how-does-bitcoin-mining-work/}}. Avšak táto odmena môže byť navýšená o poplatky, ktoré sú v transakciách. Ak teda chcete aby sa vaša transakcia dostala do blockchainu čo najrýchlejšie, poskytnete vyššiu odmenu v podobe poplatku za transakciu. Miner bude potom viac motivovaný pridať práve túto transakciu do bloku.
+	\item Ak sa podarilo úspešne blok pridať do blockchainu tak miner získava odmenu. Odmena za vyťažený blok je konštantná čiastka zdrojov poskytovaných daným blockchainom. Napríklad Bitcon poskytuje v roku 2021 ako odmenu 6,25 bitcoinov čo je približne 300 dolárov~\footnote{\url{https://www.investopedia.com/tech/how-does-bitcoin-mining-work/}}. Avšak táto odmena môže byť zvýšená o poplatky, ktoré sú v transakciách. Ak teda chcete aby sa vaša transakcia dostala do blockchainu čo najrýchlejšie, poskytnete vyššiu odmenu v podobe poplatku za transakciu. Miner bude potom viac motivovaný pridať práve túto transakciu do bloku.
 \end{enumerate}
 
 \subsection{Bitcoin}\label{subsec:bitcoin}
@@ -234,13 +230,27 @@ Bitcoin je najznámejší BC protokol, ktorý používa PoW konsenzus. Samotný 
 \subsection{Vlastnosti}
 PoW je overený konsenzus protokol, ktorý funguje a používa sa v blockchainoch ako je Bitcoin~\cite{satoshiBitcoin} alebo Ethereum~\footnote{\url{https://ethereum.org/en/whitepaper/}}. Tento protokol má však jeden dlhodobý problém a to je spotreba energie. Uzly ktoré riešia kryptografický problém pre nové bloky spotrebujú veľké množstvo energie čo má nepriaznivý dopad na životné prostredie. Niektoré zdroje~\footnote{\url{https://www.businessinsider.com/bitcoin-mining-electricity-usage-more-than-google-2021-9}} napríklad hovoria, že v roku 2021 pokrýva ťažba Bitcoinu 0,5\,\% celkovej spotreby elektrickej energie na svete. Pre porovnanie, ide o sedemkrát väčšiu spotrebu energie ako má celá spoločnosť Google.~\cite{leporeConsensus}
 
+Druhou veľkou nevýhodou Bitcoinu je jeho slabá priepustnosť transakcií (\textit{TPS - transaction per second}). TPS je metrika kľúčová napríklad v oblasti kryptomien. Pre porovnanie, centralizovaný platobný systém VISA~\footnote{\url{https://towardsdatascience.com/the-blockchain-scalability-problem-the-race-for-visa-like-transaction-speed-5cce48f9d44}} má TPS približne 1\,500 zatiaľ čo Bitcoin približne~5.
+
 \section{Proof-of-Stake}\label{sec:pos}
 
 Dôkaz podielom na vlastníctve, anglicky \textit{Proof-of-Stake} (ďalej PoS), je založený na technike lotérie, kde pravdepodobnosť výhry rastie s množstvom už vlastnených zdrojov. Základnou myšlienkou, je že vlastník veľkého množstva zdrojov v danom BC je veľmi nepravdepodobným útočníkom pretože svoje zdroje nechce ohroziť. Uzly sa teda musia preukázať vlastníctvom zdrojov v danom BC ak chcú publikovať nový blok. Pravdepodobnosť výberu uzlu rastie s množstvom zdrojov, ktoré v sieti vlastní.~\cite{homoliakBlockchain, nguyenPos}
 
+\subsection{Vlastnosti}
+
+Veľkou výhodou PoS oproti PoW je, že nevyžaduje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. Ďalšou veľkou výhodou je rýchlosť. PoS konsenzus umožňuje rádovo vyššie TPS, ktoré je v prípade PoW značne limitované.~\cite{leporeConsensus, nguyenPos}
+
+PoS konsenzus však prináša aj viaceré problémy. Najväčším problémom je bezpečnosť. PoS prinieslo nové typy útokov, ktoré pri PoW nevznikali. Tieto útoky sú podrobnejšie popísané v sekcii~\ref{sec:pos-attacks}. Bežným problémom väčšiny PoS protokolov je, že nedefinujú teoretický základ a formálne definovanú bezpečnosť. Existujú teda rôzne riešenia na tieto útoky avšak neexistuje formálny bezpečnostný model, ktorý by dokazoval, že tieto útoky sú zabezpečené.
+
+Ďalším problémom je model motivácie. PoS konsenzus podporuje validné správanie odmeňovaním v podobe zdrojov. Naopak, škodlivé chovanie je trestané ich odoberaním. Problémom tohoto mechanizmu je jeho nejednoznačná definícia. Väčšina protokolov neobsahuje formálnu analýzu ich modelu motivácie.~\cite{nguyenPos}
+
+\section{Proof-of-Authority}
+
+PoA~\cite{Angelis2018PBFTVP} je rodina konsenzus protokolov založená na algoritmoch BFT (\textit{Byzantian Fault Tolerance}). PoA predpokladá, že v sieti je $N$ dôveryhodných uzlov. Tieto uzly (autority) sú jednoznačne identifikované  a majorita autorít je poctivá (konkrétne $N/2 + 1$). Veľmi rozšírený PoA protokol je PBFT popísaný v sekcii~\ref{subsec:pos-pbft}.
+
 \subsection{Practical Byzantine Fault Tolerance}\label{subsec:pos-pbft}
 
-\textit{Practical Byzantine Fault Tolerance}~\cite{pbftCastro} (ďalej len PBFT) je protokol na uznesenie konsenzu v distribuovanej sieti pomocou hlasovania. Tento protokol je používaný na uznesenie PoS konsenzu v BC. PBFT funguje pod podmienkou, že v sieti je maximálne $\frac{1}{3}$ nepoctivých uzlov. Na komunikáciu v sieti sa používa všesmerové vysielanie (anglicky \textit{broadcast}). Na zabezpečenie sa požíva kryptografia s digitálnym podpisom (viď sekcia~\ref{subsec:sign}). Jednotlivé uzly môžu posielať požiadavky do siete (vtedy hovoríme o tomto uzle ako o klientovi). Protokol definuje jeden uzol v sieti ako vodcu a ostatné uzly ako validátorov. Vodca hlasovania sa pravidelne mení podľa dohodnutého rozvrhu.
+\textit{Practical Byzantine Fault Tolerance}~\cite{pbftCastro} (ďalej len PBFT) je protokol na uznesenie konsenzu v distribuovanej sieti pomocou hlasovania. Tento protokol patrí do rodiny proof-of-authority. Avšak je často používaný aj v rámci PoS konsenzu. PoS protokoly často vyžadujú interné hlasovanie ktoré sa často rieši práve pomocou PBFT, kde dôveryhodnosť uzlov je zabezpečená vlastníctvom zdrojov (PoS). PBFT funguje pod podmienkou, že v sieti je maximálne $\frac{1}{3}$ nepoctivých uzlov. Na komunikáciu v sieti sa používa všesmerové vysielanie (anglicky \textit{broadcast}). Na zabezpečenie sa požíva kryptografia s digitálnym podpisom (viď sekcia~\ref{subsec:sign}). Jednotlivé uzly môžu posielať požiadavky do siete (vtedy hovoríme o tomto uzle ako o klientovi). Protokol definuje jeden uzol v sieti ako vodcu a ostatné uzly ako validátorov. Vodca hlasovania sa pravidelne mení podľa dohodnutého rozvrhu.
 Hlasovanie protokolu prebieha v štyroch fázach:
 \begin{enumerate}
 	\item \textit{Request}: Klient zašle vodcovi požiadavku na uznesenie konsenzu v sieti.
@@ -256,88 +266,119 @@ Obrázok~\ref{img:pbft} demonštruje tento protokol. \textbf{C} je klient, uzol 
 	\label{img:pbft}
 \end{figure}
 
-\subsection{Vlastnosti}
-
-Veľkou výhodou PoS oproti PoW je, že nevyžaduje také veľké množstvo energie. Uzly už nemusia súťažiť v riešení výpočtovo náročných úloh. Ďalšou veľkou výhodou je rýchlosť. PoS konsenzus umožňuje rádovo vyššie TPS, ktoré je v prípade PoW značne limitované.~\cite{leporeConsensus, nguyenPos}
-
-PoS konsenzus však prináša aj viaceré problémy. Najväčším problémom je bezpečnosť. PoS prinieslo nové typy útokov, ktoré pri PoW nevznikali. Tieto útoky sú podrobnejšie popísané v sekcii~\ref{sec:pos-attacks}. Bežným problémom väčšiny PoS protokolov je, že nedefinujú teoretický základ a formálne definovanú bezpečnosť. Existujú teda rôzne riešenia na tieto útoky avšak neexistuje formálny bezpečnostný model, ktorý by dokazoval, že tieto útoky sú zabezpečené.
-
-Ďalším problémom je model motivácie. PoS konsenzus podporuje validné správanie odmeňovaním v podobe zdrojov. Naopak, škodlivé chovanie je trestané ich odoberaním. Problémom tohoto mechanizmu je jeho nejednoznačná definícia. Väčšina protokolov neobsahuje formálnu analýzu ich modelu motivácie.~\cite{nguyenPos}
-
 \section{Všeobecné útoky na konsenzus}
+Nasledujúca sekcia vysvetľuje najbežnejšie typy útokov na bezpečnosť konsenzus protokolov. Ide o útoky, ktoré sú aplikovateľné na všetky rodiny konsenzus protokolov. Ďalej popísané útoky vychádzajú z nasledujúcej práce~\cite{homoliakBlockchain}. 
 
 \subsection{Ovládnutie konsenzu útočníkmi}
-Tieto útoky narušia decentralizované siete tým, že útočníci dokážu utvoriť konsenzus. V takom prípade sa stáva sieť centralizovaná, kde centrálnou autoritou sú práve útočníci. Príkladom takéhoto útoku pre PoW a PoS konsenzus je ovládnutie 51\,\% siete. V prípade protokolov Byzantskej chyby dokáže $\frac{1}{3}$ uzlov spôsobiť, že bude protokol narušený alebo dokonca zastavený.~\cite{homoliakBlockchain}
+Tento útok naruší decentralizovanosť siete tým, že útočníci dokážu utvoriť konsenzus aj bez poctivých uzlov. V takom prípade sa stáva sieť centralizovaná, kde centrálnou autoritou sú práve útočníci. Príkladom takéhoto útoku pre PoW a PoS konsenzus je ovládnutie 51\,\% siete. V prípade protokolov Byzantskej chyby dokáže $\frac{1}{3}$ uzlov spôsobiť, že bude protokol narušený alebo dokonca zastavený.
 
 \subsection{Porušenie synchronného doručovania}
 
-Ak útočník dokáže narušiť synchrónne doručovanie správ v protokole, ktorý synchronizáciu predpokladá tak takýto protokol prestane fungovať. Tento útok už nie je možné urobiť na protokole, ktorý umožňuje asynchronnú komunikáciu. Tento útok je možné vykonať napríklad pre protokoly Byzantskej chyby.~\cite{homoliakBlockchain}
+Ak útočník dokáže narušiť synchrónne doručovanie správ v protokole, ktorý synchronizáciu predpokladá tak takýto protokol prestane fungovať. Tento útok už nie je možné urobiť na protokole, ktorý umožňuje asynchronnú komunikáciu. Tento útok je možné vykonať napríklad pre protokoly Byzantskej chyby.
 
 \subsection{Útok na časovú synchronizáciu}
-Okrem času celého systému majú jednotlivé uzly v sieti vlastný čas. Uzly ho vypočítavajú ako medián všetkých časov získaných od ostatných. Ak je uzol miner tak typicky vloží práve tento čas do hlavičky bloku, ktorý vytvoril. Ostatné uzly v sieti budú pri distribúcii bloku overovať, že čas je dostatočne čerstvý aby bol akceptovaný. Ak útočník disponuje veľkým množstvom uzlov v sieti, tak môže narušiť synchronizáciu času, ktorý bloky získavajú mediánom. Tento útok následne spomaľuje sieť pretože bloky distribuujú bloky s časovou značkou, ktorá už nebude akceptovaná.
+Decentralizovaná sieť BC potrebuje časovú synchronizáciu medzi uzlami. Pri vytvorení nového bloku sa do jeho hlavičky zvyčajne vkladá aj časové razítko (anglicky \textit{timestamp}). Jednotlivé uzly v sieti majú vlastný čas, ktorý typicky vypočítavajú ako medián všetkých časov získaných od ostatných. Tvorca nového bloku potom vloží do hlavičky práve takto vypočítaný čas. Ostatné uzly v sieti budú pri distribúcii bloku overovať, že čas je dostatočne aktuálny aby bol akceptovaný. Ak útočník disponuje veľkým množstvom uzlov v sieti, tak môže narušiť synchronizáciu času, ktorý bloky získavajú mediánom. Tento útok následne spomaľuje sieť pretože bloky distribuujú bloky s časovou značkou, ktorá už nebude akceptovaná.
 
 \subsection{Zdvojnásobenie výdavkov}
 
-Zdvojnásobenie výdavkov (anglicky \textit{double spending}) je útok, ktorý vzniká vytvorením dvoch alebo viac konfliktných blokov. Tieto bloky vytvárajú tzv. vetvy (anglicky \textit{forks}). S tohoto dôvodu môžu byť niektoré krypto mince dočasne minuté v oboch konfliktných blokoch. Neskôr je síce len jeden z nich validný pretože druhá vetva bude zahodená. Avšak tento útok spomaľuje konzistentnosť blockchainu.
+Zdvojnásobenie výdavkov (anglicky \textit{double spending}) je útok, ktorý vzniká vytvorením dvoch alebo viac konfliktných blokov. Tieto bloky vytvárajú tzv. vetvy (anglicky \textit{forks}). S tohoto dôvodu môžu byť niektoré krypto mince dočasne minuté v oboch konfliktných blokoch. Neskôr je síce len jeden z nich validný pretože druhá vetva bude zahodená. Avšak tento útok spomaľuje konzistentnosť blockchainu. Tento útok už bol popísaný aj v sekcii~\ref{subsec:bc-usage}.
 
 \subsection{Útok na podskupiny uzlov}\label{subsec:shard-attack}
 
 Niektoré konsenzus protokoly rozdeľujú celú sieť na podskupiny uzlov (anglicky \textit{shards}). Sharding zvyšuje škálovateľnosť a priepustnosť siete pretože uzly validujú transakcie len v rámci svojej podskupiny. Na druhej strane, tento prístup môže viesť k zníženie bezpečnosti. Množstvo spolupracujúcich uzlov v jednej takejto podskupine je oveľa menší než v celej sieti. Pre útočníka môže byť preto jednoduchšie ovládnuť takúto podskupinu ako celú sieť.
 
-\subsection{Útok posledného objaviteľa}\label{subsec:lst-re-attack}
+%\subsection{Útok posledného objaviteľa}\label{subsec:lst-re-attack}
+%
+%last-revealer attack~\cite{lastRevealerAttack}
 
-last-revealer attack~\cite{lastRevealerAttack}
-
-\section{Útoky na PoS konsenzus}\label{sec:pos-attacks}
+\section{Útoky na Proof-of-Stake}\label{sec:pos-attacks}
+V tejto sekcii sa pozrieme na útoky špecifické pre PoS konsenzus protokoly. Vymenované útoky sú definované v tejto práci~\cite{homoliakBlockchain}.
 
 \subsection{Vetvenie bez rizika straty zdrojov}
 Generovanie blokov v PoS nestojí žiadnu energiu v podobe výpočtového výkonu. Uzly preto môžu generovať viacero konfliktných uzlov súčasne a tým zvyšovať pravdepodobnosť, že bude práve ich uzol pridaný do reťazca. Takéto správanie nepredstavuje pre daný uzol žiaden risk v podobe straty zdrojov. Problémom tohoto správania je, že vzniká väčšie množstvo vetiev reťazca. Ako dôsledok sa potom zvyšuje čas do konzistentnosti BC.
 
-\subsection{Ovplyvnenie volieb}
-Útočník ovplyvňuje voľby v jeho prospech. Takto zvyšuje pravdepodobnosť, že bude zvolený práve jeho blok. 
+\subsection{Ovplyvnenie volieb}\label{subsec:grinding-attack}
+PoS protokoly často potrebujú aby podielnici hlasovali. Na to používajú hlasovacie protokoly z rodiny BFT. Ako bolo popísané v sekcii~\ref{subsec:pos-pbft}, tieto protokoly typicky fungujú tak, že jeden uzol (vodca) vedie voľby a ostatné uzly (validátori) ich overujú a potvrdzujú. Roľa vodcu má rôzne výhody (napríklad niektoré BC odmeňujú vodcu podielom z poplatkov za vložené transakcie do bloku). Útočník preto môže chcieť ovplyvniť voľbu vodcu v svoj prospech. Na určenie, ktorý uzol sa stane vodcom sa často používa nejaká forma náhodnosti, ktorá je distribuovane generovaná. Útočník môže ovplyvniť generovanie tejto náhodnosti vo svoj prospech, tak aby sa stal vodcom práve on.
 
-\subsection{Odmietnutie služby lídrovi/výboru}
+\subsection{Odmietnutie služby lídrovi/výboru}\label{subsec:leader-dos}
 
-Tomuto vobec nerozumiem TODO - najst vhodno literaturu kde sa to vysvetluje
+Ako už bolo spomenuté v sekcii~\ref{subsec:grinding-attack}, PoS protokoly často používajú BFT hlasovanie v ktorom je kľúčová roľa vodcu bez ktorého hlasovanie neprebehne. Niektoré PoS protokoly vytvárajú rozvrh vodcov na dlhšie časové obdobie. Takýto rozvrh je dopredu známi čo zjednodušuje a zrýchľuje celý konsenzus. Na druhej strane, útočníci dopredu vedia, ktorý uzol bude v konkrétnom čase vodcom. Útočník potom môže v danom čase vykonať DoS útok na vodcu a znemožniť uzatvárať konsenzus v BC pomocou hlasovania.
 
 \subsection{Neskoršia korupcia}
-Útočník sa snaží získať privátne kľúče uzlov, ktoré mali v minulosti vplyv na reťazec. Útočník ich môže ukradnúť ale taktiež kúpiť. Tieto uzly môžu byť ochotné predať svoje privátne kľúče pretože tým nič neriskujú. Svoje krypto tokeny môžu kedykoľvek vymeniť za reálne peniaze.
-
-Ak útočník získa kľúče s dostatočným podielom zdrojov, tak môže pozmeniť históriu reťazca. 
+Útočník sa snaží získať privátne kľúče uzlov, ktoré mali v minulosti vplyv na reťazec BC. Útočník ich môže ukradnúť, ale taktiež kúpiť. Tieto uzly môžu byť ochotné predať svoje privátne kľúče pretože tým nič neriskujú. Virtuálne zdroje, ktoré majú vložené do daného BC môžu kedykoľvek vymeniť za reálne peniaze. Ak útočník získa kľúče s dostatočným podielom zdrojov, tak môže pozmeniť históriu reťazca. 
 
 \chapter{Harmony}\label{chap:harmony}
 
-Harmony je BC používajúci PoS konsenzus a \textit{sharding}. Cieľom tohoto protokolu je poskytovať aplikácie, ktoré v minulosti nebolo možné uskutočňovať na technológii BC (decentralizované zmenárne, platobný systém rozsahovo porovnateľný s Visa).
+Harmony je BC používajúci PoS konsenzus a \textit{sharding}. Cieľom tohoto protokolu je poskytovať aplikácie, ktoré v minulosti nebolo možné uskutočňovať na technológii BC z dôvodu rýchlosti a škálovateľnosti. Harmony je BC, ktorý má poskytovať služby ako decentralizované zmenárne alebo platobný systém rozsahovo porovnateľný s Visa.
 
-Všetky informácie o protokole Harmony popisované v tejto kapitole vychádzajú z oficiálnej dokumentácie publikovanej autormi tohoto protokolu~\cite{harmonyWp}. Sekcia~\ref{sec:harmony-cons} popisuje konsenzus protokol. Sekcia~\ref{sec:harmony-shards} vysvetľuje sharding používaný v tomto protokole.  Na záver je v sekcii~\ref{sec:harmony-analyze} tento protokol analyzovaný z hľadiska bezpečnosti a výkonnosti.
+Ak nie je uvedené inak, tak všetky informácie o protokole Harmony popisované v tejto kapitole vychádzajú z oficiálnej dokumentácie publikovanej autormi tohoto protokolu~\cite{harmonyWp, harmonyDoc}. Sekcia~\ref{sec:harmony-cons} popisuje konsenzus protokol. Sekcia~\ref{sec:harmony-shards} vysvetľuje sharding používaný v tomto protokole a sekcia~\ref{sec:harmony-incenctives} definuje model motivácie. Na záver je v sekcii~\ref{sec:harmony-analyze} tento protokol analyzovaný z hľadiska bezpečnosti a výkonnosti.
 
 \section{Konsenzus}\label{sec:harmony-cons}
 
-Konsenzus v Harmony protokole je založený na algoritme PBFT, ktorý už bol popísaný v sekcii~\ref{subsec:pos-pbft}. Celková časová zložitosť PBFT je $O(n^2)$ pre $n$ uzlov.
+Konsenzus v Harmony protokole je založený na algoritme PBFT, ktorý už bol popísaný v sekcii~\ref{subsec:pos-pbft}. Jeden z kľúčových problémov PBFT je, že jeho časová zložitosť je $O(n^2)$ pre $n$ uzlov. Táto vlastnosť neumožňuje dobrú škálovatelnosť siete. Avšak Harmony používa úpravu PBFT, ktorá má lineárnu časovú zložitosť vzhľadom k počtu uzlov v sieti (viď sekcia~\ref{subsec:fbft}).
 
-\subsection{Protokol}\label{subsec:fbft}
-Harmony používa úpravu PBFT s lineárnou škálovateľnosťou, ktorú nazýva FBFT (\textit{Fast Byzantine Fault Tolerance}). FBFT namiesto zasielania hlasov pomocou broadcastu používa prahový digitálny podpis (pozri sekciu~\ref{subsec:threshold-sig}). FBFT konsenzus prebieha následovne:
+\subsection{Protokol FBFT}\label{subsec:fbft}
+Pre vygenerovanie nového bloku používa Harmony svoj vlastný protokol FBFT (\textit{Fast Byzantine Fault Tolerance}). FBFT namiesto zasielania hlasov pomocou broadcastu používa prahový digitálny podpis (pozri sekciu~\ref{subsec:threshold-sig}). FBFT konsenzus prebieha následovne:
 \begin{enumerate}
-	\item Vodca vytvorí blok a rozošle jeho hlavičku validátorom pomocou broadcastu. Súčasne rozošle aj dátový obsah bloku.
-	\item Validátori overia hlavičku bloku, podpíšu ju svojím digitálnym podpisu a pošlú späť vodcovi. Obsah bloku je zatiaľ ignorovaný.
-	\item Keď vodca prijme aspoň $\frac{2}{3}$ podpisov tak ich agreguje do jediného prahového digitálneho podpisu. Tento podpis rozošle pomocou broadcastu spolu s bitmapou indikujúcou validátorov ktorý podpísali.
+	\item Vodca vytvorí blok a rozošle jeho hlavičku aj dátový obsah validátorom pomocou broadcastu.
+	\item Validátori príjmu nový blok, overia jeho hlavičku, podpíšu ju svojím digitálnym podpisu a pošlú späť vodcovi. Obsah bloku je zatiaľ ignorovaný.
+	\item Keď vodca prijme aspoň $\frac{2}{3}$ podpisov, tak ich agreguje do jediného prahového digitálneho podpisu (viď kryptografický prahový podpis popísaný v sekcii~\ref{subsec:threshold-sig}). Tento podpis rozošle pomocou broadcastu spolu s bitmapou indikujúcou validátorov ktorý podpísali.
 	\item Každý validátor overí, že prahový podpis obsahuje požadované $\frac{2}{3}$ hlasov. Až v tejto chvíli validátor overí transakcie v dátovom obsahu bloku, ktorý bol zasielaný už v kroku 1. Ak všetko súhlasí, tak podpíše správu s kroku 3 a pošle ju späť vodcovi.
 	\item Vodca čaká na $\frac{2}{3}$ podpisov validátorov s predošlého kroku (môžu sa líšiť od podpisov z kroku 3). Opäť ich agreguje do prahového podpisu a spolu s bitmapou účastníkov rozošle pomocou broadcastu nový blok na potvrdenie všetkým validátorom. 
 \end{enumerate}
-Je dôležité podotknúť, že Harmony je PoS konsenzus. Preto v celej tejto schéme neplatí, že jeden validátor sa rovná jednému hlasu. Jeden účastník môže mať viac hlasovacích lístkov (viď sekcia~\ref{subsec:rand-dist}). Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu hlasovacích lístkov.
+Obrázok~\ref{img:fbft} demonštruje FBFT protokol pre štyri uzly. Na tomto príklade môžeme vidieť, že celé hlasovanie má lineárnu časovú zložitosť, keďže broadcast vysiela len vodca (na rozdiel od PBFT, kde broadcast vysielajú aj validátori).
+
+Je dôležité podotknúť, že Harmony je PoS konsenzus. Vodca v skutočnosti nečaká na $\frac{2}{3}$ podpisov, ale len na toľko aby ich vlastníci spoločne vlastnili $\frac{2}{3}$ celkového podielu.
+
+\begin{figure}[bt]
+	\centering
+	\includegraphics[width=.7\textwidth]{obrazky-figures/harmony-fbft}
+	\caption{Priebeh hlasovania v FBFT (prevzaté z~\cite{harmonyWp}).}
+	\label{img:fbft}
+\end{figure}
+
+%Uvažujme epocha $e$, každý validátor $v$ má v epoche $e$ podiel $s_v$ a počet jeho hlasovacích lístkov $t_v$. Podiel $s_v$ sa rozdelí na $t_v$ častí, kde každá časť má hodnotu $s_v / t_v$. Všetky časti podielu od všetkých validátorov sa následne zostupne zoradia a vyberie sa z nich prvých $n$. Majiteľ $i$-tého dielu v tejto rade, pre $1 ~\leq i \leq n$, bude vodcom pre $i$-té kolo FBFT v epoche $e+1$.
+
+%Obrázok~\ref{img:harmony-leader} demonštruje protokol na určenie vodcu FBFT protokolu pre jednotlivé bloky v rámci epochy. Všimnime si, že validátori s malým podielom sa vôbec nemusia stať vodcami.
+
+%\begin{figure}[bt]
+%	\centering
+%	\includegraphics[width=.8\textwidth]{obrazky-figures/harmony-leader}
+%	\caption{Vytvorenie rozvrhu vodcov v epoche ktorej dĺžka je 8.~\cite{harmonyDoc}}
+%	\label{img:harmony-leader}
+%\end{figure}
 
 \section{Sharding}\label{sec:harmony-shards}
 
-Harmony protokol používa \textit{sharding} aby dosiahol lepšiu škálovateľnosť a priepustnosť transakcií. Niektoré zdroje~\footnote{\url{https://www.investing.com/news/cryptocurrency-news/harmony-one-slow-and-steady-wins-the-race-2609585}} deklarujú, že Harmony má priepustnosť priemerne 2\,000 TPS. Aktuálne používa 4 shardy a autori tvrdia, že pridaním každej ďalšej sa zvýši priepustnosť o 500 TPS. Táto sekcia vysvetľuje celý koncept shardingu v protokole Harmony.
+Harmony protokol používa \textit{sharding} aby dosiahol lepšiu škálovateľnosť a priepustnosť transakcií. Niektoré zdroje%
+\footnote{\url{https://www.investing.com/news/cryptocurrency-news/harmony-one-slow-and-steady-wins-the-race-2609585}} deklarujú, že Harmony má priepustnosť priemerne 2\,000 TPS. Aktuálne používa 4 shardy a autori tvrdia, že pridaním každej ďalšej sa zvýši priepustnosť o 500 TPS. Táto sekcia vysvetľuje celý koncept shardingu v protokole Harmony.
 
 \subsection{Rozdelenie hlasovacím podielom}\label{subsec:rand-dist}
-Ak sa chce uzol stať účastníkom Harmony blockchainu, musí vložiť určité množstvo zdrojov. Tento podiel určuje koľko bude mať hlasovacích lístkov pri validovaní. Tieto hlasovacie lístky sú následne náhodne rozdelené medzi všetky shardy (viď sekcia~\ref{subsec:rnd}) po dobu jednej epochy (viď sekcia~\ref{subsec:epoch}).
+Ak sa chce uzol stať účastníkom Harmony blockchainu, musí vložiť určité množstvo zdrojov. Tento podiel určuje koľko bude mať hlasovacích lístkov pri validovaní. Tieto hlasovacie lístky sú následne náhodne rozdelené medzi všetky shardy (viď sekcia~\ref{subsec:rnd}) po dobu jednej epochy (viď sekcia~\ref{subsec:epoch}). Tento postup je demonštrovaný na obrázku~\ref{img:harmony-sharding}.
+
+\begin{figure}[bt]
+	\centering
+	\includegraphics[width=\textwidth]{obrazky-figures/harmony-sharding}
+	\caption{Rozdelenie hlasovacieho podielu validátorov medzi všetky shardy (prevzraté z~\cite{harmonyDoc}).}
+	\label{img:harmony-sharding}
+\end{figure}
 
 \subsection{Epocha}\label{subsec:epoch}
-Epocha je časový interval počas, ktorého je štruktúra každého shardu nemenná. Epocha odpovedá času potrebnému na vygenerovanie 32\,768 blokov v beacon sharde, čo je približne 18,2 hodiny~\footnote{\url{https://docs.harmony.one/home/network/validators/definitions/epoch-transition}} (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}). Na začiatku epochy je vygenerované náhodné číslo (pozri sekciu~\ref{subsec:rnd}) na základe ktorého sa vytvorí rozdelenie do shardov. Účastníci, ktorý chcú validovať v nasledujúcej epoche musia v aktuálnej vložiť svoj podiel tokenov.
+Epocha je časový interval počas, ktorého je štruktúra každého shardu nemenná. Epocha odpovedá času potrebnému na vygenerovanie 32\,768 blokov v beacon sharde, čo je približne 18,2 hodiny%
+\footnote{\url{https://docs.harmony.one/home/network/validators/definitions/epoch-transition}} (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}). Na začiatku epochy je vygenerované náhodné číslo (pozri sekciu~\ref{subsec:rnd}) na základe ktorého sa vytvorí rozdelenie do shardov. Účastníci, ktorý chcú validovať v nasledujúcej epoche musia v aktuálnej vložiť svoj podiel tokenov.
 
-\subsection{Distribuovaná generácia náhodnosti}\label{subsec:rnd}
-Harmony rozdeľuje hlasovacie lístky do shardov pomocou náhodnej voľby (anglicky \textit{randomness-based sharding}). Na vygenerovanie náhodného čísla sa používa algoritmus VRF (\textit{Verifiable Random Function~\cite{algorandGilad}}) a VDF (\textit{Verifiable Delay Function~\cite{vdfBoneh}}). Tento výpočet vykonáva beacon shard (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}):
+
+\subsection{Hlasovacie lístky}
+Celkové množstvo hlasovacieho podielul je rozdelené na konštantne veľké tokeny (hlasovacie lístky). Hodnota jedného hlasovacieho lístku $t$ v epoche $e$ je určená rovnicou~\ref{eq:harmony-vote}, kde $S_{e-1}$ je celkový podiel vložený v epoche $e-1$, $n$ je počet shardov a $\lambda$ je bezpečnostný parameter. Ak $\lambda > 600$, tak pravdepodobnosť ovládnutia aspoň $\frac{1}{3}$ shardu jedným útočníkom je $0,000\,003$\,\% (dôkaz viď~\cite{harmonyDoc} kapitola 3).
+
+\begin{equation}\label{eq:harmony-vote}
+	t = \frac{S_{e-1}}{n . \lambda}
+\end{equation}
+
+\subsection{Náhodné rozdelenie hlasovacieho podielu medzi shardy}\label{subsec:rnd}
+Harmony rozdeľuje hlasovacie lístky do shardov pomocou náhodnej voľby (anglicky \textit{randomness based sharding}). Na začiatku epochy je vykonaná náhodná permutácia hlasovacieho podielu všetkých podielnikov. Získaná permutácia je rozdelená na $n$ rovnakých častí, kde $n$ je počet shardov. Časť $i$, kde $1 \leq i \leq n$, predstavuje validátorov a ich hlasovací podiel v sharde $i$. Permutácia je vykonaná na základe náhodného čísla \textit{rnd}, ktoré je generované distribuovane.
+
+Na vygenerovanie \textit{rnd} sa používa algoritmus VRF (\textit{Verifiable Random Function~\cite{algorandGilad}}) a VDF (\textit{Verifiable Delay Function~\cite{vdfBoneh}}). Tento výpočet vykonáva beacon shard (koncept beacon shard bude vysvetlený v sekcii~\ref{subsec:cross-com}):
 \begin{enumerate}
 	\item Vodca pošle hash posledného bloku všetkým validátorom.
 	\item Každý validátor vypočíta s prijatého hashu pomocou VRF náhodné číslo, ktoré pošle späť vodcovi.
@@ -346,6 +387,9 @@ Harmony rozdeľuje hlasovacie lístky do shardov pomocou náhodnej voľby (angli
 	\item VDF garantuje, že výpočet \textit{rnd} zaberie toľko času aby sa stihlo vyprodukovať špecifické množstvo nových blokov. Keď vodca vypočíta \textit{rnd} tak ho pomocou FBFT vloží do nového bloku.
 \end{enumerate}
 
+\subsection{Voľba vodcu}
+V jednej epoche sa vždy vygeneruje počet blokov $n$. Inak povedané, prebehne práve $n$ kôl protokolu FBFT. Počas celej epochy je rovnaký vodca FBFT. Za vodca shardy v epoche je určený podielnik, ktorý vlastní prvý hlasovací lístok v diele hlasovacích lístkov určených pre túto shardu (viď~\ref{subsec:rnd}). Pravdepodobnosť, že podielnik bude zvolený za vodcu shardy je priamo úmerná množstvu podielu, ktorý vložil (princíp PoS).
+
 \subsection{Komunikácie medzi shardami}\label{subsec:cross-com}
 Každý shard spravuje vlastný reťazec (anglicky \textit{shard chain}), ktorý spracováva vlastné transakcie. Jeden shard má špeciálnu úlohu a nazývame ho \textit{beacon shard}. Tento shard generuje náhodné číslo a rozdeľuje na základe neho hlasovacie lístky do shardov (viď~\ref{subsec:rnd}). Beacon shard taktiež prijíma tokeny na hlasovanie v ďalšej epoche (viď~\ref{subsec:epoch}).
 
@@ -353,11 +397,11 @@ Harmony umožňuje komunikáciu medzi shardami. Každá taká komunikácie preds
 
 Vždy keď niektorý shard potvrdí nový blok, zašle jeho hlavičku na beacon chain. Ten ju validuje a uloží do svôjho nového bloku. Nový blok v beacon chaine je následne pomocou broadcastu zaslaný všetkým ostatným shardom, ktoré si ho uložia. Vďaka tomu vedia jednotlivé shardy validovať transakcie z iných shardov.
 
-\section{Model motivácie}
+\section{Model motivácie}\label{sec:harmony-incenctives}
 
-Za každý nový blok v reťazci sú validátori odmenený v podobe protokolom definovaného počtu tokenov. Každý validátor dostane podiel z celkovej odmeny priamo úmerný množstvu jeho hlasovacích lístkov.
+Za každý nový blok v reťazci sú odmenený všetci validátori v podobe protokolom definovaného počtu tokenov. Každý validátor dostane podiel z celkovej odmeny priamo úmerný množstvu jeho hlasovacích lístkov v danom sharde. Úplne rovnakým spôsobom sú rozdelené aj poplatky za transakcie, ktoré boli v danom bloku vložené.
 
-Na druhej strane, každé zlomyseľné chovanie je potrestané odobraním časti vlastnených tokenov. Napríklad, ak bude dokázané, že validátor podpísal neplatný blok, budú mu odobrané všetky zdroje v danom sharde.
+Na druhej strane, zlomyseľné chovanie je potrestané odobraním časti vlastnených tokenov. Ak bude dokázané, že validátor podpísal neplatný blok (podpis na dvoch konfliktných blokoch súčasne), budú mu odobrané všetky zdroje v danom sharde.
 
 \section{Teoretická analýza}\label{sec:harmony-analyze}
 V tejto sekcii teoreticky zanalyzujeme protokol Harmony z hľadiska bezpečnosti a výkonnosti.
@@ -383,10 +427,13 @@ Na rozdelenie do shardov sa používa lotéria, ktorá je postavená na kryptogr
 
 Obrázok~\ref{img:hypergeom-dist} ukazuje pravdepodobnosť ovládnutia jedného shardu v závislosti na celkovom podiele hlasovacích lístkov vlastnených útočníkom. Tento výpočet je založený na už spomínanom hypergeometrickom rozdelení a parametroch BC Harmony~\cite{harmonyWp}. Môžeme vidieť, že útočník má zanedbateľnú pravdepodobnosť ovládnuť shard pokiaľ nevlastní približne $\frac{1}{3}$ z celkového množstva hlasovacích lístkov. S toho plynie, že shardingu v tomto protokole neumožňuje útočníkovi využiť útok na podskupinu uzlov (viď sekcia~\ref{subsec:shard-attack}).
 
-Harmony sharding používa algoritmus VDF na oneskorenie odhalenia náhodného čísla čím zabraňuje útoku na posledného objaviteľa (viď sekacia~\ref{subsec:lst-re-attack}).
+Harmony sharding používa algoritmus VDF na oneskorenie odhalenia náhodného čísla. %čím zabraňuje útoku na posledného objaviteľa (viď sekacia~\ref{subsec:lst-re-attack}).
 
 \subsection{Komunikácie medzi shardami}
 Autori deklarujú vysokú škálovateľnosť pomocou shardingu. Avšak samotné shardy sú všetky úzko závislé na beacon sharde z dôvodu medzishardovej komunikácie. Každý nový blok v ľubovoľnom sharde musí byť zaslaný do beacon shardu. Ten musí jeho hlavičku pomocou konsenzu uložiť do svôjho nového bloku a tento blok broadcastom poskytnúť všetkým ostatným shardom. Táto závislosť na beacon sharde môže potenciálne predstavovať výkonnostné úzke hrdlo. Aktuálne Harmony používa len 4 shardy a teda nie je overené ani jasné nakoľko bude tento protokol efektívny ak by pracoval s desiatkami až stovkami shardov.
+
+\subsection{Voľba vodcu FBFT}
+Roľa vodcu v protokole FBFT je dôležitá pretože, ak vodca nespolupracuje tak nie je možné vytvárať nové bloky. Voľba vodcu je skutočne náhodná a zároveň vodcom sa pravdepodobnejšie stávajú najväčší podielnici čo je z pohľadu PoS bezpečné (viď útok~\ref{subsec:grinding-attack}). Avšak, vodca shardy sa nemení počas celej epochy (približne 18,2 hodiny) a všetci útočníci vedia, ktorý uzol je vodcom. S tohoto hľadiska je možné počas celej epochy vykonávať DoS útok na vodcu, čím sa znemožní uzatvárať konsenzus (viď útok~\ref{subsec:leader-dos}). Samotný protokol Harmony tento útok nerieši a ochrana vodcu by preto musela byť vykonaná na sieťovej vrstve napríklad pomocou firewallu.
 
 \chapter{Solana}
 
