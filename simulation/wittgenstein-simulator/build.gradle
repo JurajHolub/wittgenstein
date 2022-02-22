@@ -1,0 +1,60 @@
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.23.1"
+    id "com.github.johnrengelman.shadow" version "4.0.4"
+}
+
+subprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.9
+    targetCompatibility = 1.9
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+    javadoc.options.encoding = 'UTF-8'
+
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.diffplug.gradle.spotless'
+
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.maven.apache.org/maven2" }
+    }
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter-web:2.1.9.RELEASE"
+        implementation 'com.google.guava:guava:28.1-jre'
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+        implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.0'
+        implementation 'commons-cli:commons-cli:1.5.0'
+
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.mockito:mockito-inline:4.3.1'
+        testImplementation 'org.mockito:mockito-junit-jupiter:4.3.1'
+    }
+
+    spotless {
+        java {
+            removeUnusedImports()
+            googleJavaFormat('1.7')
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+    }
+
+    test {
+        environment "GROOVY_TURN_OFF_JAVA_WARNINGS", "true"
+        // To use less memory during the tests, for the execution on circle ci...
+        jvmArgs "-XX:+UseSerialGC", "-Xss512k", "-Dspring.test.context.cache.maxSize=1"
+        // We need to limit the memory to be on par with CircleCI
+        // It seems that 2g is the maximum we can get on CircleCI
+        maxHeapSize = "2400m"
+        afterSuite { desc, result ->
+            if (!desc.parent)
+                println("${result.resultType} " +
+                        "(${result.testCount} tests, " +
+                        "${result.successfulTestCount} successes, " +
+                        "${result.failedTestCount} failures, " +
+                        "${result.skippedTestCount} skipped)")
+        }
+    }
+}
