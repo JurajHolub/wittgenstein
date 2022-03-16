@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class Harmony implements Protocol {
@@ -26,6 +26,7 @@ public class Harmony implements Protocol {
     private final NodeBuilder nb;
     public final StakeDistribution stakeDistribution;
     public final CsvDumper csvDumper = new CsvDumper();
+    public final Map<Integer, List<Integer>> mapSlotToLeaders = new HashMap<>();
 
     private static final Logger logger;
     static {
@@ -119,12 +120,13 @@ public class Harmony implements Protocol {
         csvDumper.dumpEpochStake(epoch, stakeDistribution, network);
         for (int slot = 0; slot < harmonyConfig.epochDurationInSlots; slot++) {
 
-            network.run(5);
+            network.run(10);
             if (slot % intervalForLoggingInSlots == 0) {
                 logger.info(String.format("Simulate epoch %d/%d, Slot %d/%d [%.2f%%]",
                         epoch+1, numberOfEpochs, slot, harmonyConfig.epochDurationInSlots, (double)slot / harmonyConfig.epochDurationInSlots * 100));
                 csvDumper.dumpEpoch(epoch);
             }
+            ddosAttack(slot);
             if (slot == harmonyConfig.epochDurationInSlots - 2*harmonyConfig.vdfInSlots) {
                 HarmonyNode beaconChainLeader = network.allNodes.get(stakeDistribution.getBeaconShard().epochLeader);
                 logger.info(String.format("Start DRS, node %d, epoch %d, slot %d, shard 0 (beacon)", beaconChainLeader.nodeId, epoch, slot));
@@ -134,76 +136,57 @@ public class Harmony implements Protocol {
                 network.allNodes.get(shard.epochLeader).onSlot(epoch, slot, shard.shardId);
             }
         }
-        csvDumper.dumpEpoch(epoch);
         //network.allNodes.forEach(node -> csvDumper.dumpEpoch(node, epoch, node.fbft.epochCommit));
     }
     public void simulate(int epochs) {
 
         for (int epoch = 0; epoch < epochs; epoch++) {
             simulateEpoch(epoch, epochs);
+            network.run(10);
+            csvDumper.dumpEpoch(epoch);
         }
-        network.run(10);
         csvDumper.dumpLeaders(stakeDistribution.leaders);
     }
 
+    public void prepareDdosAttack() {
+        if (!harmonyConfig.ddosAttacks) return;
+
+        int numberOfShards = stakeDistribution.shards.size();
+
+        int step = harmonyConfig.epochDurationInSlots / (numberOfShards*2);
+        int numberLeadersUnderAttack = 1;
+
+        for (int slot = step; slot < harmonyConfig.epochDurationInSlots; slot += step) {
+            if (numberLeadersUnderAttack > numberOfShards) break;
+
+
+            List<Integer> ddosedLeaders = IntStream.range(0, numberLeadersUnderAttack)
+                    .map(shard -> stakeDistribution.shards.get(shard).epochLeader)
+                    .boxed()
+                    .collect(Collectors.toList());
+            mapSlotToLeaders.put(slot, ddosedLeaders);
+
+            numberLeadersUnderAttack++;
+        }
+        logger.info("DDoS attack: " + mapSlotToLeaders);
+    }
+
+    public void ddosAttack(int slot) {
+        List<Integer> startDdos = mapSlotToLeaders.get(slot);
+        if (startDdos != null) {
+            for (Integer ddosLeader : startDdos) {
+                network.allNodes.get(ddosLeader).stop();
+            }
+        }
+
+        int numberOfShards = stakeDistribution.shards.size();
+        int step = harmonyConfig.epochDurationInSlots / (numberOfShards*2);
+        if (slot == harmonyConfig.epochDurationInSlots - step) {
+            network.allNodes.forEach(Node::start);
+        }
+    }
+
     public static void main(String[] args) throws ParseException, IOException {
-//        Options options = new Options()
-//            .addOption(
-//                Option.builder().longOpt("tpb")
-//                    .required(true)
-//                    .hasArg().type(Number.class)
-//                    .desc("TPB (Transaction per block) value set up network nodes to generated enough transaction for given TPB.")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder().longOpt("slots")
-//                    .required(true)
-//                    .hasArg().type(Number.class)
-//                    .desc("Number of slots in every epoch.")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder("e").longOpt("epochs")
-//                    .required(true)
-//                    .hasArg().type(Number.class)
-//                    .desc("Number of epochs to simulate.")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder("n").longOpt("nodes")
-//                    .required(true)
-//                    .hasArg().type(Number.class)
-//                    .desc("Network size (number of nodes).")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder("s").longOpt("shards")
-//                    .required(true)
-//                    .hasArg().type(Number.class)
-//                    .desc("Number of shards.")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder().longOpt("lambda")
-//                    .required(false)
-//                    .hasArg().type(Number.class)
-//                    .desc("Lambda for token size (default 600).")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder().longOpt("epoch-duration")
-//                    .required(false)
-//                    .hasArg().type(Number.class)
-//                    .desc("Epoch duration in slots.")
-//                    .build()
-//            )
-//            .addOption(
-//                Option.builder().longOpt("byzantine")
-//                    .required(false)
-//                    .hasArg().type(Number.class)
-//                    .desc("Number of nodes, which are malicious.")
-//                    .build()
-//        );
         Options options = new Options()
             .addOption(
                 Option.builder().longOpt("config")
@@ -222,28 +205,11 @@ public class Harmony implements Protocol {
         }
         String config = cmd.getParsedOptionValue("config").toString();
 
-//        int numberOfShards = ((Number) cmd.getParsedOptionValue("shards")).intValue();
-//        int networkSize = ((Number) cmd.getParsedOptionValue("nodes")).intValue();
-//        int numberOfSlots = ((Number) cmd.getParsedOptionValue("slots")).intValue();
-//        int numberOfEpochs = ((Number) cmd.getParsedOptionValue("epochs")).intValue();
-//        int expectedTxPerBlock = ((Number) cmd.getParsedOptionValue("tpb")).intValue();
-//        int lambda = 600;
-//        int byzantine = 0;
-//        if (cmd.hasOption("lambda")) {
-//            lambda = ((Number) cmd.getParsedOptionValue("lambda")).intValue();
-//        }
-//        if (cmd.hasOption("byzantine")) {
-//            byzantine = ((Number) cmd.getParsedOptionValue("byzantine")).intValue();
-//        }
-//        if (cmd.hasOption("epoch-duration")) {
-//            byzantine = ((Number) cmd.getParsedOptionValue("byzantine")).intValue();
-//        }
-
         ObjectMapper objectMapper = new ObjectMapper();
         HarmonyConfig harmonyConfig = objectMapper.readValue(new File(config), HarmonyConfig.class);
         Harmony harmony = new Harmony(harmonyConfig);
         harmony.init();
-
+        harmony.prepareDdosAttack();
         logger.info("Start simulation of Harmony.");
 
         logger.info("Clean output directory.");
@@ -258,6 +224,8 @@ public class Harmony implements Protocol {
     public static OutputInfo run(HarmonyConfig harmonyConfig) throws IOException {
         Harmony harmony = new Harmony(harmonyConfig);
         harmony.init();
+        harmony.prepareDdosAttack();
+
         logger.info("Start simulation of Harmony.");
 
         logger.info("Clean output directory.");

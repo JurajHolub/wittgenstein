@@ -609,7 +609,7 @@ public class Network<TN extends Node> {
             throw new IllegalStateException("Message size should be greater than zero: " + m);
           }
           to.msgReceived++;
-          to.bytesReceived += m.getMessage().size();
+          to.bytesReceived = Math.addExact(to.bytesReceived, m.getMessage().size());
         }
         @SuppressWarnings("unchecked")
         Message<TN> mc = (Message<TN>) m.getMessage();

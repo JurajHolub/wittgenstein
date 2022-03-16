@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import net.consensys.wittgenstein.protocols.utils.StakeDto;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,16 +19,6 @@ public class StakeDistribution {
     private int totalStake;
     private List<Integer> nodesStake;
     private List<Double> nodesProbability;
-
-    public static class StakeDto {
-        private String node;
-        private String stake;
-
-        public String getNode() {return node;}
-        public void setNode(String node) {this.node = node;}
-        public String getStake() {return stake;}
-        public void setStake(String stake) {this.stake = stake;}
-    }
 
     StakeDistribution(int totalStake, List<Integer> nodesStake, List<Double> nodesProbability) {
         this.totalStake = totalStake;
@@ -52,7 +43,7 @@ public class StakeDistribution {
         ObjectReader objectReader = new CsvMapper().readerFor(StakeDto.class).with(schema);
         try {
             MappingIterator<StakeDto> userMappingIterator = objectReader.readValues(csvFile);
-            this.nodesStake = userMappingIterator.readAll().stream().mapToInt(s -> Integer.parseInt(s.stake)).boxed().limit(size).collect(Collectors.toList());
+            this.nodesStake = userMappingIterator.readAll().stream().mapToInt(s -> Integer.parseInt(s.getStake())).boxed().limit(size).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }

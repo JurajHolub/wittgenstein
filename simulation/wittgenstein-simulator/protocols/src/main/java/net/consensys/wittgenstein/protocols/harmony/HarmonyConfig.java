@@ -1,5 +1,10 @@
 package net.consensys.wittgenstein.protocols.harmony;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class HarmonyConfig {
     public int epochDurationInSlots;
     public int numberOfEpochs;
@@ -12,6 +17,15 @@ public class HarmonyConfig {
     public int expectedTxPerBlock;
     public int byzantineNodes;
     public int lambda;
+    public boolean ddosAttacks;
+
+    public boolean getDdosAttacks() {
+        return ddosAttacks;
+    }
+
+    public void setDdosAttacks(boolean ddosAttacks) {
+        this.ddosAttacks = ddosAttacks;
+    }
 
     public int getLambda() {
         return lambda;

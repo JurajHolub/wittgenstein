@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -41,6 +42,12 @@ public class CsvDumper {
     private ObjectMapper objectMapper = new ObjectMapper();
     private final List<SlotStats> epochSlotStats = new ArrayList<>();
     private final OutputInfo outputInfo = new OutputInfo();
+    private static final Logger logger;
+    static {
+        System.setProperty("java.util.logging.SimpleFormatter.format",
+                "[%1$tF %1$tT] [%4$s] %5$s %n");
+        logger = Logger.getLogger(Solana.class.getName());
+    }
 
     public void cleanData() {
         try {
@@ -100,8 +107,11 @@ public class CsvDumper {
     public void dumpEpoch(int epoch) {
         createDirectoryIfNotExist(Paths.get(OUTPUT_DIR, "epochs"));
         if (epochSlotStats.isEmpty()) return;
+        logger.info(String.format("Dump epochs: %d", epochSlotStats.size()));
         String path = writeToCsv(Paths.get(OUTPUT_DIR, "epochs", "epoch"+epoch+".csv"), epochSlotStats);
-        outputInfo.epochs.add(path);
+        if (!outputInfo.epochs.contains(path)) {
+            outputInfo.epochs.add(path);
+        }
         epochSlotStats.clear();
     }
 
