@@ -1,6 +1,6 @@
 import pandas as pd
 import SimulatorSubproces as java
-import OutputMetadata as out
+from wsparser.SolanaParser import SolanaParser as out
 import matplotlib.pyplot as plt
 
 class Scenario03:
@@ -30,8 +30,8 @@ labels = []
 java.SimulatorBuild()
 for ddos_nodes in [0, 10, 15, 20]:
     scenario02 = Scenario03()
-    p = java.SimulatorSubprocess(nodes=1500, epoch=10, tps=3000, ddos=ddos_nodes).run()
-    out.OutputMetadata().parse(scenario02.calculate_epoch_stats)
+    p = java.SimulatorSubprocess(protocol='solana', nodes=1500, epoch=10, tps=3000, ddos=ddos_nodes).run()
+    out.Parser().parse(scenario02.calculate_epoch_stats)
     leader_reward.append(scenario02.stats['leader_reward'].mean())
     scenario02.stats['node'] = range(0, len(scenario02.stats.index))
     labels.append(ddos_nodes)

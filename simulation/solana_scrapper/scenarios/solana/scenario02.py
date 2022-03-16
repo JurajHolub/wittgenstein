@@ -1,6 +1,5 @@
 import pandas as pd
-import SimulatorSubproces as java
-import OutputMetadata as out
+from wsparser.SolanaParser import SolanaParser as out
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.ticker as mtick
@@ -32,8 +31,8 @@ labels = []
 java.SimulatorBuild()
 for ddos_nodes in range(0, 50, 5):
     scenario02 = Scenario02()
-    p = java.SimulatorSubprocess(nodes=1500, epoch=5, tps=500, ddos=ddos_nodes).run()
-    out.OutputMetadata().parse(scenario02.calculate_epoch_stats)
+    p = java.SimulatorSubprocess(protocol='solana', nodes=1500, epoch=5, tps=500, ddos=ddos_nodes).run()
+    out.Parser().parse(scenario02.calculate_epoch_stats)
 
     scenario02.stake = scenario02.stake.groupby('node').mean().reset_index()
     scenario02.stake.sort_values(by=['stake'], ascending=False)

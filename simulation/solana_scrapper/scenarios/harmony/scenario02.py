@@ -35,6 +35,7 @@ class Scenario02(Scenario):
                 "expectedTxPerBlock": 500,
                 "byzantineNodes": byzantine_nodes,
                 "lambda": 600,
+                "ddosAttack": False,
             }
             logger.logging.info(
                 f'Start simulate Harmony with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')
