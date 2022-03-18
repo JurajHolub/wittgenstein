@@ -15,7 +15,7 @@ class Scenario02(Scenario):
     """
     Sharding security:
     1000 nodes, 4 shards, 600 lambda, uniform stake distribution, various byzantine nodes
-    plot heatmap of spearman correlation for each shard
+    plot histogram of voting stake for 1000 epoch
     """
 
     def __init__(self, output_path):
