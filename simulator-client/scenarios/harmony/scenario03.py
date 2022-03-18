@@ -31,7 +31,7 @@ class Scenario03(Scenario):
         slots = 300
         token_lambda = 600
         num_of_epochs = 3
-        for shards in range(2, 5):
+        for shards in range(2, 21):
             nodes = 250 * shards
             parameters = {
                 "epochDurationInSlots": slots,
