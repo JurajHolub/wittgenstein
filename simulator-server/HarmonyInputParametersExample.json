@@ -1,0 +1,12 @@
+{
+  "epochDurationInSlots": 500,
+  "numberOfEpochs": 5,
+  "vdfInSlots": 5,
+  "txSizeInBytes":  32,
+  "blockHeaderSizeInBytes": 80,
+  "networkSize": 1000,
+  "numberOfShards": 4,
+  "expectedTxPerBlock": 500,
+  "byzantineNodes": 250,
+  "lambda": 660
+}
