@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    container_name: "mongodb"
+    ports:
+      - '27017:27017'
+    volumes:
+      - /data/db
+  simulator:
+    build:
+      context: ./simulator-server
+      dockerfile: Dockerfile
+    restart: always
+    container_name: "simulator"
+    ports:
+      - '8080:8080'
+    links:
+      - mongodb
