@@ -1,0 +1,9 @@
+{
+  "slotDurationInMs": 400,
+  "epochDurationInSlots": 200,
+  "validatorReliability": 100,
+  "expectedTps": 3000,
+  "networkSize": 1000,
+  "numberOfEpochs": 1,
+  "mongoServerAddress": "localhost:27017"
+}
