@@ -1,4 +1,4 @@
-package net.consensys.wittgenstein.protocols.ouroboros.output;
+package net.consensys.wittgenstein.protocols.ouroboros.output.dto;
 
 public class Stake {
     public int stake;

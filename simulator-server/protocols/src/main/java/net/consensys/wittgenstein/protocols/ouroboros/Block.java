@@ -35,4 +35,9 @@ public class Block {
     public int size() {
         return headerSize + transactions * txSize;
     }
+
+    public boolean isLessThen(Block b) {
+        if (epoch < b.epoch) return true;
+        return epoch == b.epoch && slot < b.slot;
+    }
 }

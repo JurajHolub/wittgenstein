@@ -174,7 +174,21 @@ public class Ouroboros  implements Protocol {
                 ? stakeDistribution.vrfLeaderSelection.chooseSlotLeader(slot)
                 : leaderSchedule.get(slot);
         OuroborosNode leader = network.allNodes.get(slotLeader);
-        leader.onSlotEnd(epoch, slot);
+
+        if (leader.underDos) {
+            network.allNodes.forEach(node -> node.outputDumper.dumpSlot(new Block(
+                -1,
+                slot,
+                epoch,
+                0,
+                0,
+                0,
+                network.time
+            ), node, network.time));
+        }
+        else {
+            leader.onSlotEnd(epoch, slot);
+        }
     }
 
     public void prepareDosAttack() {
@@ -185,7 +199,7 @@ public class Ouroboros  implements Protocol {
                 : dosAttackUtil.bestLeadersToAttackWithSchedule(leaderSchedule, ouroborosConfig.numberOfNodesUnderDos);
 
         for (int nodeId : leaders) {
-            network.allNodes.get(nodeId).stop();
+            network.allNodes.get(nodeId).underDos = true;
         }
     }
 

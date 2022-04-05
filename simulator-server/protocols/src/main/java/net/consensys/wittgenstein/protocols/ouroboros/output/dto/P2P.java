@@ -1,4 +1,4 @@
-package net.consensys.wittgenstein.protocols.ouroboros.output;
+package net.consensys.wittgenstein.protocols.ouroboros.output.dto;
 
 import java.util.List;
 

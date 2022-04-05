@@ -13,6 +13,7 @@ import java.util.Random;
 public class OuroborosNode extends Ouroboros.AOuroborosNode {
 
     private Block lastReceivedValidBlock;
+    public boolean underDos = false;
 
     public OuroborosNode(
             Random rd,
@@ -32,9 +33,10 @@ public class OuroborosNode extends Ouroboros.AOuroborosNode {
         return ouroborosConfig.expectedTxPerBlock + (int) (rd.nextGaussian() * ouroborosConfig.expectedTxPerBlock / 10);
     }
 
+    /**
+     * Generate new block and distribute it to the peers.
+     */
     public void onSlotEnd(int epoch, int slot) {
-        // 3. Ak je uživateľ aktuálny vodca, tak vytvorí nový blok z~transakcií ktoré získal. Blok pridá na koniec BC a distribuuje ho. Je dôležité podotknúť, že vodca nemusí vždy publikovať nový blok a teda slot môže byť "prázdny". Avšak jeden slot môže publikovať maximálne jeden blok.
-
         int transactions = generateTransactionsPerBlock();
         Block block = new Block(
             nodeId,
@@ -51,23 +53,15 @@ public class OuroborosNode extends Ouroboros.AOuroborosNode {
         //network.sendAll(blockAnnounce, this);
     }
 
-//    public void onBlockReceive(OuroborosNode from, Block block) {
-//        if (block.slot <= lastReceivedValidBlock.slot) return;
-//        if (block.epoch < lastReceivedValidBlock.epoch) return;
-//        if (!isLeader(block.slot, block.creator)) return;
-//
-//        outputDumper.dumpSlot(block, this, network.time);
-//
-//        lastReceivedValidBlock = block;
-//
-//    }
-
+    /**
+     * Peer receive block and if valid then dump to the database.
+     */
     @Override
     public void onFlood(OuroborosNode from, FloodMessage floodMessage) {
         BlockAnnounce blockAnnounce = (BlockAnnounce) floodMessage;
         Block block = blockAnnounce.block;
-        if (block.slot <= lastReceivedValidBlock.slot) return;
-        if (block.epoch < lastReceivedValidBlock.epoch) return;
+
+        if (block.isLessThen(lastReceivedValidBlock)) return;
         if (!isLeader(block.slot, block.creator)) return;
 
         outputDumper.dumpSlot(block, this, network.time);
