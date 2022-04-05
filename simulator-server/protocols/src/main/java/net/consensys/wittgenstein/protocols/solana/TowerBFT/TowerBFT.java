@@ -7,7 +7,7 @@ import net.consensys.wittgenstein.protocols.solana.StakeDistribution;
 import net.consensys.wittgenstein.protocols.solana.TowerBFT.Protocol.SlotAnnounceMessage;
 import net.consensys.wittgenstein.protocols.solana.TowerBFT.Protocol.SlotProposeMessage;
 import net.consensys.wittgenstein.protocols.solana.TowerBFT.Protocol.VoteMessage;
-import net.consensys.wittgenstein.protocols.solana.output.NodeSlot;
+import net.consensys.wittgenstein.protocols.solana.output.dto.NodeSlot;
 import net.consensys.wittgenstein.protocols.solana.output.OutputDumper;
 
 import java.util.HashMap;

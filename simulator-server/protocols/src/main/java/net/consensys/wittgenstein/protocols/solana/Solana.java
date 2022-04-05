@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 import net.consensys.wittgenstein.protocols.solana.TowerBFT.TowerBFT;
-import net.consensys.wittgenstein.protocols.solana.output.NodeSlot;
+import net.consensys.wittgenstein.protocols.solana.output.dto.NodeSlot;
 import net.consensys.wittgenstein.protocols.solana.output.OutputDumper;
 import net.consensys.wittgenstein.protocols.utils.AliasMethod;
 import net.consensys.wittgenstein.protocols.utils.DosAttackUtil;
