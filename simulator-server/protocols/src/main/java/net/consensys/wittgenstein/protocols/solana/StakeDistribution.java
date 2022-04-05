@@ -1,52 +1,47 @@
 package net.consensys.wittgenstein.protocols.solana;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import net.consensys.wittgenstein.protocols.utils.StakeDto;
+import net.consensys.wittgenstein.protocols.utils.StakeDistributionUtil;
+import net.consensys.wittgenstein.protocols.utils.VRFLeaderSelection;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Stake distribution for Solana. This is a GOD object due to simulation effectivity. Correctly every node should
+ * possess own copy, but that is to memory consuming for simulation purposes.
+ * @author Juraj Holub <xholub40@vutbr.cz>
+ */
 public class StakeDistribution {
     private int totalStake;
     private List<Integer> nodesStake;
     private List<Double> nodesProbability;
+    private Random rd;
+    public StakeDistributionUtil stakeDistributionUtil;
+    private final String CONFIG_FILE = "SolanaStake-2022-02-22.csv";
+    public VRFLeaderSelection vrfLeaderSelection;
+    public final SolanaConfig solanaConfig;
 
-    StakeDistribution(int totalStake, List<Integer> nodesStake, List<Double> nodesProbability) {
-        this.totalStake = totalStake;
-        this.nodesStake = nodesStake;
-        this.nodesProbability = nodesProbability;
-    }
-
-    StakeDistribution(int size) {
-        readStakeDistributionFromConfigurationFile(size);
-
-        size -= nodesStake.size();
-        IntStream.range(0, size).forEach(i-> nodesStake.add(0));
+    StakeDistribution(SolanaConfig solanaConfig, Random rd) {
+        this.rd = rd;
+        this.stakeDistributionUtil = new StakeDistributionUtil(rd);
+        this.solanaConfig = solanaConfig;
+        if (solanaConfig.uniformStakeDistribution) {
+            nodesStake = stakeDistributionUtil.uniformDistribution(solanaConfig.networkSize);
+        }
+        else {
+            nodesStake = stakeDistributionUtil.readStakeDistributionFromConfigurationFile(CONFIG_FILE, solanaConfig.networkSize);
+        }
 
         this.totalStake = nodesStake.stream().mapToInt(value -> value).sum();
         this.nodesProbability = nodesStake.stream().mapToDouble(value -> (double) value / totalStake).boxed().collect(Collectors.toList());
+
+        updateVRF(0);
     }
 
-    private void readStakeDistributionFromConfigurationFile(int size) {
-        String fileName = "SolanaStake-2022-02-22.csv";
-        File csvFile = new File(fileName);
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
-        ObjectReader objectReader = new CsvMapper().readerFor(StakeDto.class).with(schema);
-        try {
-            MappingIterator<StakeDto> userMappingIterator = objectReader.readValues(csvFile);
-            this.nodesStake = userMappingIterator.readAll().stream().mapToInt(s -> Integer.parseInt(s.getStake())).boxed().limit(size).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void updateVRF(int epoch) {
+        this.vrfLeaderSelection = new VRFLeaderSelection(epoch, IntStream.range(0, solanaConfig.networkSize).boxed().collect(Collectors.toList()), nodesProbability);
     }
 
     public int getTotalStake() {
