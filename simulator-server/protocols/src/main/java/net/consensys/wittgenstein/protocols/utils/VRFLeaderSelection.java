@@ -7,6 +7,7 @@ import java.util.Random;
 
 /**
  * VRF feature inspired by Algorand leader selection.
+ * @author Juraj Holub <xholub40@vutbr.cz>
  */
 public class VRFLeaderSelection {
     /**

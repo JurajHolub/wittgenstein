@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * Utility encapsulates operations with MongoDB.
+ * @author Juraj Holub <xholub40@vutbr.cz>
  */
 public class MongoDumper {
 

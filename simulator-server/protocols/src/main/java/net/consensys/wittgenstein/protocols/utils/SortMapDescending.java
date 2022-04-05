@@ -3,6 +3,9 @@ package net.consensys.wittgenstein.protocols.utils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author Juraj Holub <xholub40@vutbr.cz>
+ */
 public class SortMapDescending {
 
     /**

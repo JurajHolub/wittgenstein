@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 /**
  * Utility helps to choose nodes for DoS attack.
+ * @author Juraj Holub <xholub40@vutbr.cz>
  */
 public class DosAttackUtil {
 

@@ -1,5 +1,9 @@
 package net.consensys.wittgenstein.protocols.utils;
 
+/**
+ * Shared input parameters for all protocols.
+ * @author Juraj Holub <xholub40@vutbr.cz>
+ */
 public class SharedConfig {
     /**
      * Size of simulate network (number of nodes).

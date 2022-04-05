@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 /**
  * Utility helps to manipulate with stake.
+ * @author Juraj Holub <xholub40@vutbr.cz>
  */
 public class StakeDistributionUtil {
     private final Random rd;

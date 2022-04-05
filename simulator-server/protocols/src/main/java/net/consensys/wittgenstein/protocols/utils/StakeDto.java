@@ -1,7 +1,7 @@
 package net.consensys.wittgenstein.protocols.utils;
 
 /**
- *
+ * @author Juraj Holub <xholub40@vutbr.cz>
  */
 public class StakeDto {
     private String node;
