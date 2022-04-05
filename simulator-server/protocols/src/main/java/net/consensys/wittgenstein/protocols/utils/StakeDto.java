@@ -1,5 +1,8 @@
 package net.consensys.wittgenstein.protocols.utils;
 
+/**
+ *
+ */
 public class StakeDto {
     private String node;
     private String stake;

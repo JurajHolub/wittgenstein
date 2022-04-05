@@ -1,4 +1,4 @@
-package net.consensys.wittgenstein.protocols.solana;
+package net.consensys.wittgenstein.protocols.utils;
 
 /******************************************************************************
  * File: AliasMethod.java
