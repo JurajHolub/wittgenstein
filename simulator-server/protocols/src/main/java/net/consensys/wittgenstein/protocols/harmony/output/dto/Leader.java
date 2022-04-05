@@ -1,4 +1,4 @@
-package net.consensys.wittgenstein.protocols.harmony.output;
+package net.consensys.wittgenstein.protocols.harmony.output.dto;
 
 public class Leader {
     public int node;

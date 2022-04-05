@@ -1,23 +1,16 @@
 package net.consensys.wittgenstein.protocols.harmony;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.google.common.collect.Lists;
-import net.consensys.wittgenstein.protocols.harmony.output.Leader;
-import net.consensys.wittgenstein.protocols.solana.Solana;
-import net.consensys.wittgenstein.protocols.utils.StakeDto;
+import net.consensys.wittgenstein.protocols.harmony.output.dto.Leader;
+import net.consensys.wittgenstein.protocols.utils.StakeDistributionUtil;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class StakeDistribution {
 
     private final String CONFIGURATION_FILE = "HarmonyStake-2022-02-24.csv";
+    private StakeDistributionUtil stakeDistributionUtil;
     private List<Integer> nodesStake;
     private List<Integer> nodesTokens;
     private int totalStake;
@@ -31,7 +24,10 @@ public class StakeDistribution {
     public StakeDistribution(Random rd, HarmonyConfig harmonyConfig) {
         this.harmonyConfig = harmonyConfig;
         this.rd = rd;
-        this.nodesStake = uniformDistribution(harmonyConfig.networkSize);//readStakeDistributionFromConfigurationFile(networkSize);
+        this.stakeDistributionUtil = new StakeDistributionUtil(rd);
+        this.nodesStake = (harmonyConfig.uniformStakeDistribution)
+                ? stakeDistributionUtil.uniformDistribution(harmonyConfig.networkSize)
+                : stakeDistributionUtil.readStakeDistributionFromConfigurationFile(CONFIGURATION_FILE, harmonyConfig.networkSize); //uniformDistribution(harmonyConfig.networkSize);//readStakeDistributionFromConfigurationFile(networkSize);
         this.totalStake = nodesStake.stream().mapToInt(value -> value).sum();
         this.tokenSize = calculateSize(totalStake, harmonyConfig.numberOfShards);
         this.nodesTokens = nodesStake.stream().mapToInt(stake -> stake / tokenSize).boxed().collect(Collectors.toList());
@@ -78,7 +74,7 @@ public class StakeDistribution {
         int shardId = 0;
         shards.clear();
         for (List<Integer> tokens : Lists.partition(allTokens, allTokens.size() / harmonyConfig.numberOfShards + 1)) {
-            shards.add(new Shard(shardId++, tokens));
+            shards.add(new Shard(epoch, shardId++, tokens));
         }
         for (Shard shard : shards) {
             leaders.add(new Leader(shard.epochLeader, epoch, shard.shardId));
@@ -96,47 +92,12 @@ public class StakeDistribution {
         );
     }
 
-    protected List<Integer> uniformDistribution(int size) {
-        int stdDeviation = 20;
-        int mean = 100;
-        return IntStream.range(0, size).map(i ->
-            180 - (int)(rd.nextGaussian()*stdDeviation + mean)
-        ).boxed().collect(Collectors.toList());
-    }
-
-    protected List<Integer> readStakeDistributionFromConfigurationFile(int size) {
-        List<Integer> nodesStake = new ArrayList<>();
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
-        ObjectReader objectReader = new CsvMapper().readerFor(StakeDto.class).with(schema);
-        try {
-            MappingIterator<StakeDto> userMappingIterator =
-                    objectReader.readValues(getClass().getClassLoader().getResource(CONFIGURATION_FILE));
-            nodesStake = userMappingIterator.readAll().stream()
-                    .mapToInt(s -> Integer.parseInt(s.getStake())).boxed().limit(size).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // if there is not enough data in config file
-        if (size - nodesStake.size() > 0) {
-            int carryOver = size - nodesStake.size();
-            for (int i = 0; i < carryOver; i++) {
-                nodesStake.add(1);
-            }
-        }
-        return nodesStake;
-    }
-
     /** Simulate redistribution of stake after each epoch. Real stake distribution would depend on transactions
      * included into current epoch, but we do not simulate data layer. As a result, we cannot change stake distribution
      * from real data in transaction.
      */
-    public void updateStakeDistribution() {
-        for (int node = 0; node < nodesStake.size(); node++) {
-            int oldStake = nodesStake.get(node);
-            double change = oldStake / 100.0;
-            int newStake = oldStake + (int) (rd.nextGaussian() * change);
-            nodesStake.set(node, newStake);
-        }
+    public void updateStakeDistribution(int epoch) {
+        nodesStake = stakeDistributionUtil.updateStakeDistribution(epoch, nodesStake);
 
         totalStake = nodesStake.stream().mapToInt(value -> value).sum();
         tokenSize = calculateSize(totalStake, harmonyConfig.numberOfShards);

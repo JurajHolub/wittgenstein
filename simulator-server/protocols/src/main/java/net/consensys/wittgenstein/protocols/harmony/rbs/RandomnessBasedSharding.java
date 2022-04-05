@@ -13,6 +13,10 @@ import net.consensys.wittgenstein.protocols.harmony.rbs.Protocol.ValidatorInit;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Randomness Based Sharding used in Harmony for leader schedule.
+ * @author Juraj Holub <xholub40@vutbr.cz>
+ */
 public class RandomnessBasedSharding {
     protected final transient Network<HarmonyNode> network;
     protected final transient HarmonyNode me;
@@ -29,7 +33,7 @@ public class RandomnessBasedSharding {
     }
 
     /**
-     * 1. Vodca pošle hash posledného bloku všetkým validátorom.
+     * 1. The leader sends a hash of the last block to all validators.
      */
     public void onDRG(Block block, List<HarmonyNode> validators) {
         int lastBlockHash = block.hashCode(); // hash of last block (this is enough for simulation)
@@ -37,7 +41,7 @@ public class RandomnessBasedSharding {
     }
 
     /**
-     * 2. Každý validátor vypočíta s prijatého hashu pomocou VRF náhodné číslo, ktoré pošle späť vodcovi.
+     * 2. Each validator calculates a random number from the received hash using VRF, which it sends back to the leader.
      */
     public void onLeaderInit(HarmonyNode leader, int lastBlockHash) {
         int randomNumber = network.rd.nextInt() ^ lastBlockHash; // simulation of VRF
@@ -45,8 +49,8 @@ public class RandomnessBasedSharding {
     }
 
     /**
-     * 3. Keď vodca príjme 1/3 náhodných čísel, tak nad nimi urobí XOR. Výslednú hodnotu pRand vloží do nového bloku
-     * pomocou FBFT konsenzu.
+     * 3. When the leader receives 1/3 of the random numbers, he makes an XOR above them. It inserts the resulting
+     * pRand value into the new block using the FBFT consensus.
      */
     public void onValidatorInit(HarmonyNode validator, int randomNumber) {
         randomNumberCollector.add(randomNumber);
@@ -62,9 +66,9 @@ public class RandomnessBasedSharding {
     }
 
     /**
-     * 4. Keď je pRand potvrdená v bloku, vypočíta vodca z tejto hodnoty finálne náhodne číslo rnd pomocou VDF.
-     * VDF garantuje, že výpočet rnd zaberie toľko času aby sa stihlo vyprodukovať špecifické množstvo nových blokov.
-     * Keď vodca vypočíta rnd tak ho pomocou FBFT vloží do nového bloku.
+     * 4. When pRand is confirmed in the block, the leader calculates the final random number rnd from this value
+     * using VDF. VDF guarantees that the calculation of rnd will take so long to produce a specific number of new
+     * blocks. When the leader calculates the rnd, he inserts it into a new block using FBFT.
      */
     public void onPRandCommit(int rnd) {
         this.rnd = rnd;

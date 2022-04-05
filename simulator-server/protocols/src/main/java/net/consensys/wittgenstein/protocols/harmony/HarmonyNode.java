@@ -3,7 +3,7 @@ package net.consensys.wittgenstein.protocols.harmony;
 import com.google.common.collect.HashBasedTable;
 import net.consensys.wittgenstein.core.Network;
 import net.consensys.wittgenstein.core.NodeBuilder;
-import net.consensys.wittgenstein.protocols.harmony.output.CsvDumper;
+import net.consensys.wittgenstein.protocols.harmony.output.OutputDumper;
 
 import java.util.List;
 import java.util.Random;
@@ -19,14 +19,19 @@ public class HarmonyNode extends Harmony.AHarmonyNode {
         StakeDistribution stakeDistribution,
         HarmonyConfig harmonyConfig,
         Logger logger,
-        CsvDumper csvDumper,
+        OutputDumper outputDumper,
         int expectedTps,
         boolean byzantine
     ) {
-        super(rd, nb, network, stakeDistribution, harmonyConfig, logger, csvDumper, expectedTps, byzantine);
+        super(rd, nb, network, stakeDistribution, harmonyConfig, logger, outputDumper, expectedTps, byzantine);
     }
 
     public boolean isLeader(Block block) {
+        if (harmonyConfig.vrfLeaderSelection) {
+            int slotLeader = stakeDistribution.shards.get(block.shard).vrfLeaderSelection.chooseSlotLeader(block.slot);
+            return nodeId == slotLeader;
+        }
+
         return stakeDistribution.shards.get(block.shard).epochLeader == nodeId;
     }
 
