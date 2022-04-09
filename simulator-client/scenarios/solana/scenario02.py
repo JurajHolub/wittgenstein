@@ -1,10 +1,17 @@
+import json
+
 import pandas as pd
-from wsparser.SolanaParser import SolanaParser as out
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.ticker as mtick
+import requests
+from pymongo import MongoClient
 
-class Scenario02:
+import logger
+from scenarios.scenario import Scenario
+
+
+class Scenario02(Scenario):
     """
     Simulate X epochs with 1500 nodes (same as real network). The nodes stake is taken from the real network.
     Set up TPS to the real one (around 3k).
@@ -12,52 +19,73 @@ class Scenario02:
     Check the TPS drop according to the size of ddos attack.
     """
 
-    def __init__(self):
-        self.stake = pd.DataFrame()
-        self.tps = pd.DataFrame()
+    def __init__(self, output_path):
+        super().__init__(output_path)
+        self.stats = {}
 
-    def calculate_epoch_stats(self, epoch, epoch_df, df_stake, df_leader):
-        self.stake= self.stake.append(df_stake, ignore_index=True)
-        self.tps = self.tps.append({
-            'epoch_end_time': epoch_df['arriveTime'].mean(),
-            'tps_total': (epoch_df['txCounterVote'] + epoch_df['txCounterNonVote']).sum(),
-        }, ignore_index=True)
+    def simulate(self):
+        stats = {
+            True: {},  # uniform stake distribution
+            False: {},  # the real one
+        }
+        for stakeDist in [False, True]:
+            for ddos_nodes in range(0, 51, 5):
+                parameters = {
+                    "slotDurationInMs": 400,
+                    "epochDurationInSlots": 1000,
+                    "validatorReliability": 100,
+                    "expectedTxPerBlock": 1500,
+                    "networkSize": 1500,
+                    "numberOfEpochs": 1,
+                    "numberOfNodesUnderAttack": ddos_nodes,
+                    "uniformStakeDistribution": stakeDist,
+                    "mongoServerAddress": self.mongoserver
+                }
 
+                logger.logging.info(
+                    f'Start simulate Solana with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')
+                response = requests.post(self.solana_endpoint, json=parameters)
+                logger.logging.info(f'Simulation result: {response}')
 
-mean_tps = []
-ddos_stake = []
-labels = []
+                client = MongoClient()
+                stake = pd.DataFrame(list(client.simulator.Stake.find()))
+                leaders = pd.DataFrame(list(client.simulator.Leaders.find()))
+                tps = list(client.simulator.Epochs.aggregate([{
+                    '$group': {
+                        '_id': None,
+                        'mean': {
+                            '$avg': '$txCounterNonVote'
+                        }
+                    }
+                }]))[0]['mean']
+                under_ddos = stake.loc[stake['node'].isin(leaders[leaders['underDdos']]['leaderNode'])]
+                stats[stakeDist].setdefault('ddosed-stake', []).append(under_ddos['stake'].sum() / stake['stake'].sum() *100)
+                stats[stakeDist].setdefault('tps', []).append(tps)
+                stats[stakeDist].setdefault('ddos-nodes', []).append(ddos_nodes)
+            self.stats[stakeDist] = pd.DataFrame(stats[stakeDist])
+            self.stats[stakeDist].set_index('ddos-nodes', inplace=True)
 
-java.SimulatorBuild()
-for ddos_nodes in range(0, 50, 5):
-    scenario02 = Scenario02()
-    p = java.SimulatorSubprocess(protocol='solana', nodes=1500, epoch=5, tps=500, ddos=ddos_nodes).run()
-    out.Parser().parse(scenario02.calculate_epoch_stats)
-
-    scenario02.stake = scenario02.stake.groupby('node').mean().reset_index()
-    scenario02.stake.sort_values(by=['stake'], ascending=False)
-    under_ddos = scenario02.stake.loc[scenario02.stake['node'].isin(range(0, ddos_nodes))]
-    ddos_stake.append(under_ddos['stake'].sum() / scenario02.stake['stake'].sum())
-    mean_tps.append(scenario02.tps['tps_total'].sum() / scenario02.tps['epoch_end_time'].max() * 1000)
-    labels.append(ddos_nodes)
-
-fig = plt.figure()
-gs = gridspec.GridSpec(2, 1, height_ratios=[1, 1])
-ax0 = fig.add_subplot(gs[0])
-ax0.tick_params(labelbottom=False)
-ax1 = fig.add_subplot(gs[1])
-ax0.set_ylabel("TPS")
-df = pd.DataFrame({
-    'TPS': mean_tps
-}, index=labels).plot.bar(rot=45, ax=ax0, legend=False, color='r')
-pd.DataFrame({
-    'Nedostupné uzly': [stake*100 for stake in ddos_stake],
-    'Dostupné uzly': [(1-stake)*100 for stake in ddos_stake],
-}, index=labels).plot.bar(rot=45, ax=ax1, stacked=True)
-ax1.set_ylabel("Hlasovací podiel")
-ax1.set_xlabel("Počet nedostupných uzlov")
-ax1.yaxis.set_major_formatter(mtick.PercentFormatter())
-ax0.grid(axis="y", linestyle='--')
-ax1.grid(axis="y", linestyle='--')
-plt.tight_layout()
-plt.show()
+    def analyze(self):
+        fig = plt.figure()
+        gs = gridspec.GridSpec(2, 1, height_ratios=[1, 1])
+        ax0 = fig.add_subplot(gs[0])
+        ax0.tick_params(labelbottom=False)
+        ax1 = fig.add_subplot(gs[1])
+        ax0.set_ylabel("TPS")
+        pd.DataFrame({
+            'Rovnomerné rozdelenie': self.stats[True]['tps'],
+            'Skutočné rozdelenie': self.stats[False]['tps'],
+        }, index=self.stats[False].index).plot.line(rot=45, ax=ax0)
+        pd.DataFrame({
+            'Rovnomerné rozdelenie': self.stats[True]['ddosed-stake'],
+            'Skutočné rozdelenie': self.stats[False]['ddosed-stake']
+        }, index=self.stats[False].index).plot.line(rot=45, ax=ax1)
+        ax1.set_ylabel("Hlasovací podiel")
+        ax0.set_xlabel('')
+        ax1.set_xlabel('Počet uzlov pod DDoS útokom')
+        ax1.yaxis.set_major_formatter(mtick.PercentFormatter())
+        ax0.grid(axis="y", linestyle='--')
+        ax1.grid(axis="y", linestyle='--')
+        plt.tight_layout()
+        #plt.show()
+        self.save_plot(f'solana-scenario02')

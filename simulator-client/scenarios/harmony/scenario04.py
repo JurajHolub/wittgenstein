@@ -36,6 +36,7 @@ class Scenario04(Scenario):
             "byzantineNodes": 0,
             "lambda": token_lambda,
             "ddosAttacks": True,
+            "mongoServerAddress": self.mongoserver,
         }
 
         logger.logging.info(f'Start simulate Harmony with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')
@@ -59,4 +60,4 @@ class Scenario04(Scenario):
         ax.set_xlabel('Slot')
         ax.grid(axis="y", linestyle='--')
         fig.tight_layout()
-        self.save_plot(f'ddos-attack')
+        self.save_plot(f'harmony-scenario04')

@@ -1,7 +1,4 @@
 import json
-import os
-import re
-import statistics
 import seaborn as sns
 import pandas as pd
 import requests
@@ -37,6 +34,7 @@ class Scenario02(Scenario):
                 "byzantineNodes": byzantine_nodes,
                 "lambda": 600,
                 "ddosAttack": False,
+                "mongoServerAddress": self.mongoserver,
             }
             logger.logging.info(
                 f'Start simulate Harmony with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')

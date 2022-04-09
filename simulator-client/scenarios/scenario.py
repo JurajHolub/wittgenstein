@@ -15,6 +15,9 @@ class Scenario:
         self.blocks = {}
         self.output_path = output_path
         self.harmony_endpoint = 'http://localhost:8080/w/harmony'
+        self.solana_endpoint = 'http://localhost:8080/w/solana'
+        self.ouroboros_endpoint = 'http://localhost:8080/w/ouroboros'
+        self.mongoserver = 'mongodb'
 
     def init(self):
         if os.path.exists(self.output_path):

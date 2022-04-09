@@ -34,6 +34,7 @@ class Scenario01(Scenario):
                 "byzantineNodes": 0,
                 "lambda": token_lambda,
                 "ddosAttack": False,
+                "mongoServerAddress": self.mongoserver,
             }
             logger.logging.info(f'Start simulate Harmony with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')
             response = requests.post(self.harmony_endpoint, json=parameters)

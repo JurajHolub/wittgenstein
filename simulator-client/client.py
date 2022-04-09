@@ -1,32 +1,84 @@
-from scenarios.harmony.scenario01 import Scenario01
-from scenarios.harmony.scenario02 import Scenario02
-from scenarios.harmony.scenario03 import Scenario03
-from scenarios.harmony.scenario04 import Scenario04
-import argparse
+from scenarios.harmony.scenario01 import Scenario01 as HarmonyScenario01
+from scenarios.harmony.scenario02 import Scenario02 as HarmonyScenario02
+from scenarios.harmony.scenario03 import Scenario03 as HarmonyScenario03
+from scenarios.harmony.scenario04 import Scenario04 as HarmonyScenario04
+from scenarios.harmony.scenario05 import Scenario05 as HarmonyScenario05
+from scenarios.solana.scenario01 import Scenario01 as SolanaScenario01
+from scenarios.solana.scenario02 import Scenario02 as SolanaScenario02
+from scenarios.solana.scenario03 import Scenario03 as SolanaScenario03
+from scenarios.solana.scenario04 import Scenario04 as SolanaScenario04
+from scenarios.ouroboros.scenario01 import Scenario01 as OuroborosScenario01
+from scenarios.ouroboros.scenario02 import Scenario02 as OuroborosScenario02
+from scenarios.ouroboros.scenario03 import Scenario03 as OuroborosScenario03
+from argparse import ArgumentParser
 
 output_path = 'output'
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--harmony', action='store_true', help='Simulation of Harmony.')
-parser.add_argument('--scenario01', action='store_true', help='Sharding PoS stake disribution.')
-parser.add_argument('--scenario02', action='store_true', help='Byzantine shard attack.')
-parser.add_argument('--scenario03', action='store_true', help='Harmony throughput.')
-parser.add_argument('--scenario04', action='store_true', help='Leader DDoS attack.')
+parser = ArgumentParser('Wittgenstein simulator client')
+parser.add_argument('--mongoserver', type=str, required=True, help='Address to mongo server. In case of '
+                                                                   'release docker it is \'mongodb\'. In '
+                                                                   'case of debug \'localhost:27017\'.')
+subparsers = parser.add_subparsers(dest='command')
+
+harmony = subparsers.add_parser('harmony', help='Simulation of Harmony.')
+harmony.add_argument('--scenario01', action='store_true', help='Sharding PoS stake disribution.')
+harmony.add_argument('--scenario02', action='store_true', help='Byzantine shard attack.')
+harmony.add_argument('--scenario03', action='store_true', help='Harmony throughput.')
+harmony.add_argument('--scenario04', action='store_true', help='Leader DDoS attack.')
+harmony.add_argument('--scenario05', action='store_true', help='Leader DDoS attack with VRF feature.')
+
+solana = subparsers.add_parser('solana', help='Simulation of Solana.')
+solana.add_argument('--scenario01', action='store_true', help='Ratio of voting / nonvoting transactions.')
+solana.add_argument('--scenario02', action='store_true', help='Leader DDoS attack.')
+solana.add_argument('--scenario03', action='store_true', help='Throughput in bytes.')
+solana.add_argument('--scenario04', action='store_true', help='Leader DDoS attack with VRF feature.')
+
+
+ouroboros = subparsers.add_parser('ouroboros', help='Simulation of Ouroboros.')
+ouroboros.add_argument('--scenario01', action='store_true', help='DoS attack to leader schedule.')
+ouroboros.add_argument('--scenario02', action='store_true', help='Fork and finality.')
+ouroboros.add_argument('--scenario03', action='store_true', help='DoS attack to VRF.')
+
 args = parser.parse_args()
 
-if not args.harmony:
+scenario = None
+
+if args.command == 'harmony':
+    if args.scenario01:
+        scenario = HarmonyScenario01(output_path)
+    if args.scenario02:
+        scenario = HarmonyScenario02(output_path)
+    if args.scenario03:
+        scenario = HarmonyScenario03(output_path)
+    if args.scenario04:
+        scenario = HarmonyScenario04(output_path)
+    if args.scenario05:
+        scenario = HarmonyScenario05(output_path)
+elif args.command == 'solana':
+    if args.scenario01:
+        scenario = SolanaScenario01(output_path)
+    if args.scenario02:
+        scenario = SolanaScenario02(output_path)
+    if args.scenario03:
+        scenario = SolanaScenario03(output_path)
+    if args.scenario04:
+        scenario = SolanaScenario04(output_path)
+elif args.command == 'ouroboros':
+    if args.scenario01:
+        scenario = OuroborosScenario01(output_path)
+    if args.scenario02:
+        scenario = OuroborosScenario02(output_path)
+    if args.scenario03:
+        scenario = OuroborosScenario03(output_path)
+else:
     parser.exit()
 
-scenario = None
-if args.scenario01:
-    scenario = Scenario01(output_path)
-if args.scenario02:
-    scenario = Scenario02(output_path)
-if args.scenario03:
-    scenario = Scenario03(output_path)
-if args.scenario04:
-    scenario = Scenario04(output_path)
 if scenario is None:
+    parser.exit()
+
+if args.mongoserver:
+    scenario.mongoserver = args.mongoserver
+else:
     parser.exit()
 
 scenario.simulate()
