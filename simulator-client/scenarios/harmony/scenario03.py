@@ -100,4 +100,4 @@ class Scenario03(Scenario):
         ax2.grid(axis="y", linestyle='--')
         plt.xticks(rotation=90)
         fig.tight_layout()
-        self.save_plot(f'tps-stats')
+        self.save_plot(f'harmony-scenario03')

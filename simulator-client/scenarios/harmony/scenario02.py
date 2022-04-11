@@ -35,6 +35,7 @@ class Scenario02(Scenario):
                 "lambda": 600,
                 "ddosAttack": False,
                 "mongoServerAddress": self.mongoserver,
+                "uniformStakeDistribution": True
             }
             logger.logging.info(
                 f'Start simulate Harmony with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')
@@ -71,4 +72,4 @@ class Scenario02(Scenario):
                     verticalalignment='center',
                     transform=ax.transAxes)
             fig.tight_layout()
-            self.save_plot(f'byzantine{total_byzantine}-shard-kde')
+            self.save_plot(f'harmony-scenario02--byzantine{total_byzantine}')

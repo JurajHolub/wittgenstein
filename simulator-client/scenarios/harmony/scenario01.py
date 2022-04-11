@@ -35,6 +35,7 @@ class Scenario01(Scenario):
                 "lambda": token_lambda,
                 "ddosAttack": False,
                 "mongoServerAddress": self.mongoserver,
+                "uniformStakeDistribution": True
             }
             logger.logging.info(f'Start simulate Harmony with parameters: {json.dumps(parameters, sort_keys=False, indent=4)}')
             response = requests.post(self.harmony_endpoint, json=parameters)
@@ -57,4 +58,4 @@ class Scenario01(Scenario):
         sns.heatmap(self.spearman, vmin=-1, vmax=1)
         plt.xticks(rotation=70)
         fig.tight_layout()
-        self.save_plot('shard-correlation')
+        self.save_plot('harmony-scenario01')
