@@ -14,7 +14,7 @@ from argparse import ArgumentParser
 
 output_path = 'output'
 
-parser = ArgumentParser('Wittgenstein simulator client')
+parser = ArgumentParser('client.py')
 parser.add_argument('--mongoserver', type=str, required=True, help='Address to mongo server. In case of '
                                                                    'release docker it is \'mongodb\'. In '
                                                                    'case of debug \'localhost:27017\'.')

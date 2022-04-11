@@ -24,7 +24,7 @@ class Scenario03(Scenario):
         network_size = 1500
         experiments_results = []
         for vrfEnabled, name in [(False, 'Rozvrh'), (True, 'VRF')]:
-            for numberOfNodesUnderDos in [30, 60, 90]:
+            for numberOfNodesUnderDos in [30]:
                 parameters = {
                     "slotDurationInMs": 500,
                     "epochDurationInSlots": self.epochDurationInSlots,
@@ -34,7 +34,7 @@ class Scenario03(Scenario):
                     "mongoServerAddress": self.mongoserver,
                     "p2pConnectionCount": 100,
                     "p2pMinimum": False,
-                    "uniformStakeDistribution": False,
+                    "uniformStakeDistribution": True,
                     "txSizeInBytes": 670,
                     "blockHeaderSizeInBytes": 80,
                     "numberOfNodesUnderDos": numberOfNodesUnderDos,
