@@ -87,11 +87,10 @@ public class Solana implements Protocol {
     }
 
     public void calculateLeaderSchedule(int epoch) {
-        StakeDistribution stake = stakeDistribution;
         leaderSchedule.clear();
 
         AliasMethod aliasMethod =
-                new AliasMethod(stake.getNodesProbability(), new Random(epoch+42)); // +42 to prevent 0 seed at epoch 0.
+                new AliasMethod(stakeDistribution.getNodesProbability(), new Random(epoch+42)); // +42 to prevent 0 seed at epoch 0.
 
         IntStream.range(0, solanaConfig.epochDurationInSlots)
                 .forEach(i -> leaderSchedule.add(aliasMethod.next()));
@@ -117,22 +116,8 @@ public class Solana implements Protocol {
         ));
         stakeDistribution.setNodesProbability(stakeDistribution.stakeDistributionUtil.updateStakeProbability(
             epoch,
-            stakeDistribution.getNodesStake(),
-            stakeDistribution.getNodesProbability()
+            stakeDistribution.getNodesStake()
         ));
-
-        for (int node = 0; node < stakeDistribution.getNodesStake().size(); node++) {
-            stakeDistribution.vrfLeaderSelection.updateStake(epoch, stakeDistribution.getNodesProbability());
-        }
-    }
-
-    public List<Integer> getLeaderSchedule() {
-        return leaderSchedule;
-    }
-
-    public SolanaNode getSlotLeader(int slot) {
-        int id = leaderSchedule.get(slot);
-        return network.allNodes.get(id);
     }
 
     /** SolanaNode */
@@ -163,7 +148,7 @@ public class Solana implements Protocol {
             this.logger = logger;
             this.leaderSchedule = leaderSchedule;
             this.stats = stats;
-            this.towerBFT = new TowerBFT((SolanaNode) this, stakeDistribution, leaderSchedule, network, stats);
+            this.towerBFT = new TowerBFT((SolanaNode) this, stakeDistribution, leaderSchedule, network, stats, solanaConfig);
         }
 
     }
@@ -203,9 +188,6 @@ public class Solana implements Protocol {
                         epoch, numberOfEpochs, slot, solanaConfig.epochDurationInSlots, (double)slot / solanaConfig.epochDurationInSlots * 100));
             }
             simulateSlot(epoch, slot);
-            if (slot == solanaConfig.leaderScheduleTrigger) {
-                setLeadersForEpoch(epoch+1);
-            }
         }
     }
 
@@ -223,6 +205,7 @@ public class Solana implements Protocol {
             simulateEpoch(epoch, numberOfEpochs);
 
             updateStakeDistribution(epoch);
+            setLeadersForEpoch(epoch+1);
         }
         network().run(5000); // enough time to receive last messages
     }

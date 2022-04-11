@@ -16,6 +16,7 @@ public class Slot {
     public long bytesReceived;
     public long bytesSent;
     public int hopCount;
+    public int hash;
 
     public Slot(
             Block block,
@@ -25,7 +26,8 @@ public class Slot {
             long msgSent,
             long bytesReceived,
             long bytesSent,
-            int hopCount
+            int hopCount,
+            int hash
     ) {
         this.node = nodeId;
         this.transactions = block.transactions;
@@ -40,5 +42,6 @@ public class Slot {
         this.bytesReceived = bytesReceived;
         this.bytesSent = bytesSent;
         this.hopCount = hopCount;
+        this.hash = hash;
     }
 }

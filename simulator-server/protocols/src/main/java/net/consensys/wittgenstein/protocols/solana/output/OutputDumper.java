@@ -58,12 +58,14 @@ public class OutputDumper extends MongoDumper {
                 .collect(Collectors.toList());
         collectionStakeStats.insertMany(stake);
 
-        List<Leaders> leaders = IntStream.range(0, leaderSchedule.size())
-                .mapToObj(slot -> {
-                    int leaderId = leaderSchedule.get(slot);
-                    return new Leaders(slot, leaderId, nodes.get(leaderId).underDDoS);
-                })
-                .collect(Collectors.toList());
+        List<Leaders> leaders = IntStream.range(0, solanaConfig.epochDurationInSlots)
+            .mapToObj(slot -> {
+                int leaderId = (solanaConfig.vrfLeaderSelection)
+                        ? stakeDistribution.vrfLeaderSelection.chooseSlotLeader(slot)
+                        : leaderSchedule.get(slot);
+                return new Leaders(slot, leaderId, nodes.get(leaderId).underDDoS);
+            })
+            .collect(Collectors.toList());
         collectionLeaders.insertMany(leaders);
     }
 }

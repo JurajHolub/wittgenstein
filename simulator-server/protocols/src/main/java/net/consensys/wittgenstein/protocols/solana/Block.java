@@ -47,7 +47,7 @@ public class Block {
     /**
      * There are 2/3 BFT consensus.
      */
-    public boolean isValid(int totalVotingPower) {
+    public boolean isValid(double totalVotingPower) {
         return receivedVotingPower >= (2f/3f) * totalVotingPower;
     }
 }

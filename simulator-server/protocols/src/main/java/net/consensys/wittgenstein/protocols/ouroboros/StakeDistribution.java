@@ -40,7 +40,7 @@ public class StakeDistribution {
 
     public void updateStakeDistribution(int epoch) {
         nodesStake = stakeDistributionUtil.updateStakeDistribution(epoch, nodesStake);
-        nodesProbability = stakeDistributionUtil.updateStakeProbability(epoch, nodesStake, nodesProbability);
+        nodesProbability = stakeDistributionUtil.updateStakeProbability(epoch, nodesStake);
         totalStake = nodesStake.stream().mapToInt(i->i).sum();
     }
 }

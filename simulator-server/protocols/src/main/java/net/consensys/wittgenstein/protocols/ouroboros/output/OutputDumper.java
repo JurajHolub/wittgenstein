@@ -3,6 +3,7 @@ package net.consensys.wittgenstein.protocols.ouroboros.output;
 import net.consensys.wittgenstein.protocols.ouroboros.Block;
 import net.consensys.wittgenstein.protocols.ouroboros.OuroborosConfig;
 import net.consensys.wittgenstein.protocols.ouroboros.OuroborosNode;
+import net.consensys.wittgenstein.protocols.ouroboros.StakeDistribution;
 import net.consensys.wittgenstein.protocols.ouroboros.output.dto.Leader;
 import net.consensys.wittgenstein.protocols.ouroboros.output.dto.P2P;
 import net.consensys.wittgenstein.protocols.ouroboros.output.dto.Slot;
@@ -15,6 +16,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class OutputDumper extends MongoDumper {
 
@@ -53,7 +55,8 @@ public class OutputDumper extends MongoDumper {
             node.getMsgSent(),
             node.getBytesReceived(),
             node.getBytesSent(),
-            0
+            0,
+            block.hash
         );
         slotPool.add(slot);
         if (slotPool.size() < 100) return;
@@ -61,19 +64,23 @@ public class OutputDumper extends MongoDumper {
         slotPool.clear();
     }
 
-    public void dumpLeaderSchedule(int epoch, List<Integer> leaders) {
-        List<Leader> leadersDto = new ArrayList<>();
-        for (int slot = 0; slot < leaders.size(); slot++) {
-            leadersDto.add(new Leader(leaders.get(slot), slot, epoch));
-        }
+    public void dumpLeaderSchedule(int epoch, List<Integer> leaders, List<OuroborosNode> nodes, StakeDistribution stakeDistribution) {
+        List<Leader> leadersDto = IntStream.range(0, ouroborosConfig.epochDurationInSlots)
+            .mapToObj(slot -> {
+                int leaderId = (ouroborosConfig.vrfLeaderSelection)
+                        ? stakeDistribution.vrfLeaderSelection.chooseSlotLeader(slot)
+                        : leaders.get(slot);
+                return new Leader(leaderId, slot, epoch, nodes.get(leaderId).byzantine);
+            })
+            .collect(Collectors.toList());
         collectionLeaders.insertMany(leadersDto);
     }
 
-    public void dumpStake(int epoch, List<Integer> nodesStake) {
+    public void dumpStake(int epoch, List<Integer> nodesStake, List<OuroborosNode> nodes) {
         List<Stake> stakeDto = new ArrayList<>();
         for (int node = 0; node < nodesStake.size(); node++) {
             nodesStake.get(node);
-            stakeDto.add(new Stake(nodesStake.get(node), node, epoch));
+            stakeDto.add(new Stake(nodesStake.get(node), node, epoch, nodes.get(node).byzantine));
         }
         collectionStakeStats.insertMany(stakeDto);
     }

@@ -128,6 +128,6 @@ public class P2PNetwork<TN extends P2PNode<TN>> extends Network<TN> {
     msg.addToReceived(from);
     List<TN> dest = new ArrayList<>(from.peers);
     Collections.shuffle(dest, rd);
-    send(msg, time + 1 + msg.localDelay, from, dest, msg.delayBetweenPeers);
+    send(msg, from, dest);
   }
 }

@@ -1,7 +1,6 @@
 package net.consensys.wittgenstein.core.messages;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import net.consensys.wittgenstein.core.Network;
 import net.consensys.wittgenstein.core.P2PNode;
@@ -23,6 +22,7 @@ public class FloodMessage<TN extends P2PNode<TN>> extends Message<TN> {
    * It's possible to send the message immediately to all peers, but as well to wait between peers.
    */
   public final int delayBetweenPeers;
+  public int hopCount = 0;
 
   public long msgId() {
     return -1;
@@ -50,7 +50,7 @@ public class FloodMessage<TN extends P2PNode<TN>> extends Message<TN> {
       to.onFlood(from, this);
       List<TN> dest = to.peers.stream().filter(n -> n != from).collect(Collectors.toList());
       Collections.shuffle(dest, network.rd);
-      network.send(this, network.time + 1 + localDelay, to, dest, delayBetweenPeers);
+      network.send(this, to, dest);
     }
   }
 

@@ -47,7 +47,7 @@ public class Node implements Closeable {
    * boolean marks, for statistics only, that this node is a byzantine node. It's not use anywhere
    * else in the framework.
    */
-  public final boolean byzantine;
+  public boolean byzantine;
 
   /**
    * Some scenarios are interesting when the nodes are heterogeneous: Having some nodes lagging

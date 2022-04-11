@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  * @author Juraj Holub <xholub40@vutbr.cz>
  */
 public class StakeDistribution {
-    private int totalStake;
+    private double totalStake;
     private List<Integer> nodesStake;
     private List<Double> nodesProbability;
     private Random rd;
@@ -34,17 +34,15 @@ public class StakeDistribution {
             nodesStake = stakeDistributionUtil.readStakeDistributionFromConfigurationFile(CONFIG_FILE, solanaConfig.networkSize);
         }
 
-        this.totalStake = nodesStake.stream().mapToInt(value -> value).sum();
+        this.totalStake = nodesStake.stream().mapToDouble(value -> value).sum();
         this.nodesProbability = nodesStake.stream().mapToDouble(value -> (double) value / totalStake).boxed().collect(Collectors.toList());
-
-        updateVRF(0);
     }
 
     public void updateVRF(int epoch) {
         this.vrfLeaderSelection = new VRFLeaderSelection(epoch, IntStream.range(0, solanaConfig.networkSize).boxed().collect(Collectors.toList()), nodesProbability);
     }
 
-    public int getTotalStake() {
+    public double getTotalStake() {
         return totalStake;
     }
 
@@ -76,11 +74,11 @@ public class StakeDistribution {
     }
 
     public class Stake {
-        public int totalStake;
+        public double totalStake;
         public int nodeStake;
         public double nodeProbability;
 
-        public Stake(int totalStake, int nodeStake, double nodeProbability) {
+        public Stake(double totalStake, int nodeStake, double nodeProbability) {
             this.totalStake = totalStake;
             this.nodeStake = nodeStake;
             this.nodeProbability = nodeProbability;

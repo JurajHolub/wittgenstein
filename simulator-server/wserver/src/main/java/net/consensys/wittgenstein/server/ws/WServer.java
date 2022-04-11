@@ -1,13 +1,10 @@
 package net.consensys.wittgenstein.server.ws;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
 
 import net.consensys.wittgenstein.core.EnvelopeInfo;
 import net.consensys.wittgenstein.core.External;
@@ -16,10 +13,12 @@ import net.consensys.wittgenstein.core.WParameters;
 import net.consensys.wittgenstein.core.messages.SendMessage;
 import net.consensys.wittgenstein.protocols.harmony.Harmony;
 import net.consensys.wittgenstein.protocols.harmony.HarmonyConfig;
-import net.consensys.wittgenstein.protocols.harmony.output.OutputInfo;
+import net.consensys.wittgenstein.protocols.harmony.output.dto.OutputInfo;
+import net.consensys.wittgenstein.protocols.ouroboros.Ouroboros;
+import net.consensys.wittgenstein.protocols.ouroboros.OuroborosConfig;
+import net.consensys.wittgenstein.protocols.solana.Solana;
+import net.consensys.wittgenstein.protocols.solana.SolanaConfig;
 import net.consensys.wittgenstein.server.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -45,6 +44,30 @@ public class WServer extends ExternalWS implements IServer, External {
     try {
       OutputInfo outputInfo = Harmony.run(config);
       return ResponseEntity.ok().body(outputInfo);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @PostMapping(value = "/ouroboros")
+  public ResponseEntity runHarmony(@RequestBody OuroborosConfig config) {
+    System.out.println(config.toString());
+    try {
+      Ouroboros.run(config);
+      return ResponseEntity.ok().build();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @PostMapping(value = "/solana")
+  public ResponseEntity runSolana(@RequestBody SolanaConfig config) {
+    System.out.println(config.toString());
+    try {
+      Solana.run(config);
+      return ResponseEntity.ok().build();
     } catch (IOException e) {
       e.printStackTrace();
       return ResponseEntity.badRequest().body(e.getMessage());

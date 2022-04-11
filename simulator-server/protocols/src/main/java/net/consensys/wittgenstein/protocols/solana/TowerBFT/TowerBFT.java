@@ -2,6 +2,7 @@ package net.consensys.wittgenstein.protocols.solana.TowerBFT;
 
 import net.consensys.wittgenstein.core.Network;
 import net.consensys.wittgenstein.protocols.solana.Block;
+import net.consensys.wittgenstein.protocols.solana.SolanaConfig;
 import net.consensys.wittgenstein.protocols.solana.SolanaNode;
 import net.consensys.wittgenstein.protocols.solana.StakeDistribution;
 import net.consensys.wittgenstein.protocols.solana.TowerBFT.Protocol.SlotAnnounceMessage;
@@ -26,13 +27,15 @@ public class TowerBFT {
     private transient Network<SolanaNode> network;
     private transient OutputDumper outputDumper;
     public final Map<Integer, Block> receivedBlocks;
+    private SolanaConfig solanaConfig;
 
     public TowerBFT(
             SolanaNode solanaNode,
             StakeDistribution stakeDistribution,
             List<Integer> leaderSchedule,
             Network<SolanaNode> network,
-            OutputDumper outputDumper
+            OutputDumper outputDumper,
+            SolanaConfig solanaConfig
     ) {
         this.me = solanaNode;
         this.stakeDistribution = stakeDistribution;
@@ -40,6 +43,7 @@ public class TowerBFT {
         this.network = network;
         this.outputDumper = outputDumper;
         this.receivedBlocks = new HashMap<>();
+        this.solanaConfig = solanaConfig;
     }
 
     /**
@@ -56,7 +60,10 @@ public class TowerBFT {
      */
     public void onSlotReceive(SolanaNode from, Block block) {
         //if (network.rd.nextDouble() <= solanaConfig.validatorReliability) {
-        network.send(new VoteMessage(block), me, network.allNodes.get(leaderSchedule.get(block.slot)));
+        int leader = solanaConfig.vrfLeaderSelection
+                ? stakeDistribution.vrfLeaderSelection.chooseSlotLeader(block.slot)
+                : leaderSchedule.get(block.slot);
+        network.send(new VoteMessage(block), me, network.allNodes.get(leader));
         //}
     }
 

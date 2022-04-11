@@ -77,11 +77,12 @@ public class StakeDistributionUtil {
         return stakeDistribution;
     }
 
-    public List<Double> updateStakeProbability(int epoch, List<Integer> stakeDistribution, List<Double> nodesProbability) {
-        int totalStake = stakeDistribution.stream().mapToInt(i->i).sum();
-        for (int node = 0; node < nodesProbability.size(); node++) {
+    public List<Double> updateStakeProbability(int epoch, List<Integer> stakeDistribution) {
+        double totalStake = stakeDistribution.stream().mapToDouble(i->i).sum();
+        List<Double> nodesProbability = new ArrayList<>();
+        for (int node = 0; node < stakeDistribution.size(); node++) {
             double pst = stakeDistribution.get(node) / (double)totalStake;
-            nodesProbability.set(node, pst);
+            nodesProbability.add(pst);
         }
         return nodesProbability;
     }

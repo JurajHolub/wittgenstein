@@ -3,10 +3,9 @@ package net.consensys.wittgenstein.protocols.harmony.FBFT;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import net.consensys.wittgenstein.core.Network;
-import net.consensys.wittgenstein.core.NodeBuilder;
 import net.consensys.wittgenstein.protocols.harmony.*;
 import net.consensys.wittgenstein.protocols.harmony.FBFT.Protocol.*;
-import net.consensys.wittgenstein.protocols.harmony.output.SlotStats;
+import net.consensys.wittgenstein.protocols.harmony.output.dto.SlotStats;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -25,7 +24,7 @@ public class Fbft {
     Queue<Integer> pseudoRand = new LinkedList<>();
     Queue<Integer> rand = new LinkedList<>();
 
-    public Fbft(Random rd, NodeBuilder nb, Network<HarmonyNode> network, HarmonyNode me, StakeDistribution stakeDistribution, Logger logger, HarmonyConfig  harmonyConfig) {
+    public Fbft(Network<HarmonyNode> network, HarmonyNode me, StakeDistribution stakeDistribution, Logger logger, HarmonyConfig  harmonyConfig) {
         this.network = network;
         this.me = me;
         this.stakeDistribution = stakeDistribution;
@@ -65,8 +64,9 @@ public class Fbft {
         pseudoRand.add(pRand);
     }
 
-    // 1. Vodca vytvorí blok a rozošle jeho hlavičku aj dátový obsah validátorom pomocou
-    // broadcastu.
+    /**
+     * 1. The leader creates the block and sends its header and data content to the validator via broadcast.
+     */
     public void onBlockCreate(int epoch, int slot, int shard) {
         Block block;
         int transactions = me.generateTransactionsPerBlock();
@@ -77,8 +77,10 @@ public class Fbft {
         network.send(leaderAnnounce, me, shardNodes);
     }
 
-    // 2. Validátori príjmu nový blok, overia jeho hlavičku, podpíšu ju svojím digitálnym podpisu
-    // a pošlú späť vodcovi. Obsah bloku je zatiaľ ignorovaný.
+    /**
+     * 2. The validators receive the new block, verify its header, sign it with their digital signature
+     * and send it back to the leader. The contents of the block are still ignored.
+     */
     public void onLeaderAnnounce(HarmonyNode leader, Block block) {
         if (!block.isHeaderValid()) return;
 
@@ -86,9 +88,10 @@ public class Fbft {
         network.send(validatorAnnounce, me, leader);
     }
 
-    // 3. Keď vodca prijme aspoň 2/3 podpisov, tak ich agreguje do jediného prahového digitálneho
-    // podpisu. Tento podpis rozošle pomocou broadcastu spolu s bitmapou indikujúcou validátorov
-    // ktorý podpísali.
+    /**
+     * 3. When a leader receives at least 2/3 of the signatures, he aggregates them into a single digital threshold.
+     * It broadcasts this signature along with a bitmap indicating the validators they signed.
+     */
     public void onValidatorAnnounce(HarmonyNode validator, BlockSigners block) {
         if (isBlockSent(block, true)) return;
 
@@ -124,9 +127,11 @@ public class Fbft {
         }
     }
 
-    // 4. Každý validátor overí, že prahový podpis obsahuje požadované 2/3 hlasov. Až v tejto
-    // chvíli validátor overí transakcie v dátovom obsahu bloku, ktorý bol zasielaný už
-    // v kroku 1. Ak všetko súhlasí, tak podpíše správu s kroku 3 a pošle ju späť vodcovi.
+    /**
+     * 4. Each validator verifies that the threshold signature contains the required 2/3 votes. Only at this point
+     * does the validator verify the transactions in the data content of the block that was already sent in step 1.
+     * If everything agrees, it will sign the message with step 3 and send it back to the leader.
+     */
     public void onLeaderPrepare(HarmonyNode leader, BlockSigners block) {
         if (!block.majoritySigned()) return;
         epochPrepare.put(block.slot, block.shard, block);
@@ -137,9 +142,11 @@ public class Fbft {
         network.send(validatorPrepare, me, leader);
     }
 
-    // 5. Vodca čaká na 2/3 podpisov validátorov s predošlého kroku (môžu sa líšiť od podpisov
-    // z kroku 3). Opäť ich agreguje do prahového podpisu a spolu s bitmapou účastníkov
-    // rozošle pomocou broadcastu nový blok na potvrdenie všetkým validátorom.
+    /**
+     * 5. The leader waits for 2/3 of the validator signatures from the previous step (they may differ from the
+     * signatures from step 3). Again, it aggregates them into a threshold signature and, together with the subscriber
+     * bitmap, broadcasts a new block for confirmation by all validators.
+     */
     public void onValidatorPrepare(HarmonyNode validator, BlockSigners block) {
         if (isBlockSent(block, false)) return;
 
@@ -152,6 +159,9 @@ public class Fbft {
         }
     }
 
+    /**
+     * 6. Block is finaliszed for this node. Save it to the database.
+     */
     public void onCommit(HarmonyNode leader, BlockSigners block) {
         if (!leader.isLeader(block)) return;
 
@@ -173,8 +183,11 @@ public class Fbft {
         }
     }
 
+    /**
+     * Helper function for dumping node status for particular slot into the database (mongo).
+     */
     public void saveStatsAboutSlot(Block block) {
-        me.csvDumper.dumpSlot(
+        me.outputDumper.dumpSlot(
             new SlotStats(
                 me.nodeId,
                 block.shard,

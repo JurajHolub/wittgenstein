@@ -10,4 +10,6 @@ public class OuroborosConfig extends SharedConfig {
     public int p2pConnectionCount = 20;
     public boolean p2pMinimum = false;
     public int numberOfNodesUnderDos = 0;
+    public double byzantineStake = 0.0;
+    public int forkRatio = 3;
 }

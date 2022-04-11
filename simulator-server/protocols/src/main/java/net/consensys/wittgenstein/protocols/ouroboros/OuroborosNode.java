@@ -1,12 +1,18 @@
 package net.consensys.wittgenstein.protocols.ouroboros;
 
+import com.google.common.collect.Lists;
 import net.consensys.wittgenstein.core.Network;
 import net.consensys.wittgenstein.core.NodeBuilder;
 import net.consensys.wittgenstein.core.P2PNetwork;
 import net.consensys.wittgenstein.core.messages.FloodMessage;
+import net.consensys.wittgenstein.protocols.harmony.Shard;
+import net.consensys.wittgenstein.protocols.harmony.output.dto.Leader;
 import net.consensys.wittgenstein.protocols.ouroboros.messages.BlockAnnounce;
 import net.consensys.wittgenstein.protocols.ouroboros.output.OutputDumper;
+import org.springframework.util.DigestUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -33,11 +39,9 @@ public class OuroborosNode extends Ouroboros.AOuroborosNode {
         return ouroborosConfig.expectedTxPerBlock + (int) (rd.nextGaussian() * ouroborosConfig.expectedTxPerBlock / 10);
     }
 
-    /**
-     * Generate new block and distribute it to the peers.
-     */
-    public void onSlotEnd(int epoch, int slot) {
+    public Block createBlock(int slot, int epoch) {
         int transactions = generateTransactionsPerBlock();
+        int hash = rd.nextInt();
         Block block = new Block(
             nodeId,
             slot,
@@ -45,12 +49,30 @@ public class OuroborosNode extends Ouroboros.AOuroborosNode {
             transactions,
             ouroborosConfig.blockHeaderSizeInBytes,
             ouroborosConfig.txSizeInBytes,
-            network.time
+            network.time,
+            hash
         );
-        BlockAnnounce blockAnnounce = new BlockAnnounce(block);
+        return block;
+    }
 
-        network.sendPeers(blockAnnounce, this);
-        //network.sendAll(blockAnnounce, this);
+    /**
+     * Generate new block and distribute it to the peers.
+     */
+    public void onSlotEnd(int epoch, int slot) {
+        // Fork attack
+        if (byzantine) {
+            List<OuroborosNode> myPeers = new ArrayList<>(peers);
+            Collections.shuffle(myPeers, rd);
+            int forks = ouroborosConfig.forkRatio - rd.nextInt(ouroborosConfig.forkRatio-1);
+            for (List<OuroborosNode> peerPartition : Lists.partition(myPeers, myPeers.size() / forks + 1)) {
+                Block block = createBlock(slot, epoch);
+                network.send(new BlockAnnounce(block), this, peerPartition);
+            }
+        }
+        else {
+            Block block = createBlock(slot, epoch);
+            network.sendPeers(new BlockAnnounce(block), this);
+        }
     }
 
     /**
@@ -61,7 +83,7 @@ public class OuroborosNode extends Ouroboros.AOuroborosNode {
         BlockAnnounce blockAnnounce = (BlockAnnounce) floodMessage;
         Block block = blockAnnounce.block;
 
-        if (block.isLessThen(lastReceivedValidBlock)) return;
+        if (block.isLessEqualThen(lastReceivedValidBlock)) return;
         if (!isLeader(block.slot, block.creator)) return;
 
         outputDumper.dumpSlot(block, this, network.time);
