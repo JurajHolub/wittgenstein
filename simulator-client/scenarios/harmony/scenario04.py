@@ -32,7 +32,7 @@ class Scenario04(Scenario):
             "blockHeaderSizeInBytes": 80,
             "networkSize": nodes,
             "numberOfShards": shards,
-            "expectedTxPerBlock": 600,
+            "expectedTxPerBlock": 1500,
             "byzantineNodes": 0,
             "lambda": token_lambda,
             "ddosAttacks": True,

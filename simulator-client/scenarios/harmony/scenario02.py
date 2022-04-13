@@ -21,7 +21,7 @@ class Scenario02(Scenario):
     def simulate(self):
         self.byzantine = {}
         num_of_epochs = 1000
-        for byzantine_nodes in [200, 220, 240, 260, 280, 300, 320, 340]:
+        for byzantine_share in [0.28, 0.30, 0.32]:
             parameters = {
                 "epochDurationInSlots": 50,
                 "numberOfEpochs": num_of_epochs,
@@ -31,7 +31,7 @@ class Scenario02(Scenario):
                 "networkSize": 1000,
                 "numberOfShards": 4,
                 "expectedTxPerBlock": 500,
-                "byzantineNodes": byzantine_nodes,
+                "byzantineShare": byzantine_share,
                 "lambda": 600,
                 "ddosAttack": False,
                 "mongoServerAddress": self.mongoserver,
@@ -56,10 +56,10 @@ class Scenario02(Scenario):
                     attacks.setdefault(f'Hlasovací podiel', []).append(shard_byzantine / shard_stake * 100)
                     attacks.setdefault(f'Shard', []).append(i)
                     attacks.setdefault(f'Epocha', []).append(epoch_num)
-            self.byzantine[byzantine_nodes] = pd.DataFrame(attacks)
+            self.byzantine[f'byzantine{byzantine_share}'] = pd.DataFrame(attacks)
 
     def analyze(self):
-        for total_byzantine, df in self.byzantine.items():
+        for byzantine_share, df in self.byzantine.items():
             fig = plt.figure()
             ax = sns.histplot(df, x='Hlasovací podiel')
             for p in ax.patches:
@@ -72,4 +72,4 @@ class Scenario02(Scenario):
                     verticalalignment='center',
                     transform=ax.transAxes)
             fig.tight_layout()
-            self.save_plot(f'harmony-scenario02--byzantine{total_byzantine}')
+            self.save_plot(f'harmony-scenario02--{byzantine_share}')
