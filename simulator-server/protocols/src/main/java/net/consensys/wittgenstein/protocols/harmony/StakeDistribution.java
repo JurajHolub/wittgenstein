@@ -13,7 +13,7 @@ public class StakeDistribution {
     private StakeDistributionUtil stakeDistributionUtil;
     private List<Integer> nodesStake;
     private List<Integer> nodesTokens;
-    private int totalStake;
+    public int totalStake;
     private final HarmonyConfig harmonyConfig;
     private int tokenSize;
     private final Random rd;

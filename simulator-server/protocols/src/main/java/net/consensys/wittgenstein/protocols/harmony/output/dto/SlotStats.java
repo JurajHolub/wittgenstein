@@ -11,8 +11,21 @@ public class SlotStats{
     public long msgSent;
     public long bytesReceived;
     public long bytesSent;
+    public boolean isLeader;
 
-    public SlotStats(int node, int shard, int slot, int epoch, int transactions, int time, long msgReceived, long msgSent, long bytesReceived, long bytesSent) {
+    public SlotStats(
+            int node,
+            int shard,
+            int slot,
+            int epoch,
+            int transactions,
+            int time,
+            long msgReceived,
+            long msgSent,
+            long bytesReceived,
+            long bytesSent,
+            boolean isLeader
+    ) {
         this.node = node;
         this.shard = shard;
         this.slot = slot;
@@ -23,6 +36,7 @@ public class SlotStats{
         this.msgSent = msgSent;
         this.bytesReceived = bytesReceived;
         this.bytesSent = bytesSent;
+        this.isLeader = isLeader;
     }
 
     public int getEpoch() {

@@ -48,6 +48,11 @@ public class HarmonyNode extends Harmony.AHarmonyNode {
     public void cleanStats() {
         msgReceived = 0;
         msgSent = 0;
+        bytesReceived = 0;
+        bytesSent = 0;
+    }
+
+    public void epochClean() {
         fbft.epochPrepare = HashBasedTable.create();
         fbft.epochCommit = HashBasedTable.create();
         rbs.randomNumberCollector.clear();
@@ -55,6 +60,9 @@ public class HarmonyNode extends Harmony.AHarmonyNode {
 
     public void onDistributedRandomnessGeneration(int epoch, int lastSlot) {
         Block lastBlock = fbft.epochCommit.get(lastSlot, Shard.BEACON_SHARD);
+        if (lastBlock == null) {
+            lastBlock = new Block(harmonyConfig.blockHeaderSizeInBytes, harmonyConfig.txSizeInBytes);
+        }
         List<HarmonyNode> nodes = network.allNodes.stream()
             .filter(node -> stakeDistribution.shards.get(Shard.BEACON_SHARD).nodes.contains(node.nodeId))
             .collect(Collectors.toList());
@@ -64,7 +72,5 @@ public class HarmonyNode extends Harmony.AHarmonyNode {
     public boolean isBlockValid(int block) {
         return false;
     }
-
-
 
 }

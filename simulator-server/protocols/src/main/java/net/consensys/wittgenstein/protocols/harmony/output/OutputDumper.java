@@ -42,7 +42,6 @@ public class OutputDumper extends MongoDumper {
 
     public void dumpEpoch() {
         if (epochSlotStats.isEmpty()) return;
-        logger.info(String.format("Dump epochs: %d", epochSlotStats.size()));
 
         collectionSlotStats.insertMany(epochSlotStats);
 

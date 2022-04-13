@@ -8,6 +8,7 @@ public class BlockSigners extends Block {
     public final BitSet signatures;
     public final int validators;
     public boolean sent = false;
+    public static int BLS_SIGNATURE_SIZE = 32;
 
     public BlockSigners(Block block, int validators) {
         super(block);
@@ -28,7 +29,7 @@ public class BlockSigners extends Block {
     }
 
     public int size() {
-        return headerSize;
+        return headerSize + BLS_SIGNATURE_SIZE + (signatures.size() % 8);
     }
 
 }

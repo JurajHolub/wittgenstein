@@ -7,6 +7,7 @@ import net.consensys.wittgenstein.protocols.harmony.output.OutputDumper;
 import net.consensys.wittgenstein.protocols.harmony.output.dto.OutputInfo;
 import net.consensys.wittgenstein.protocols.harmony.rbs.RandomnessBasedSharding;
 import net.consensys.wittgenstein.protocols.solana.Solana;
+import net.consensys.wittgenstein.protocols.utils.ByzantineShare;
 import net.consensys.wittgenstein.protocols.utils.SortMapDescending;
 import org.apache.commons.cli.*;
 
@@ -36,7 +37,7 @@ public class Harmony implements Protocol {
     static {
         System.setProperty("java.util.logging.SimpleFormatter.format",
                 "[%1$tF %1$tT] [%4$s] %5$s %n");
-        logger = Logger.getLogger(Solana.class.getName());
+        logger = Logger.getLogger(Harmony.class.getName());
     }
 
     public Harmony(HarmonyConfig harmonyConfig) throws UnknownHostException {
@@ -59,7 +60,6 @@ public class Harmony implements Protocol {
 
     @Override
     public void init() {
-        stakeDistribution.redistributeToShards(0, 0);
         for (int node = 0; node < harmonyConfig.networkSize; node++) {
             network.addNode(
                 new HarmonyNode(
@@ -75,6 +75,12 @@ public class Harmony implements Protocol {
                 )
             );
         }
+
+        // choose byzantine nodes
+        ByzantineShare.prepareByzantineNodes(harmonyConfig.byzantineShare, stakeDistribution.getNodesStake())
+            .forEach(node -> network.allNodes.get(node).byzantine = true);
+
+        stakeDistribution.redistributeToShards(0, 0);
     }
 
     /** HarmonyNode */
@@ -119,7 +125,7 @@ public class Harmony implements Protocol {
             int rand = stakeDistribution.randForNextEpoch.poll();
             logger.info("Redistribute to shards for epoch "+ (epoch+1));
             stakeDistribution.redistributeToShards(rand, epoch);
-            network.allNodes.forEach(HarmonyNode::cleanStats);
+            network.allNodes.forEach(HarmonyNode::epochClean);
         }
         outputDumper.dumpEpochStake(epoch, stakeDistribution, network);
         for (int slot = 0; slot < harmonyConfig.epochDurationInSlots; slot++) {
@@ -133,13 +139,11 @@ public class Harmony implements Protocol {
             ddosAttack(slot);
             if (slot == harmonyConfig.epochDurationInSlots - 2*harmonyConfig.vdfInSlots) {
                 HarmonyNode beaconChainLeader = getLeader(Shard.BEACON_SHARD, slot);
-                //HarmonyNode beaconChainLeader = network.allNodes.get(stakeDistribution.getBeaconShard().epochLeader);
-                logger.info(String.format("Start DRS, node %d, epoch %d, slot %d, shard 0 (beacon)", beaconChainLeader.nodeId, epoch, slot));
+                // logger.info(String.format("Start DRS, node %d, epoch %d, slot %d, shard 0 (beacon)", beaconChainLeader.nodeId, epoch, slot));
                 beaconChainLeader.onDistributedRandomnessGeneration(epoch, slot-1);
             }
             for (Shard shard : stakeDistribution.shards) {
                 getLeader(shard.shardId, slot).onSlot(epoch, slot, shard.shardId);
-                //network.allNodes.get(shard.epochLeader).onSlot(epoch, slot, shard.shardId);
             }
         }
     }

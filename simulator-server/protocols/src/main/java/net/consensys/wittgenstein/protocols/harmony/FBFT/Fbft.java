@@ -171,14 +171,14 @@ public class Fbft {
         if (!me.isLeader(block)) return;
 
         if (block.pRand != null) {
-            logger.info(String.format("Received pRand=%d, node %d, epoch %d, slot %d, shard %d", block.pRand, me.nodeId, block.epoch, block.slot, block.shard));
+            // logger.info(String.format("Received pRand=%d, node %d, epoch %d, slot %d, shard %d", block.pRand, me.nodeId, block.epoch, block.slot, block.shard));
             int rand = network.rd.nextInt() ^ block.pRand; // simulate calculation of final rand
             IntStream.range(0, harmonyConfig.vdfInSlots -1).forEach(i -> this.rand.add(null)); // simulate vdf that takes N blocks
             this.rand.add(rand);
         }
 
         if (block.rnd != null) {
-            logger.info(String.format("Received rand=%d, node %d, epoch %d, slot %d, shard %d", block.rnd, me.nodeId, block.epoch, block.slot, block.shard));
+            // logger.info(String.format("Received rand=%d, node %d, epoch %d, slot %d, shard %d", block.rnd, me.nodeId, block.epoch, block.slot, block.shard));
             stakeDistribution.randForNextEpoch.add(block.rnd);
         }
     }
@@ -198,8 +198,10 @@ public class Fbft {
                 me.getMsgReceived(),
                 me.getMsgSent(),
                 me.getBytesReceived(),
-                me.getBytesSent()
+                me.getBytesSent(),
+                me.isLeader(block)
             )
         );
+        me.cleanStats();
     }
 }

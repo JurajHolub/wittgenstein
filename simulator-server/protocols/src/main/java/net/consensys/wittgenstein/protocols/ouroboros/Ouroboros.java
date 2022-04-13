@@ -6,6 +6,7 @@ import net.consensys.wittgenstein.core.geoinfo.Geo;
 import net.consensys.wittgenstein.core.geoinfo.GeoAllCities;
 import net.consensys.wittgenstein.protocols.ouroboros.output.OutputDumper;
 import net.consensys.wittgenstein.protocols.utils.AliasMethod;
+import net.consensys.wittgenstein.protocols.utils.ByzantineShare;
 import net.consensys.wittgenstein.protocols.utils.DosAttackUtil;
 import net.consensys.wittgenstein.tools.CSVLatencyReader;
 import org.springframework.util.DigestUtils;
@@ -208,24 +209,8 @@ public class Ouroboros  implements Protocol {
     }
 
     public void prepareByzantineNodes() {
-        double byzantineShare = ouroborosConfig.byzantineStake;
-        double eps = byzantineShare / 100;
-
-        List<Integer> byzantineNodes = new ArrayList<>();
-
-        double accum = 0d;
-        for (int node = 0; node < stakeDistribution.nodesProbability.size(); node++) {
-            double nodeStake = stakeDistribution.nodesProbability.get(node);
-
-            if (Math.abs(byzantineShare - (accum + nodeStake)) <= eps) break;
-
-            accum += nodeStake;
-            byzantineNodes.add(node);
-        }
-
-        for (int node = 0; node < byzantineNodes.size(); node++) {
-            network.allNodes.get(node).byzantine = true;
-        }
+        ByzantineShare.prepareByzantineNodes(ouroborosConfig.byzantineStake, stakeDistribution.nodesStake)
+                .forEach(node -> network.allNodes.get(node).byzantine = true);
     }
 
     public static void run(OuroborosConfig ouroborosConfig) throws IOException {

@@ -30,4 +30,8 @@ public class HarmonyConfig extends SharedConfig {
      * which will be under DoS attack.
      */
     public int shardDoSMax = 0;
+    /**
+     * Part of share that is byzantine. Value in range <0;1>
+     */
+    public double byzantineShare = 0;
 }
