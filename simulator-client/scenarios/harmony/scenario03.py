@@ -30,6 +30,7 @@ class Scenario03(Scenario):
             nodes = 250 * shards
             expectedTxPerBlock = 500 * shards
             parameters = {
+                "slotDurationInMs": 2000,
                 "epochDurationInSlots": slots,
                 "numberOfEpochs": 1,
                 "vdfInSlots": 5,

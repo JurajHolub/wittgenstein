@@ -5,7 +5,7 @@
 *Wittgenstain simulator server must already running!*
 
 ## Prerequisities
-Python3.8
+Python3.9
 
 `$ pip install -r requirements.txt`
 

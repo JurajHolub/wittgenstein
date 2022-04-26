@@ -83,11 +83,7 @@ class Scenario02(Scenario):
             'incidents': incidents.values
         }, index=[k[0] for k in incidents.keys()])
         plots = sns.barplot(x=df.index, y=df.incidents)
-        for bar in plots.patches:
-            plots.annotate(int(bar.get_height()),
-                           (bar.get_x() + bar.get_width() / 2,
-                            bar.get_height()), ha='center', va='center', xytext=(0, 8),
-                           textcoords='offset points')
+        [plots.bar_label(i, ) for i in plots.containers]
         plt.xlabel('Počet kontinuálnych byzantských blokov')
         plt.ylabel('Počet výskytov')
         plt.tight_layout()

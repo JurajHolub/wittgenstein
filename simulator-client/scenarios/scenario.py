@@ -44,8 +44,3 @@ class Scenario:
     def get_data_from_mongo(self):
         client = MongoClient()
         return client.simulator
-        df = pd.DataFrame.from_dict(db.Epochs)
-        pass
-        # db.Epochs
-        # db.Leaders
-        # db.StakeStats

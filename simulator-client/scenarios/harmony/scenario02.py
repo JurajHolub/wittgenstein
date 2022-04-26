@@ -23,6 +23,7 @@ class Scenario02(Scenario):
         num_of_epochs = 1000
         for byzantine_share in [0.28, 0.30, 0.32]:
             parameters = {
+                "slotDurationInMs": 2000,
                 "epochDurationInSlots": 50,
                 "numberOfEpochs": num_of_epochs,
                 "vdfInSlots": 5,

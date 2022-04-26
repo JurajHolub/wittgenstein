@@ -23,6 +23,7 @@ class Scenario01(Scenario):
         self.spearman = pd.DataFrame()
         for token_lambda in [600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 10_000, 20_000]:
             parameters = {
+                "slotDurationInMs": 2000,
                 "epochDurationInSlots": 50,
                 "numberOfEpochs": 1,
                 "vdfInSlots": 5,

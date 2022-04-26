@@ -25,6 +25,7 @@ class Scenario04(Scenario):
         token_lambda = 600
         shards = 4
         parameters = {
+            "slotDurationInMs": 2000,
             "epochDurationInSlots": slots,
             "numberOfEpochs": 1,
             "vdfInSlots": 5,

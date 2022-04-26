@@ -23,6 +23,7 @@ class Scenario05(Scenario):
         shards = 4
         for vrfFeature in [False, True]:
             parameters = {
+                "slotDurationInMs": 2000,
                 "epochDurationInSlots": slots,
                 "numberOfEpochs": 1,
                 "vdfInSlots": 5,

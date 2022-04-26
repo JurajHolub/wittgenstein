@@ -61,6 +61,10 @@ class Scenario01(Scenario):
         g = sns.FacetGrid(self.tpb, col='TPS', row='Počet uzlov', legend_out=False)
         g = g.map_dataframe(self.ploter)
         g.add_legend()
+        for ax in g.axes.flatten():
+            #ax.tick_params(labelbottom=True)
+            ax.set_ylabel('Pomer [%]')
+            ax.set_xlabel('Slot')
         plt.tight_layout()
         #plt.show()
         self.save_plot('solana-scenario01')
