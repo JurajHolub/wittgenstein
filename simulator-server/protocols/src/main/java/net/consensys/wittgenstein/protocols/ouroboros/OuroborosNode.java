@@ -83,11 +83,25 @@ public class OuroborosNode extends Ouroboros.AOuroborosNode {
         BlockAnnounce blockAnnounce = (BlockAnnounce) floodMessage;
         Block block = blockAnnounce.block;
 
-        if (block.isLessEqualThen(lastReceivedValidBlock)) return;
-        if (!isLeader(block.slot, block.creator)) return;
+        if (block.isLessEqualThen(lastReceivedValidBlock)) {
+            bytesReceived -= floodMessage.size();
+            return;
+        }
+        if (!isLeader(block.slot, block.creator)) {
+            bytesReceived -= floodMessage.size();
+            return;
+        }
 
         outputDumper.dumpSlot(block, this, network.time);
+        cleanStats();
         lastReceivedValidBlock = block;
+    }
+
+    public void cleanStats() {
+        bytesReceived = 0;
+        bytesSent = 0;
+        msgReceived = 0;
+        msgSent = 0;
     }
 
     public boolean isLeader(int slot, int leader) {

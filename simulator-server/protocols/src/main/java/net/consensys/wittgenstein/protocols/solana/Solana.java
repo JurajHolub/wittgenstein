@@ -171,7 +171,8 @@ public class Solana implements Protocol {
                     0,
                     0,
                     0,
-                    0
+                    0,
+                    node.isLeader(slot)
                 )
             ));
         }

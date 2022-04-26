@@ -155,16 +155,6 @@ public class Ouroboros  implements Protocol {
                 );
             }
 
-//            if (network.rd.nextBoolean()) {
-//                float part = network.rd.nextFloat();
-//                if (part != 0) {
-//                    network.partition(part);
-//                }
-//            }
-//            if (network.rd.nextBoolean()) {
-//                network.endPartition();
-//            }
-
             network.runMs(ouroborosConfig.slotDurationInMs);
             simulateSlot(epoch, slot);
         }
@@ -180,16 +170,19 @@ public class Ouroboros  implements Protocol {
 
         if (leader.underDos) {
             int hash = network.rd.nextInt();
-            network.allNodes.forEach(node -> node.outputDumper.dumpSlot(new Block(
-                -1,
-                slot,
-                epoch,
-                0,
-                0,
-                0,
-                network.time,
-                hash
-            ), node, network.time));
+            network.allNodes.forEach(node -> {
+                node.outputDumper.dumpSlot(new Block(
+                        -1,
+                        slot,
+                        epoch,
+                        0,
+                        0,
+                        0,
+                        network.time,
+                        hash
+                ), node, network.time);
+                node.cleanStats();
+            });
         }
         else {
             leader.onSlotEnd(epoch, slot);

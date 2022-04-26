@@ -7,6 +7,7 @@ public class NodeSlot {
     public int slot;
     public int epoch;
     public int node;
+    public boolean isLeader;
     public int txCounterVote;
     public int receivedVotingPower;
     public int txCounterNonVote;
@@ -25,11 +26,14 @@ public class NodeSlot {
             long msgReceived,
             long msgSent,
             long bytesReceived,
-            long bytesSent)
+            long bytesSent,
+            boolean isLeader
+    )
     {
         this.node = node;
         this.slot = slotData.slot;
         this.epoch = slotData.epoch;
+        this.isLeader = isLeader;
         this.txCounterVote = slotData.txCounterVote;
         this.receivedVotingPower = slotData.receivedVotingPower;
         this.txCounterNonVote = slotData.txCounterNonVote;

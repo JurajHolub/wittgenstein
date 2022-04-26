@@ -130,7 +130,7 @@ public class Harmony implements Protocol {
         outputDumper.dumpEpochStake(epoch, stakeDistribution, network);
         for (int slot = 0; slot < harmonyConfig.epochDurationInSlots; slot++) {
 
-            network.run(10);
+            network.run(harmonyConfig.slotDurationInMs);
             if (slot % intervalForLoggingInSlots == 0) {
                 logger.info(String.format("Simulate epoch %d/%d, Slot %d/%d [%.2f%%]",
                         epoch+1, numberOfEpochs, slot, harmonyConfig.epochDurationInSlots, (double)slot / harmonyConfig.epochDurationInSlots * 100));

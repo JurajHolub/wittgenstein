@@ -105,7 +105,8 @@ public class TowerBFT {
                 me.getMsgReceived(),
                 me.getMsgSent(),
                 me.getBytesReceived(),
-                me.getBytesSent()
+                me.getBytesSent(),
+                me.isLeader(block.slot)
             )
         );
         me.cleanStats();
