@@ -10,6 +10,8 @@ from scenarios.solana.scenario04 import Scenario04 as SolanaScenario04
 from scenarios.ouroboros.scenario01 import Scenario01 as OuroborosScenario01
 from scenarios.ouroboros.scenario02 import Scenario02 as OuroborosScenario02
 from scenarios.ouroboros.scenario03 import Scenario03 as OuroborosScenario03
+from scenarios.comparison.scenario01 import Scenario01 as ComparisonScenario01
+from scenarios.comparison.scenario02 import Scenario02 as ComparisonScenario02
 from argparse import ArgumentParser
 
 output_path = 'output'
@@ -33,11 +35,14 @@ solana.add_argument('--scenario02', action='store_true', help='Leader DDoS attac
 solana.add_argument('--scenario03', action='store_true', help='Throughput in bytes.')
 solana.add_argument('--scenario04', action='store_true', help='Leader DDoS attack with VRF feature.')
 
-
 ouroboros = subparsers.add_parser('ouroboros', help='Simulation of Ouroboros.')
 ouroboros.add_argument('--scenario01', action='store_true', help='DoS attack to leader schedule.')
 ouroboros.add_argument('--scenario02', action='store_true', help='Fork and finality.')
 ouroboros.add_argument('--scenario03', action='store_true', help='DoS attack to VRF.')
+
+comparison = subparsers.add_parser('comparison', help='Comparison of Solana, Harmony and Ouroboros.')
+comparison.add_argument('--scenario01', action='store_true', help='Data throughput comparison for Solana and Harmony.')
+comparison.add_argument('--scenario02', action='store_true', help='VRF ddos attack effectivity comparison.')
 
 args = parser.parse_args()
 
@@ -70,6 +75,11 @@ elif args.command == 'ouroboros':
         scenario = OuroborosScenario02(output_path)
     if args.scenario03:
         scenario = OuroborosScenario03(output_path)
+elif args.command == 'comparison':
+    if args.scenario01:
+        scenario = ComparisonScenario01(output_path)
+    if args.scenario02:
+        scenario = ComparisonScenario02(output_path)
 else:
     parser.exit()
 
