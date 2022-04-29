@@ -20,7 +20,7 @@ class Scenario04(Scenario):
     def __init__(self, output_path):
         super().__init__(output_path)
         self.stats = {}
-        self.epochDurationInSlots = 10_000
+        self.epochDurationInSlots = 1000
 
     def simulate(self):
         experiments_results = []
@@ -30,8 +30,8 @@ class Scenario04(Scenario):
                 "slotDurationInMs": 400,
                 "epochDurationInSlots": self.epochDurationInSlots,
                 "validatorReliability": 100,
-                "expectedTxPerBlock": 1500,
-                "networkSize": 100,
+                "expectedTxPerBlock": 3000,
+                "networkSize": 1500,
                 "numberOfEpochs": 1,
                 "numberOfNodesUnderAttack": ddos_nodes,
                 "uniformStakeDistribution": True,
@@ -49,10 +49,11 @@ class Scenario04(Scenario):
             client = MongoClient()
             epochs = pd.DataFrame(list(client.simulator.Epochs.find()))
 
-            slot_stack = epochs.groupby(pd.cut(epochs['slot'], self.epochDurationInSlots // 10))
+            meadian_tps = epochs.groupby(['slot']).median()
+            # slot_stack = epochs.groupby(pd.cut(epochs['slot'], self.epochDurationInSlots // 10))
             df = pd.DataFrame()
-            df['Slot'] = slot_stack.max()['slot']
-            df['TPS'] = slot_stack.mean()['txCounterNonVote']
+            df['Slot'] = meadian_tps.index
+            df['TPS'] = meadian_tps['txCounterNonVote']
             df['Počet uzlov pod DoS útokom'] = ddos_nodes
             df['Voľba vodcu'] = name
             experiments_results.append(df)
@@ -60,12 +61,9 @@ class Scenario04(Scenario):
 
     def analyze(self):
         plt.figure()
-        #g = sns.FacetGrid(self.df.iloc[2000:3000], row='Počet uzlov pod DoS útokom', palette='colorblind', legend_out=False, aspect=4)
-        #df = self.df[self.df['Slot'].isin([*range(1000, 3000)])]
-        sns.displot(self.df, x='TPS', hue='Voľba vodcu', kind='kde', fill=True)
-        plt.ylabel('Odhad hustoty')
-        #g.map(sns.lineplot, 'Slot', y='TPS', hue='Voľba vodcu')
-        #g.add_legend()
+        sns.displot(self.df, x='TPS', hue='Voľba vodcu', multiple="dodge", bins=20)
+        plt.ylabel('Počet')
+        plt.xlabel('Tx/slot')
         plt.tight_layout()
         # plt.show()
         self.save_plot(f'solana-scenario04')

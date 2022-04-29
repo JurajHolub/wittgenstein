@@ -48,20 +48,21 @@ class Scenario03(Scenario):
 
                 client = MongoClient()
                 epochs = pd.DataFrame(list(client.simulator.Epochs.find()))
-                slot_stack = epochs.groupby(pd.cut(epochs['slot'], self.epochDurationInSlots // 5))
+                meadian_tps = epochs.groupby(['slot']).median()
+                # slot_stack = epochs.groupby(pd.cut(epochs['slot'], self.epochDurationInSlots // 5))
                 df = pd.DataFrame()
-                df['Slot'] = slot_stack.max()['slot']
-                df['TPS'] = slot_stack.mean()['transactions']
+                df['Slot'] = meadian_tps.index
+                df['TPS'] = meadian_tps['transactions']
                 df['Počet uzlov pod DoS útokom'] = numberOfNodesUnderDos
                 df['Voľba vodcu'] = name
                 experiments_results.append(df)
         self.df = pd.concat(experiments_results, ignore_index=True)
 
     def analyze(self):
-        fig = plt.figure()
-        g = sns.FacetGrid(self.df, row='Počet uzlov pod DoS útokom', palette='colorblind', legend_out=False, aspect=4)
-        g.map(sns.lineplot, 'Slot', 'TPS', 'Voľba vodcu')
-        g.add_legend()
+        plt.figure()
+        sns.displot(self.df, x='TPS', hue='Voľba vodcu', multiple="dodge", bins=20)
+        plt.ylabel('Počet')
+        plt.xlabel('Tx/slot')
         plt.tight_layout()
-        #plt.show()
+        # plt.show()
         self.save_plot(f'ouroboros-scenario03')

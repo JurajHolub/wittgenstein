@@ -25,10 +25,10 @@ class Scenario02(Scenario):
     def simulate(self):
         acum = []
         networkSize = 5000
-        epochDurationInSlots = 500
+        epochDurationInSlots = 1000
         tps = 3 * networkSize
         numberOfShards = networkSize // 250
-        for numberOfNodesUnderDos in [0, 50]:
+        for numberOfNodesUnderDos in [50]:
             solana = {
                 "slotDurationInMs": 400,
                 "epochDurationInSlots": epochDurationInSlots,
@@ -106,7 +106,7 @@ class Scenario02(Scenario):
 
     def analyze(self):
         plt.figure()
-        ax = sns.barplot(data=self.df, x='Protokol', y='TPS', hue='Počet uzlov pod DoS útokom', estimator=median, ci=None)
+        ax = sns.barplot(data=self.df, x='Protokol', y='TPS', estimator=median, ci=None)
         medians = self.df.groupby(['Protokol', 'Počet uzlov pod DoS útokom']).median()['TPS']
         plt.ylim(medians.min() - 50, medians.max() + 50)
         [ax.bar_label(i, ) for i in ax.containers]
