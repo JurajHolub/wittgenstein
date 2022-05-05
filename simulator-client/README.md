@@ -20,8 +20,12 @@ Python3.9
   * `--scenario01` specifies experiment to simulate (print help of given protocol to see available scenarios)
 
 View results of simulation in the directory `/output`.
+There are already results of all simulations, but you can delete them and resimulate.
+Simulation RNG has always the same seed, so you will obtain the same results.
 
 **Simulation may take from minutes to hours (depends on simulation scenario)!**
+Quick example is `python client.py --mongoserver mongodb:27017 harmony --scenario04` (takes only a few seconds).
+
 ## Harmony
 
 * `--scenario01` - Sharding distribution security:
@@ -61,3 +65,10 @@ View results of simulation in the directory `/output`.
   * Show forks in time
 * `--scenario03` - DDoS leaders with VRF feature
   * Simulate DDoS attack to a leaders, but with VRF feature instead of leader schedule.
+
+## Comparison
+* `--scenario01` - Data usage comparison.
+  * networkSize in [1000, 5000, 10_000]
+  * compare histograms of data traffic
+* `--scenario02` - DoS attack comparison with and without VRF
+  * Unfinished
