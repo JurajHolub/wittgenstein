@@ -1,4 +1,8 @@
-# How to use
+# Extended simulator Wittgenstein
+
+This project is result of my master's thesis. It extends simulator Wittgenstein with three Proof-of-Stake
+consensus protocols: Harmony, Solana and Ouroboros. Old Wittgenstein simulator is just a part of project and
+it is containerized in Docker, so it should be easier to install it.
 
 ## Prerequisities
 * [docker-compose](https://docs.docker.com/get-docker)
@@ -27,4 +31,5 @@ Set up simulator server (it may take a few minutes):
 Run specific simulation scenario from `simulator-client`:
 1. e.g. `python simulation-client/client.py --harmony --scenario03`
 2. View simulation results in `simulation-client/client/output`
+3. For more information, go to the `simulation-client/`, where is an detail `README` about simulation experiments and how to run them.
 
